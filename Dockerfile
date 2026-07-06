@@ -13,8 +13,10 @@ COPY src ./src
 COPY frontend ./frontend
 RUN mvn -q -B clean package -DskipTests
 
-# --- Runtime stage: JRE only, no JDK/Maven/Node left in the final image. ---
-FROM eclipse-temurin:17-jre-jammy
+# --- Runtime stage: needs the full JDK, not just a JRE - JavaCodeCompiler shells out to `javac`
+# and `java` at runtime to compile and grade every student submission, so the compiler must be
+# present in the running container itself, not just in the Maven build stage above. ---
+FROM eclipse-temurin:17-jdk-jammy
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
