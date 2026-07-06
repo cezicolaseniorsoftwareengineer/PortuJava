@@ -48,7 +48,17 @@ public class JavaCodeCompiler {
     }
 
     public CompileAndRunResult compileAndRun(String sourceCode, String className) {
-        return compileAndRunFiles(Map.of(className, sourceCode), className);
+        return compileFiles(Map.of(className, sourceCode), className, true);
+    }
+
+    /**
+     * Compiles without executing - for source with no runnable entry point (see
+     * SubmissionService#scratchRun: an exercise class is meant to be graded via a harness, never
+     * {@code java}-executed directly, so running it would surface a raw "main method not found" JVM
+     * error dressed up as a successful run).
+     */
+    public CompileAndRunResult compileOnly(String sourceCode, String className) {
+        return compileFiles(Map.of(className, sourceCode), className, false);
     }
 
     /**
@@ -62,10 +72,11 @@ public class JavaCodeCompiler {
         Map<String, String> sources = new LinkedHashMap<>();
         sources.put(studentClassName, studentSource);
         sources.put(harnessClassName, harnessSource);
-        return compileAndRunFiles(sources, harnessClassName);
+        return compileFiles(sources, harnessClassName, true);
     }
 
-    private CompileAndRunResult compileAndRunFiles(Map<String, String> sourcesByClassName, String mainClassName) {
+    private CompileAndRunResult compileFiles(Map<String, String> sourcesByClassName, String mainClassName,
+                                              boolean runAfterCompile) {
         List<String> errors = new ArrayList<>();
         List<String> warnings = new ArrayList<>();
         String output = "";
@@ -87,7 +98,7 @@ public class JavaCodeCompiler {
             compileSuccess = compileOutcome.success();
             timedOut = compileOutcome.timedOut();
 
-            if (compileSuccess && !timedOut) {
+            if (runAfterCompile && compileSuccess && !timedOut) {
                 ProcessOutcome runOutcome = executeCompiledClass(tempDir.toFile(), mainClassName);
                 output = runOutcome.output();
                 timedOut = runOutcome.timedOut();

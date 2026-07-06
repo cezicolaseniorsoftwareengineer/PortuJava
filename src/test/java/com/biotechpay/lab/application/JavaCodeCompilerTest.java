@@ -152,6 +152,39 @@ class JavaCodeCompilerTest {
         assertThat(result.output()).isEqualTo("RESULT#0#PASS");
     }
 
+    @Test
+    void compileOnlySucceedsWithoutRunningAndReportsNoOutput() {
+        String source = """
+                public class NoMain {
+                    public int add(int a, int b) {
+                        return a + b;
+                    }
+                }
+                """;
+
+        JavaCodeCompiler.CompileAndRunResult result = compiler.compileOnly(source, "NoMain");
+
+        assertThat(result.success()).isTrue();
+        assertThat(result.errors()).isEmpty();
+        assertThat(result.output()).isEmpty();
+    }
+
+    @Test
+    void compileOnlyStillReportsSyntaxErrors() {
+        String source = """
+                public class BrokenNoMain {
+                    public int add(int a, int b) {
+                        return a + b
+                    }
+                }
+                """;
+
+        JavaCodeCompiler.CompileAndRunResult result = compiler.compileOnly(source, "BrokenNoMain");
+
+        assertThat(result.success()).isFalse();
+        assertThat(result.errors()).isNotEmpty();
+    }
+
     private long countCompileTempDirs() throws IOException {
         Path tempRoot = Path.of(System.getProperty("java.io.tmpdir"));
         try (Stream<Path> children = Files.list(tempRoot)) {

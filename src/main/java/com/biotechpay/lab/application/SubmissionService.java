@@ -32,6 +32,11 @@ public class SubmissionService {
     private static final Pattern PUBLIC_TYPE_NAME = Pattern.compile(
             "public\\s+(?:final\\s+|abstract\\s+|sealed\\s+|non-sealed\\s+)*(?:class|interface|enum|record)\\s+(\\w+)");
     private static final Pattern RESULT_LINE = Pattern.compile("RESULT#(\\d+)#(PASS|FAIL|EXCEPTION)(?:#(.*))?");
+    private static final Pattern MAIN_METHOD = Pattern.compile(
+            "(?:public\\s+static|static\\s+public)\\s+void\\s+main\\s*\\(\\s*String\\s*(?:\\[\\s*\\]|\\.\\.\\.)\\s*\\w*\\s*\\)");
+    private static final String NO_MAIN_METHOD_MESSAGE =
+            "Compilado com sucesso. Esta classe nao tem um metodo main - ela foi escrita para ser " +
+                    "corrigida, nao executada diretamente. Clique em \"Enviar\" para rodar os testes deste desafio.";
 
     private final ExerciseRepository exerciseRepository;
     private final SubmissionRepository submissionRepository;
@@ -206,6 +211,12 @@ public class SubmissionService {
     /**
      * Runs the student's current editor code as-is, with no grading - the IDE's "Executar" action,
      * distinct from "Enviar" (submit). Useful for a quick sanity check before submitting for real.
+     *
+     * <p>Every exercise class (including a revealed referenceSolution, copy-pasted verbatim) is
+     * written to be graded through a harness, not run directly - it has no {@code main} method. Java-
+     * executing it anyway would surface a raw JVM "main method not found" error while still reporting
+     * {@code success: true} (compilation genuinely succeeded), which reads as a broken product to a
+     * student who just pasted a "complete" solution. Detect that case up front and compile-only.
      */
     public JavaCodeCompiler.CompileAndRunResult scratchRun(String code) {
         String className = extractPublicTypeName(code);
@@ -214,6 +225,17 @@ public class SubmissionService {
                     List.of("Nao foi possivel encontrar uma classe, interface, enum ou record publico no seu codigo."),
                     List.of(), "", false, false);
         }
+
+        if (!MAIN_METHOD.matcher(code).find()) {
+            JavaCodeCompiler.CompileAndRunResult compiled = javaCodeCompiler.compileOnly(code, className);
+            if (!compiled.errors().isEmpty()) {
+                return new JavaCodeCompiler.CompileAndRunResult(false,
+                        stripAbsolutePaths(compiled.errors(), className), compiled.warnings(), "", false, false);
+            }
+            return new JavaCodeCompiler.CompileAndRunResult(true, List.of(), compiled.warnings(),
+                    NO_MAIN_METHOD_MESSAGE, false, false);
+        }
+
         JavaCodeCompiler.CompileAndRunResult result = javaCodeCompiler.compileAndRun(code, className);
         if (result.errors().isEmpty()) {
             return result;

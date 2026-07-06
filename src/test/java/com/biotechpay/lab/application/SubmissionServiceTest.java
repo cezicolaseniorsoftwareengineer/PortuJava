@@ -60,6 +60,14 @@ class SubmissionServiceTest {
             }
             """;
 
+    private static final String RUNNABLE_SOURCE = """
+            public class Runner {
+                public static void main(String[] args) {
+                    System.out.println("ola mundo");
+                }
+            }
+            """;
+
     private Exercise exercise;
     private String exerciseId;
 
@@ -140,6 +148,39 @@ class SubmissionServiceTest {
                 .findByUserAndExercise(userService.getOrCreateDefaultUser(), exercise).orElseThrow();
         assertThat(progress.getAttemptCount()).isEqualTo(1);
         assertThat(progress.getStatus()).isNotEqualTo(ExerciseStatus.SOLVED);
+    }
+
+    @Test
+    void scratchRunOfExerciseCodeWithNoMainMethodCompilesInsteadOfSurfacingAJvmError() {
+        // CORRECT_SOURCE (and every exercise's referenceSolution, copy-pasted verbatim after a
+        // reveal) has no main method - it is written to be graded via a harness, not run directly.
+        // "Executar" must not java-execute it: that would print a raw "main method not found" JVM
+        // error while still reporting success, which reads as broken to whoever pasted it.
+        JavaCodeCompiler.CompileAndRunResult result = submissionService.scratchRun(CORRECT_SOURCE);
+
+        assertThat(result.success()).isTrue();
+        assertThat(result.errors()).isEmpty();
+        assertThat(result.output())
+                .as("must not surface the raw JVM error, which reports success while looking broken")
+                .doesNotContain("main method not found", "método main não foi encontrado", "JavaFX")
+                .contains("Enviar");
+    }
+
+    @Test
+    void scratchRunOfRunnableCodeStillExecutesNormally() {
+        JavaCodeCompiler.CompileAndRunResult result = submissionService.scratchRun(RUNNABLE_SOURCE);
+
+        assertThat(result.success()).isTrue();
+        assertThat(result.errors()).isEmpty();
+        assertThat(result.output()).isEqualTo("ola mundo");
+    }
+
+    @Test
+    void scratchRunOfBrokenCodeStillReportsCompileErrors() {
+        JavaCodeCompiler.CompileAndRunResult result = submissionService.scratchRun(BROKEN_SOURCE);
+
+        assertThat(result.success()).isFalse();
+        assertThat(result.errors()).isNotEmpty();
     }
 
     @Test
