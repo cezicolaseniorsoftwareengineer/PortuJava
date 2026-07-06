@@ -1,6 +1,7 @@
 :host {
   display: block;
-  height: 100vh;
+  min-height: 100vh;
+  min-height: 100dvh;
   font-family: 'Segoe UI', system-ui, sans-serif;
   background: #0d1117;
   color: #e6edf3;
@@ -8,11 +9,14 @@
 
 .ide {
   display: grid;
-  grid-template-columns: minmax(320px, 40%) 1fr;
+  // minmax(0, 1fr) so wide content (pre blocks, long test output) cannot blow the column out.
+  grid-template-columns: minmax(320px, 40%) minmax(0, 1fr);
   height: 100vh;
+  height: 100dvh;
 }
 
 .statement-panel {
+  min-width: 0;
   padding: 24px;
   overflow-y: auto;
   border-right: 1px solid #30363d;
@@ -37,11 +41,13 @@
 
   h1 {
     margin: 8px 0 12px;
-    font-size: 22px;
+    font-size: clamp(18px, 2.5vw, 22px);
+    overflow-wrap: break-word;
   }
 
   .meta {
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
     margin-bottom: 20px;
 
@@ -50,6 +56,7 @@
       padding: 3px 10px;
       border-radius: 999px;
       background: #21262d;
+      white-space: nowrap;
     }
 
     .status.solved {
@@ -60,10 +67,12 @@
 
   .statement-text {
     white-space: pre-wrap;
+    overflow-wrap: break-word;
     font-family: inherit;
     font-size: 14px;
     line-height: 1.6;
     color: #c9d1d9;
+    max-width: 100%;
   }
 
   .hints {
@@ -71,9 +80,12 @@
     padding-top: 16px;
     border-top: 1px solid #30363d;
 
+    li { overflow-wrap: break-word; }
+
     button {
       margin-top: 8px;
       padding: 6px 14px;
+      min-height: 36px;
       background: #21262d;
       color: #e6edf3;
       border: 1px solid #30363d;
@@ -91,6 +103,7 @@
 .editor-panel {
   display: flex;
   flex-direction: column;
+  min-width: 0;
   min-height: 0;
 
   .editor {
@@ -100,6 +113,7 @@
 
   .actions {
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
     padding: 12px;
     background: #161b22;
@@ -107,6 +121,7 @@
 
     button {
       padding: 8px 20px;
+      min-height: 40px;
       border-radius: 6px;
       border: none;
       cursor: pointer;
@@ -138,10 +153,12 @@
     h2 {
       font-size: 14px;
       margin-bottom: 10px;
+      overflow-wrap: break-word;
     }
 
     .output {
       white-space: pre-wrap;
+      overflow-wrap: anywhere;
       font-size: 13px;
       padding: 10px;
       border-radius: 6px;
@@ -162,6 +179,7 @@
       padding: 2px 10px;
       border-radius: 999px;
       font-size: 12px;
+      white-space: nowrap;
     }
 
     .test-list {
@@ -171,6 +189,7 @@
 
       li {
         display: flex;
+        flex-wrap: wrap;
         gap: 8px;
         align-items: baseline;
         padding: 8px;
@@ -181,9 +200,23 @@
         &.passed { background: rgba(35, 134, 54, 0.15); }
         &.failed { background: rgba(248, 81, 73, 0.15); }
 
-        .icon { font-weight: bold; }
+        .icon { font-weight: bold; flex: none; }
+
+        .description {
+          flex: 1 1 200px;
+          min-width: 0;
+          overflow-wrap: break-word;
+        }
+
         .hidden-tag { color: #8b949e; font-size: 11px; }
-        .actual { color: #ffa198; font-size: 12px; }
+
+        .actual {
+          color: #ffa198;
+          font-size: 12px;
+          min-width: 0;
+          max-width: 100%;
+          overflow-wrap: anywhere;
+        }
       }
     }
   }
@@ -194,5 +227,65 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
+  height: 100dvh;
+  padding: 16px;
+  text-align: center;
   color: #e6edf3;
+}
+
+// Tablet: keep the two-column IDE but give the editor more room and tighten spacing.
+@media (max-width: 1024px) and (min-width: 761px) {
+  .ide {
+    grid-template-columns: minmax(260px, 36%) minmax(0, 1fr);
+  }
+
+  .statement-panel {
+    padding: 16px;
+  }
+
+  .editor-panel .results {
+    padding: 12px;
+  }
+}
+
+// Mobile and portrait tablet: stack the panels and hand scrolling to the document.
+// The statement reads first, the editor keeps a workable fixed height below it.
+@media (max-width: 760px) {
+  .ide {
+    display: block;
+    height: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  .statement-panel {
+    overflow-y: visible;
+    border-right: none;
+    border-bottom: 1px solid #30363d;
+    padding: 16px;
+  }
+
+  .editor-panel {
+    .editor {
+      flex: none;
+      height: 55vh;
+      height: 55dvh;
+      min-height: 280px;
+    }
+
+    .actions {
+      padding: 10px 12px;
+
+      // Full-width touch targets: Executar and Enviar split the row.
+      button {
+        flex: 1 1 40%;
+        min-height: 44px;
+      }
+    }
+
+    .results {
+      flex: none;
+      overflow-y: visible;
+    }
+  }
 }
