@@ -75,7 +75,8 @@
     max-width: 100%;
   }
 
-  .hints {
+  .hints,
+  .solution {
     margin-top: 24px;
     padding-top: 16px;
     border-top: 1px solid #30363d;
@@ -96,6 +97,48 @@
         opacity: 0.5;
         cursor: not-allowed;
       }
+    }
+  }
+
+  .solution {
+    h3 {
+      margin: 16px 0 8px;
+      font-size: 14px;
+      color: #d29922;
+    }
+
+    .spoiler-note {
+      font-size: 13px;
+      color: #8b949e;
+    }
+
+    .reveal-solution {
+      border-color: #9e6a03;
+      color: #d29922;
+    }
+
+    .solution-error {
+      color: #ffa198;
+      font-size: 13px;
+    }
+
+    .solution-steps {
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: #c9d1d9;
+    }
+
+    .solution-code {
+      white-space: pre;
+      overflow-x: auto;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.5;
+      padding: 12px;
+      border-radius: 6px;
+      background: #161b22;
+      border: 1px solid #30363d;
+      color: #e6edf3;
     }
   }
 }

@@ -6,7 +6,7 @@ import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 
 import { ExerciseApiService } from '../core/exercise-api.service';
 import { SubmissionApiService } from '../core/submission-api.service';
-import { ExerciseDetail, HintView, ScratchRunResult, SubmissionResult } from '../core/exercise.models';
+import { ExerciseDetail, HintView, ScratchRunResult, SolutionView, SubmissionResult } from '../core/exercise.models';
 
 @Component({
   selector: 'app-exercise-ide',
@@ -29,6 +29,10 @@ export class ExerciseIdeComponent implements OnInit {
 
   hints: HintView[] = [];
   loadingHint = false;
+
+  solution: SolutionView | null = null;
+  loadingSolution = false;
+  solutionError = '';
 
   editorOptions = {
     theme: 'vs-dark',
@@ -119,5 +123,28 @@ export class ExerciseIdeComponent implements OnInit {
 
   get hasMoreHints(): boolean {
     return !!this.exercise && this.hints.length < this.exercise.hintCount;
+  }
+
+  revealSolution(): void {
+    if (!this.exercise || this.loadingSolution || this.solution) {
+      return;
+    }
+    this.loadingSolution = true;
+    this.solutionError = '';
+    this.exerciseApi.getSolution(this.exercise.exerciseId).subscribe({
+      next: (solution) => {
+        this.solution = solution;
+        this.loadingSolution = false;
+      },
+      error: () => {
+        this.solutionError = 'Nao foi possivel carregar a resposta deste exercicio.';
+        this.loadingSolution = false;
+      }
+    });
+  }
+
+  hideSolution(): void {
+    this.solution = null;
+    this.solutionError = '';
   }
 }

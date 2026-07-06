@@ -18,6 +18,11 @@ export interface HintView {
   hasMore: boolean;
 }
 
+export interface SolutionView {
+  solutionCode: string;
+  steps: string[];
+}
+
 export interface TestCaseFeedback {
   description: string;
   passed: boolean;

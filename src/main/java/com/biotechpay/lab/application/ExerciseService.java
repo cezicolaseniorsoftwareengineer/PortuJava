@@ -13,8 +13,10 @@ import java.util.List;
 
 /**
  * Read side for a single exercise. The detail view intentionally omits TestCase content and
- * referenceSolution - those never leave the server (see SubmissionService for the grading path that
- * is the only thing allowed to read them).
+ * referenceSolution; hidden test cases never leave the server (see SubmissionService for the grading
+ * path). The reference solution is exposed only through the explicit reveal endpoint
+ * ({@link #getSolution}) - a deliberate product choice so the student opts in to the spoiler instead
+ * of receiving it embedded in the exercise payload.
  */
 @Service
 @Transactional(readOnly = true)
@@ -56,6 +58,14 @@ public class ExerciseService {
                 status);
     }
 
+    public SolutionView getSolution(String exerciseId) {
+        Exercise exercise = findExercise(exerciseId);
+        if (exercise.getReferenceSolution() == null || exercise.getReferenceSolution().isBlank()) {
+            throw new IllegalStateException("Exercicio sem solucao de referencia: " + exerciseId);
+        }
+        return new SolutionView(exercise.getReferenceSolution(), List.copyOf(exercise.getHints()));
+    }
+
     public HintView getHint(String exerciseId, int index) {
         Exercise exercise = findExercise(exerciseId);
         List<String> hints = exercise.getHints();
@@ -85,4 +95,7 @@ public class ExerciseService {
     ) {}
 
     public record HintView(int index, String text, boolean hasMore) {}
+
+    /** Full reveal: the reference solution plus the walkthrough steps (the exercise's hints). */
+    public record SolutionView(String solutionCode, List<String> steps) {}
 }

@@ -22,6 +22,30 @@
         {{ hasMoreHints ? 'Revelar proxima dica' : 'Sem mais dicas' }}
       </button>
     </div>
+
+    <div class="solution">
+      <h2>Resposta completa</h2>
+
+      <ng-container *ngIf="!solution">
+        <p class="spoiler-note">Tente resolver sozinho primeiro - revelar a resposta mostra a solucao inteira de uma vez.</p>
+        <button type="button" class="reveal-solution" (click)="revealSolution()" [disabled]="loadingSolution">
+          {{ loadingSolution ? 'Carregando...' : 'Revelar resposta completa' }}
+        </button>
+        <p class="solution-error" *ngIf="solutionError">{{ solutionError }}</p>
+      </ng-container>
+
+      <ng-container *ngIf="solution">
+        <h3>Como resolver</h3>
+        <ol class="solution-steps">
+          <li *ngFor="let step of solution.steps">{{ step }}</li>
+        </ol>
+
+        <h3>Codigo da solucao</h3>
+        <pre class="solution-code">{{ solution.solutionCode }}</pre>
+
+        <button type="button" (click)="hideSolution()">Esconder resposta</button>
+      </ng-container>
+    </div>
   </section>
 
   <section class="editor-panel">

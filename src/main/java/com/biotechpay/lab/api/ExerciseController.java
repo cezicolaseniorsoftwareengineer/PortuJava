@@ -28,4 +28,9 @@ public class ExerciseController {
     public ResponseEntity<ExerciseService.HintView> getHint(@PathVariable String exerciseId, @PathVariable int index) {
         return ResponseEntity.ok(exerciseService.getHint(exerciseId, index));
     }
+
+    @GetMapping("/{exerciseId}/solution")
+    public ResponseEntity<ExerciseService.SolutionView> getSolution(@PathVariable String exerciseId) {
+        return ResponseEntity.ok(exerciseService.getSolution(exerciseId));
+    }
 }
