@@ -26,9 +26,14 @@ public class AopDecoratorModuleSeeder implements ModuleSeeder {
     }
 
     @Override
+    public String moduleCode() {
+        return "aop-decorator-simulation";
+    }
+
+    @Override
     public LearningModule seed() {
         LearningModule module = moduleRepository.save(new LearningModule(
-                "aop-decorator-simulation",
+                moduleCode(),
                 "Aspectos na Mao: Decorators de Robo",
                 "AOP_SIMULATED",
                 "Antes de usar @Aspect do Spring, entenda o que ele faz por baixo dos panos: um " +

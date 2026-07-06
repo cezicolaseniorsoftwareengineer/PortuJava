@@ -24,9 +24,14 @@ public class RuleEngineModuleSeeder implements ModuleSeeder {
     }
 
     @Override
+    public String moduleCode() {
+        return "rule-engine-daily-routine";
+    }
+
+    @Override
     public LearningModule seed() {
         LearningModule module = moduleRepository.save(new LearningModule(
-                "rule-engine-daily-routine",
+                moduleCode(),
                 "Motor de Regras: Automacao do Dia a Dia",
                 "RULE_ENGINE",
                 "Sistemas de automacao domestica e de negocio raramente sao um unico if - sao regras " +

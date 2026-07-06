@@ -25,9 +25,14 @@ public class LogicShapesModuleSeeder implements ModuleSeeder {
     }
 
     @Override
+    public String moduleCode() {
+        return "logic-shapes";
+    }
+
+    @Override
     public LearningModule seed() {
         LearningModule module = moduleRepository.save(new LearningModule(
-                "logic-shapes",
+                moduleCode(),
                 "Os 7 Shapes da Logica",
                 "LOGIC_SHAPES",
                 "A pentatonica da programacao: quase todo exercicio de logica e variacao de 7 " +

@@ -24,9 +24,14 @@ public class EventDrivenRobotModuleSeeder implements ModuleSeeder {
     }
 
     @Override
+    public String moduleCode() {
+        return "event-driven-robot";
+    }
+
+    @Override
     public LearningModule seed() {
         LearningModule module = moduleRepository.save(new LearningModule(
-                "event-driven-robot",
+                moduleCode(),
                 "Orientacao a Eventos: Robo com Sensores",
                 "EVENT_DRIVEN",
                 "Um robo que reage a sensores sem que o codigo que dispara o evento saiba quem vai " +

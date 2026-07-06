@@ -24,9 +24,14 @@ public class DsaFoundationsModuleSeeder implements ModuleSeeder {
     }
 
     @Override
+    public String moduleCode() {
+        return "dsa-foundations";
+    }
+
+    @Override
     public LearningModule seed() {
         LearningModule module = moduleRepository.save(new LearningModule(
-                "dsa-foundations",
+                moduleCode(),
                 "Algoritmos e Estruturas de Dados",
                 "DSA",
                 "Escolher a estrutura de dados certa e pensar recursivamente sao habilidades que " +

@@ -25,9 +25,14 @@ public class CoffeeMachineModuleSeeder implements ModuleSeeder {
     }
 
     @Override
+    public String moduleCode() {
+        return "oop-coffee-machine";
+    }
+
+    @Override
     public LearningModule seed() {
         LearningModule module = moduleRepository.save(new LearningModule(
-                "oop-coffee-machine",
+                moduleCode(),
                 "Orientacao a Objetos: Maquina de Cafe",
                 "OOP",
                 "Construa uma CoffeeMachine do zero, exercicio por exercicio: encapsulamento, regras de " +
