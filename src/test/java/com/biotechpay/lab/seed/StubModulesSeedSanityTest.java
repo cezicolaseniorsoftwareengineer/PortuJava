@@ -15,8 +15,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Same seed-sanity guarantee as CoffeeMachineModuleSeederTest, applied to the stub modules (event-driven,
- * AOP-simulated, rule-engine, DSA): every referenceSolution must compile and pass all of its own test
- * cases through the real grading path.
+ * AOP-simulated, rule-engine, DSA, logic-shapes): every referenceSolution must compile and pass all of its
+ * own test cases through the real grading path.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Transactional
@@ -28,7 +28,7 @@ class StubModulesSeedSanityTest {
     private SubmissionService submissionService;
 
     @ParameterizedTest
-    @ValueSource(strings = {"event-driven-robot", "aop-decorator-simulation", "rule-engine-daily-routine", "dsa-foundations"})
+    @ValueSource(strings = {"event-driven-robot", "aop-decorator-simulation", "rule-engine-daily-routine", "dsa-foundations", "logic-shapes"})
     void everyReferenceSolutionPassesAllOfItsOwnTestCases(String moduleCode) {
         LearningModule module = moduleRepository.findByModuleCode(moduleCode).orElseThrow();
         assertThat(module.getExercises()).as("module %s must have seeded exercises", moduleCode).isNotEmpty();
@@ -51,10 +51,10 @@ class StubModulesSeedSanityTest {
     }
 
     @Test
-    void allFourStubModulesAreSeeded() {
+    void allStubModulesAreSeeded() {
         assertThat(moduleRepository.findAllByOrderBySortOrderAsc())
                 .extracting("moduleCode")
                 .contains("oop-coffee-machine", "event-driven-robot", "aop-decorator-simulation",
-                        "rule-engine-daily-routine", "dsa-foundations");
+                        "rule-engine-daily-routine", "dsa-foundations", "logic-shapes");
     }
 }
