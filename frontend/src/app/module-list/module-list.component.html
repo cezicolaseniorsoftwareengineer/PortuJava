@@ -1,0 +1,28 @@
+<div class="page">
+  <h1>PortuJava - Trilhas de Programacao Real</h1>
+  <p class="subtitle">Escolha uma trilha. Cada exercicio compila de verdade e roda contra testes reais.</p>
+
+  <div class="loading" *ngIf="loading">Carregando trilhas...</div>
+
+  <div class="modules" *ngIf="!loading">
+    <section class="module-card" *ngFor="let module of modules">
+      <header>
+        <span class="paradigm">{{ module.paradigm }}</span>
+        <h2>{{ module.title }}</h2>
+        <span class="progress">{{ module.solvedCount }}/{{ module.totalCount }} resolvidos</span>
+      </header>
+      <p class="description">{{ module.description }}</p>
+
+      <ul class="exercise-list">
+        <li *ngFor="let exercise of module.exercises">
+          <a [routerLink]="['/exercicios', exercise.exerciseId]">
+            <span class="status-dot" [class.solved]="exercise.status === 'SOLVED'" [class.in-progress]="exercise.status === 'IN_PROGRESS'"></span>
+            <span class="title">{{ exercise.title }}</span>
+            <span class="difficulty">{{ exercise.difficulty }}</span>
+            <span class="minutes">~{{ exercise.estimatedMinutes }} min</span>
+          </a>
+        </li>
+      </ul>
+    </section>
+  </div>
+</div>

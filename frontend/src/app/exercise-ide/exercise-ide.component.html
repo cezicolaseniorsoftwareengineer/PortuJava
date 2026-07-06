@@ -1,0 +1,75 @@
+<div class="ide" *ngIf="!loading && exercise">
+  <section class="statement-panel">
+    <a class="back-link" routerLink="/">&larr; Trilhas</a>
+    <header>
+      <span class="module-tag">{{ exercise.moduleTitle }}</span>
+      <h1>{{ exercise.title }}</h1>
+      <div class="meta">
+        <span class="difficulty">{{ exercise.difficulty }}</span>
+        <span class="minutes">~{{ exercise.estimatedMinutes }} min</span>
+        <span class="status" [class.solved]="exercise.status === 'SOLVED'">{{ exercise.status }}</span>
+      </div>
+    </header>
+
+    <pre class="statement-text">{{ exercise.statementMarkdown }}</pre>
+
+    <div class="hints">
+      <h2>Dicas</h2>
+      <ol>
+        <li *ngFor="let hint of hints">{{ hint.text }}</li>
+      </ol>
+      <button type="button" (click)="revealNextHint()" [disabled]="loadingHint || !hasMoreHints">
+        {{ hasMoreHints ? 'Revelar proxima dica' : 'Sem mais dicas' }}
+      </button>
+    </div>
+  </section>
+
+  <section class="editor-panel">
+    <ngx-monaco-editor class="editor" [options]="editorOptions" [(ngModel)]="code"></ngx-monaco-editor>
+
+    <div class="actions">
+      <button type="button" class="run" (click)="runCode()" [disabled]="running">
+        {{ running ? 'Executando...' : 'Executar' }}
+      </button>
+      <button type="button" class="submit" (click)="submitCode()" [disabled]="submitting">
+        {{ submitting ? 'Enviando...' : 'Enviar' }}
+      </button>
+    </div>
+
+    <div class="results" *ngIf="runResult">
+      <h2>Saida (execucao livre, sem correcao)</h2>
+      <pre *ngIf="runResult.success" class="output ok">{{ runResult.output }}</pre>
+      <pre *ngIf="!runResult.success" class="output error">{{ runResult.errors.join('\n') }}</pre>
+      <p *ngIf="runResult.timedOut" class="warning">Tempo limite excedido.</p>
+    </div>
+
+    <div class="results" *ngIf="submissionResult">
+      <h2>
+        Resultado: {{ submissionResult.passedTests }}/{{ submissionResult.totalTests }} testes
+        <span *ngIf="submissionResult.allPassed" class="badge ok">Exercicio resolvido</span>
+      </h2>
+
+      <div *ngIf="!submissionResult.compileSuccess" class="output error">
+        <p>Erro de compilacao:</p>
+        <pre>{{ submissionResult.compileErrors.join('\n') }}</pre>
+      </div>
+
+      <p *ngIf="submissionResult.executionTimedOut" class="warning">
+        Sua solucao nao terminou a tempo. Verifique loops infinitos.
+      </p>
+
+      <ul class="test-list" *ngIf="submissionResult.compileSuccess">
+        <li *ngFor="let test of submissionResult.testResults" [class.passed]="test.passed" [class.failed]="!test.passed">
+          <span class="icon">{{ test.passed ? '✔' : '✘' }}</span>
+          <span class="description">{{ test.description }}</span>
+          <span class="hidden-tag" *ngIf="test.hidden">(teste oculto)</span>
+          <span class="actual" *ngIf="test.actualValueSummary">obtido: {{ test.actualValueSummary }}</span>
+          <span class="actual" *ngIf="test.exceptionSummary">excecao: {{ test.exceptionSummary }}</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+</div>
+
+<div class="loading" *ngIf="loading">Carregando exercicio...</div>
+<div class="load-error" *ngIf="loadError">{{ loadError }}</div>
