@@ -8,14 +8,24 @@ import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactor
 class FixedPortConfigTest {
 
     @Test
-    void forcesPortuJavaFrontendPort() {
+    void defaultsToPortuJavaFrontendPortForLocalDev() {
         FixedPortConfig config = new FixedPortConfig();
         TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory();
         factory.setPort(12345);
 
-        config.portujavaFrontendPortCustomizer().customize(factory);
+        config.portujavaFrontendPortCustomizer(FixedPortConfig.DEFAULT_PORT).customize(factory);
 
-        assertThat(factory.getPort()).isEqualTo(FixedPortConfig.PORTUJAVA_FRONTEND_PORT);
+        assertThat(factory.getPort()).isEqualTo(FixedPortConfig.DEFAULT_PORT);
         assertThat(factory.getPort()).isEqualTo(62828);
+    }
+
+    @Test
+    void honorsAnInjectedPortForCloudHostsLikeRailway() {
+        FixedPortConfig config = new FixedPortConfig();
+        TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory();
+
+        config.portujavaFrontendPortCustomizer(8080).customize(factory);
+
+        assertThat(factory.getPort()).isEqualTo(8080);
     }
 }

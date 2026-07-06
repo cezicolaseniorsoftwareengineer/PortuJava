@@ -65,6 +65,40 @@ Covers the grading engine (compiler + harness generation), the submission/exerci
 seed-sanity suite that grades every track's reference solutions through the real pipeline before
 trusting them.
 
+## Deploy
+
+### Railway (backend + embedded frontend, one service)
+
+The repo ships a multi-stage `Dockerfile` (Maven+JDK build stage → JRE-only runtime stage) and a
+`railway.json` that pins Railway to build from it (`"builder": "DOCKERFILE"`), so Railway's
+auto-detection never has to guess between the root `pom.xml` and `frontend/package.json`.
+
+1. Create a new Railway project from this GitHub repo. Railway will use the Dockerfile automatically.
+2. No environment variables are required to boot: `server.port=${PORT:62828}` already reads the
+   `PORT` Railway injects at runtime, defaulting to `62828` locally.
+3. Optional environment variables:
+
+   | Variable | Purpose | Default if unset |
+   |---|---|---|
+   | `OPENROUTER_API_KEY` | Enables the AI tutor explanations | Unset — tutor endpoint responds `ok:false`, frontend falls back to its built-in explanations |
+   | `DB_PATH` | Path for the H2 database file | `./data/portujava` (container-local — **resets on every redeploy** unless this points inside a Railway Volume, e.g. `/data/portujava`) |
+   | `ALLOWED_ORIGINS` | CORS allow-list | `*` — fine for this single-origin deploy; only matters if the frontend is ever split out (see below) |
+
+4. For progress to survive redeploys, attach a Railway **Volume**, mount it at `/data`, and set
+   `DB_PATH=/data/portujava`. Without a volume, every redeploy starts with a fresh, empty database —
+   acceptable for iterating on the app itself, not for tracking real practice progress long-term.
+
+### Frontend on Netlify instead (optional, not wired up yet)
+
+The backend is already CORS-ready for this (`ALLOWED_ORIGINS`), but splitting the Angular build out
+to Netlify additionally needs, on the frontend side: an `environments/environment.prod.ts` pointing
+`apiBaseUrl` at the Railway backend's public URL, the two API services (`ExerciseApiService`,
+`SubmissionApiService`) prefixing requests with it instead of relative `/api/...` paths, a separate
+`ng build` output target (today's `angular.json` outputs straight into
+`src/main/resources/static` for the embedded-monolith setup), and a `netlify.toml` with an SPA
+fallback redirect to `index.html`. None of that exists yet — right now the Angular app is only
+built to run embedded in the same Spring Boot origin it calls.
+
 ## Architecture notes
 
 - `domain` / `persistence`: `LearningModule → Exercise → TestCase`, with `ComparisonMode` (EQUALS,

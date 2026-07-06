@@ -22,7 +22,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/exercise-progress")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "${app.cors.allowed-origins:*}")
 @Transactional(readOnly = true)
 public class ExerciseProgressController {
 

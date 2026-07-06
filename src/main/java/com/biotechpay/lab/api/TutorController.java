@@ -15,7 +15,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/tutor")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "${app.cors.allowed-origins:*}")
 public class TutorController {
 
     private final TutorService tutorService;
