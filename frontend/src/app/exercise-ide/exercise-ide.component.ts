@@ -39,7 +39,10 @@ export class ExerciseIdeComponent implements OnInit {
     language: 'java',
     automaticLayout: true,
     minimap: { enabled: false },
-    fontSize: 14
+    fontSize: 14,
+    // Monaco defaults to zero top padding, which glues line 1 to the container edge;
+    // VS Code itself renders with breathing room above the first line.
+    padding: { top: 16, bottom: 12 }
   };
 
   constructor(
