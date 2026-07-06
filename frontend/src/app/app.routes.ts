@@ -1,0 +1,14 @@
+import { Routes } from '@angular/router';
+
+export const routes: Routes = [
+  {
+    path: '',
+    loadComponent: () =>
+      import('./module-list/module-list.component').then((m) => m.ModuleListComponent)
+  },
+  {
+    path: 'exercicios/:exerciseId',
+    loadComponent: () =>
+      import('./exercise-ide/exercise-ide.component').then((m) => m.ExerciseIdeComponent)
+  }
+];
