@@ -123,6 +123,18 @@ public class CoffeeMachineModuleSeeder implements ModuleSeeder {
                             public int getBeansGrams() { return beansGrams; }
                         }
                         """)
+                .solutionAnnotation(
+                        "private final int waterMl;\n    private final int beansGrams;",
+                        "Campos privados e final: ninguem de fora altera o estado depois de construido, e o " +
+                                "compilador garante que cada campo e atribuido exatamente uma vez.")
+                .solutionAnnotation(
+                        "if (waterMl < 0) {\n        throw new IllegalArgumentException(\"waterMl must not be negative\");\n    }",
+                        "A validacao acontece ANTES de qualquer atribuicao a this.waterMl - se viesse depois, um " +
+                                "objeto invalido chegaria a existir, mesmo que por um instante, antes de lancar a excecao.")
+                .solutionAnnotation(
+                        "this.waterMl = waterMl;\n    this.beansGrams = beansGrams;",
+                        "As atribuicoes so acontecem depois que as duas validacoes passaram - todo CoffeeMachine " +
+                                "que existe e, por construcao, valido.")
                 .equalsCase("construcao valida expõe getWaterMl() corretamente",
                         "CoffeeMachine m = new CoffeeMachine(500, 100);", "m.getWaterMl()", "500", true)
                 .equalsCase("construcao valida expõe getBeansGrams() corretamente",
@@ -234,6 +246,18 @@ public class CoffeeMachineModuleSeeder implements ModuleSeeder {
                             }
                         }
                         """)
+                .solutionAnnotation(
+                        "} else {\n        return \"UNKNOWN_DRINK\";\n    }",
+                        "O tipo de bebida e checado PRIMEIRO. Se nao reconhecer, retorna imediatamente - sem " +
+                                "gastar agua ou po por um pedido que nem existe.")
+                .solutionAnnotation(
+                        "if (waterMl < waterCost || beansGrams < beansCost) {\n        return \"INSUFFICIENT_RESOURCES\";\n    }",
+                        "Verifica recurso ANTES de descontar. Essa ordem garante que uma tentativa que falha " +
+                                "nunca tem efeito colateral no estado da maquina.")
+                .solutionAnnotation(
+                        "waterMl -= waterCost;\n    beansGrams -= beansCost;\n    return \"BREWING\";",
+                        "So desconta depois de confirmar que ha recurso suficiente - o desconto e a ultima coisa " +
+                                "que acontece no caminho de sucesso.")
                 .equalsCase("espresso com recurso suficiente prepara",
                         "CoffeeMachine m = new CoffeeMachine(500, 100);", "m.brew(\"ESPRESSO\")", "\"BREWING\"", true)
                 .equalsCase("preparo de sucesso desconta a agua",
@@ -375,6 +399,14 @@ public class CoffeeMachineModuleSeeder implements ModuleSeeder {
                             }
                         }
                         """)
+                .solutionAnnotation(
+                        "abstract class Drink {\n    public abstract int waterCost();\n    public abstract int beansCost();\n}",
+                        "Drink nao sabe fazer cafe - so sabe informar o proprio custo. Cada subtipo e responsavel " +
+                                "por si mesmo, entao adicionar uma bebida nova nunca exige tocar em CoffeeMachine.")
+                .solutionAnnotation(
+                        "if (waterMl < drink.waterCost() || beansGrams < drink.beansCost()) {",
+                        "brew() chama drink.waterCost() sem nunca perguntar 'qual e o tipo concreto?' - e despacho " +
+                                "polimorfico: o objeto certo responde, o metodo nunca precisa de instanceof.")
                 .equalsCase("Espresso reporta o proprio custo de agua",
                         "", "new Espresso().waterCost()", "30", true)
                 .equalsCase("brew com Espresso e recurso suficiente prepara",
@@ -545,6 +577,18 @@ public class CoffeeMachineModuleSeeder implements ModuleSeeder {
                             }
                         }
                         """)
+                .solutionAnnotation(
+                        "interface PaymentMethod {\n    boolean charge(int amountCents);\n}",
+                        "A maquina so conversa com essa interface. CardPayment e CashPayment implementam do jeito " +
+                                "delas - nenhuma precisa que CoffeeMachine mude para funcionar.")
+                .solutionAnnotation(
+                        "if (waterMl < 30 || beansGrams < 18) {\n                    return \"INSUFFICIENT_RESOURCES\";\n                }\n                if (!payment.charge(500)) {",
+                        "A ordem importa: primeiro checa recurso (sem cobrar nada), so depois tenta cobrar. Cobrar " +
+                                "antes de saber se da pra preparar seria cobrar o cliente por um cafe que nao vai sair.")
+                .solutionAnnotation(
+                        "if (availableCents >= amountCents) {\n                    availableCents -= amountCents;\n                    return true;\n                }\n                return false;",
+                        "CashPayment so desconta o saldo quando ha dinheiro suficiente - charge() nunca deixa " +
+                                "availableCents ficar negativo.")
                 .equalsCase("cartao com recurso suficiente prepara",
                         "CoffeeMachine m = new CoffeeMachine(500, 100); PaymentMethod p = new CardPayment();", "m.brew(p)", "\"BREWING\"", true)
                 .equalsCase("dinheiro insuficiente e recusado sem descontar recurso",
@@ -661,6 +705,14 @@ public class CoffeeMachineModuleSeeder implements ModuleSeeder {
                             }
                         }
                         """)
+                .solutionAnnotation(
+                        "class InsufficientResourcesException extends RuntimeException {\n    public InsufficientResourcesException(String message) {\n        super(message);\n    }\n}",
+                        "Uma RuntimeException customizada so precisa repassar a mensagem pro construtor da " +
+                                "superclasse - o resto (stack trace, getMessage()) ja vem de graca de RuntimeException.")
+                .solutionAnnotation(
+                        "if (waterMl < waterCost) {\n        throw new InsufficientResourcesException(\"not enough water\");\n    }\n    if (beansGrams < beansCost) {",
+                        "Checa agua primeiro; so chega a checar po se a agua ja passou. Cada excecao carrega uma " +
+                                "mensagem especifica do recurso que faltou.")
                 .throwsCase("agua insuficiente lanca InsufficientResourcesException",
                         "", "new CoffeeMachine(10, 100).brew(30, 18)", "InsufficientResourcesException", true)
                 .exceptionMessageContainsCase("mensagem da excecao de agua menciona 'water'",
@@ -779,6 +831,18 @@ public class CoffeeMachineModuleSeeder implements ModuleSeeder {
                             }
                         }
                         """)
+                .solutionAnnotation(
+                        "private MachineState state = MachineState.IDLE;",
+                        "O estado inicial e definido no proprio campo, nao no construtor - garante que toda " +
+                                "CoffeeMachine nasce em IDLE, sem excecao.")
+                .solutionAnnotation(
+                        "if (state != MachineState.IDLE) {\n        throw new IllegalStateException(\"cannot start brewing from state \" + state);\n    }",
+                        "startBrew so e valida a partir de IDLE. Chamar fora de ordem lanca IllegalStateException " +
+                                "em vez de silenciosamente corromper o estado.")
+                .solutionAnnotation(
+                        "if (waterMl < waterCost || beansGrams < beansCost) {\n        state = MachineState.ERROR;\n        return;\n    }",
+                        "Falta de recurso aqui vira um ESTADO (ERROR), nao uma excecao - nem toda falha precisa " +
+                                "interromper o fluxo com throw.")
                 .equalsCase("estado inicial e IDLE",
                         "CoffeeMachine m = new CoffeeMachine(500, 100);", "m.getState()", "MachineState.IDLE", true)
                 .equalsCase("startBrew com recurso suficiente vai para BREWING",

@@ -97,6 +97,14 @@ public class DsaFoundationsModuleSeeder implements ModuleSeeder {
                             }
                         }
                         """)
+                .solutionAnnotation(
+                        "if (n <= 1) {\n        return 1;\n    }",
+                        "O caso base e o que impede a recursao de nunca terminar - sem ele, factorial(n - 1) " +
+                                "chamaria a si mesmo para sempre.")
+                .solutionAnnotation(
+                        "return n * factorial(n - 1);",
+                        "O caso recursivo resolve o problema chamando a si mesmo com uma versao MENOR (n - 1) - " +
+                                "cada chamada se aproxima um passo do caso base.")
                 .equalsCase("factorial(0) e o caso base, resultado 1",
                         "MathOps m = new MathOps();", "m.factorial(0)", "1L", true)
                 .equalsCase("factorial(1) tambem e caso base, resultado 1",
@@ -177,6 +185,14 @@ public class DsaFoundationsModuleSeeder implements ModuleSeeder {
                             }
                         }
                         """)
+                .solutionAnnotation(
+                        "stack.push(action);\n    }\n    return stack.pop();",
+                        "push/pop e LIFO - o ultimo elemento empilhado e o primeiro a sair. Por isso lastUndo " +
+                                "devolve a ULTIMA acao, nao a primeira.")
+                .solutionAnnotation(
+                        "queue.offer(job);\n    }\n    return queue.poll();",
+                        "offer/poll e FIFO - o primeiro elemento enfileirado e o primeiro a sair. Mesma estrutura " +
+                                "Deque, comportamento oposto, dependendo de quais metodos voce chama.")
                 .equalsCase("lastUndo retorna a ULTIMA acao (LIFO)",
                         "TaskHistory t = new TaskHistory(); String[] actions = {\"type\", \"delete\", \"paste\"};",
                         "t.lastUndo(actions)", "\"paste\"", true)
@@ -252,6 +268,14 @@ public class DsaFoundationsModuleSeeder implements ModuleSeeder {
                             }
                         }
                         """)
+                .solutionAnnotation(
+                        "int mid = left + (right - left) / 2;",
+                        "Essa forma de calcular o meio evita overflow em arrays muito grandes - (left + right) / 2 " +
+                                "poderia estourar o int se ambos forem grandes; assim, nunca soma dois valores grandes diretamente.")
+                .solutionAnnotation(
+                        "} else if (sortedArr[mid] < target) {\n        left = mid + 1;\n    } else {\n        right = mid - 1;\n    }",
+                        "A cada iteracao, metade do array e descartada com base numa unica comparacao - e isso " +
+                                "que torna a busca binaria O(log n) em vez de O(n).")
                 .equalsCase("encontra o alvo no inicio do array",
                         "Search s = new Search(); int[] arr = {10, 20, 30, 40, 50};", "s.binarySearch(arr, 10)", "0", true)
                 .equalsCase("encontra o alvo no meio do array",

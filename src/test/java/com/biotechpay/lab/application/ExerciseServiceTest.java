@@ -49,6 +49,8 @@ class ExerciseServiceTest {
         exercise.setReferenceSolution(SOLUTION_CODE);
         exercise.getHints().add("Some os dois parametros.");
         exercise.getHints().add("Use o operador +.");
+        exercise.getSolutionAnnotations().add(new com.biotechpay.lab.domain.SolutionAnnotation(
+                "return a + b;", "A soma e o operador + entre os dois parametros recebidos."));
         exercise = exerciseRepository.save(exercise);
     }
 
@@ -58,6 +60,10 @@ class ExerciseServiceTest {
 
         assertThat(solution.solutionCode()).isEqualTo(SOLUTION_CODE);
         assertThat(solution.steps()).containsExactly("Some os dois parametros.", "Use o operador +.");
+        assertThat(solution.annotations()).hasSize(1);
+        assertThat(solution.annotations().get(0).codeExcerpt()).isEqualTo("return a + b;");
+        assertThat(solution.annotations().get(0).explanation())
+                .isEqualTo("A soma e o operador + entre os dois parametros recebidos.");
     }
 
     @Test

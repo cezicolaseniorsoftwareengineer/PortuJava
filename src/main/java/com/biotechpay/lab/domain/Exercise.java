@@ -52,6 +52,11 @@ public class Exercise {
     @Column(name = "hint_text", length = 2000)
     private List<String> hints = new ArrayList<>();
 
+    @ElementCollection
+    @CollectionTable(name = "exercise_solution_annotations", joinColumns = @JoinColumn(name = "exercise_id"))
+    @OrderColumn(name = "annotation_order")
+    private List<SolutionAnnotation> solutionAnnotations = new ArrayList<>();
+
     public Exercise() {}
 
     public Exercise(String exerciseId, LearningModule module, String title, String statementMarkdown,
@@ -105,4 +110,7 @@ public class Exercise {
 
     public List<String> getHints() { return hints; }
     public void setHints(List<String> hints) { this.hints = hints; }
+
+    public List<SolutionAnnotation> getSolutionAnnotations() { return solutionAnnotations; }
+    public void setSolutionAnnotations(List<SolutionAnnotation> solutionAnnotations) { this.solutionAnnotations = solutionAnnotations; }
 }

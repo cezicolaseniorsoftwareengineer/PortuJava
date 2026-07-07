@@ -105,6 +105,14 @@ public class RuleEngineModuleSeeder implements ModuleSeeder {
                             }
                         }
                         """)
+                .solutionAnnotation(
+                        "if (userSnoozed) {\n        return \"ADIAR_5_MIN\";\n    }",
+                        "A checagem de maior prioridade vem primeiro - soneca vence qualquer outra regra, entao " +
+                                "e a primeira pergunta que o metodo faz.")
+                .solutionAnnotation(
+                        "return \"MANTER_ESTADO\";",
+                        "O fallback e a ultima linha, alcancada so se nenhuma das tres regras anteriores " +
+                                "combinar - um motor de regras sempre precisa de um caminho seguro para quando nada especifico se aplica.")
                 .equalsCase("dia de semana, horario de trabalho, sem soneca -> toca o alarme",
                         "AlarmDecision a = new AlarmDecision();", "a.decideAction(7, true, false)", "\"TOCAR_ALARME\"", true)
                 .equalsCase("fim de semana, mesmo horario -> silencia",
@@ -180,6 +188,14 @@ public class RuleEngineModuleSeeder implements ModuleSeeder {
                             }
                         }
                         """)
+                .solutionAnnotation(
+                        "if (manualOverride) {\n        return \"IRRIGAR_MANUAL\";\n    }",
+                        "manualOverride e a PRIMEIRA checagem - vence ate chuva prevista e solo seco. Um override " +
+                                "manual sempre tem a ultima palavra sobre a automacao.")
+                .solutionAnnotation(
+                        "if (rainForecast) {\n        return \"NAO_IRRIGAR\";\n    }",
+                        "So chega aqui se nao houver override. Chuva prevista impede irrigacao mesmo com solo " +
+                                "seco - nao faz sentido gastar agua se ela esta a caminho de graca.")
                 .equalsCase("solo seco, sem chuva prevista, sem override -> irriga",
                         "IrrigationSystem s = new IrrigationSystem();", "s.decideIrrigation(15, false, false)", "\"IRRIGAR\"", true)
                 .equalsCase("chuva prevista impede irrigacao mesmo com solo seco",
@@ -250,6 +266,14 @@ public class RuleEngineModuleSeeder implements ModuleSeeder {
                             }
                         }
                         """)
+                .solutionAnnotation(
+                        "if (hour < 0 || hour > 23) {\n        throw new IllegalArgumentException(\"hour must be between 0 and 23\");\n    }",
+                        "A validacao de entrada acontece ANTES de qualquer regra de negocio - nunca avalia " +
+                                "logica de acesso com um dado que nem faz sentido existir.")
+                .solutionAnnotation(
+                        "if (hasKeycard && !isHoliday && hour >= 8 && hour <= 18) {",
+                        "A liberacao exige as QUATRO condicoes simultaneamente (E logico) - falhar em qualquer " +
+                                "uma delas, incluindo feriado, ja e suficiente para negar.")
                 .equalsCase("cartao valido, horario comercial, sem feriado -> acesso liberado",
                         "AccessControl a = new AccessControl();", "a.evaluateAccess(10, false, true)", "\"ACESSO_LIBERADO\"", true)
                 .equalsCase("sem cartao -> acesso negado mesmo no horario certo",

@@ -63,7 +63,10 @@ public class ExerciseService {
         if (exercise.getReferenceSolution() == null || exercise.getReferenceSolution().isBlank()) {
             throw new IllegalStateException("Exercicio sem solucao de referencia: " + exerciseId);
         }
-        return new SolutionView(exercise.getReferenceSolution(), List.copyOf(exercise.getHints()));
+        List<AnnotationView> annotations = exercise.getSolutionAnnotations().stream()
+                .map(a -> new AnnotationView(a.getCodeExcerpt(), a.getExplanation()))
+                .toList();
+        return new SolutionView(exercise.getReferenceSolution(), List.copyOf(exercise.getHints()), annotations);
     }
 
     public HintView getHint(String exerciseId, int index) {
@@ -96,6 +99,11 @@ public class ExerciseService {
 
     public record HintView(int index, String text, boolean hasMore) {}
 
-    /** Full reveal: the reference solution plus the walkthrough steps (the exercise's hints). */
-    public record SolutionView(String solutionCode, List<String> steps) {}
+    /**
+     * Full reveal: the reference solution, the walkthrough steps (the exercise's hints), and
+     * annotations pairing a code excerpt with why it's written that way.
+     */
+    public record SolutionView(String solutionCode, List<String> steps, List<AnnotationView> annotations) {}
+
+    public record AnnotationView(String codeExcerpt, String explanation) {}
 }

@@ -127,6 +127,14 @@ public class AopDecoratorModuleSeeder implements ModuleSeeder {
                             }
                         }
                         """)
+                .solutionAnnotation(
+                        "private final RobotCommand inner;\n    private final java.util.List<String> log;",
+                        "O decorator guarda uma REFERENCIA ao comando original (inner) - ele nao substitui o " +
+                                "comando, ele o envolve.")
+                .solutionAnnotation(
+                        "log.add(\"BEFORE\");\n        inner.execute();\n        log.add(\"AFTER\");",
+                        "Essa e a estrutura de um @Around do Spring AOP, na mao: algo antes, o metodo original " +
+                                "roda no meio, algo depois. inner.execute() e o 'proceed()' do mundo real.")
                 .equalsCase("log registra BEFORE, a acao interna, e AFTER nesta ordem",
                         "java.util.List<String> log = new java.util.ArrayList<>(); " +
                                 "RobotCommand inner = () -> log.add(\"MOVE\"); " +
@@ -214,6 +222,10 @@ public class AopDecoratorModuleSeeder implements ModuleSeeder {
                             }
                         }
                         """)
+                .solutionAnnotation(
+                        "public void execute() {\n        log.add(\"BEFORE\");\n        inner.execute();\n        log.add(\"AFTER\");\n    }",
+                        "Essa mesma classe funciona para QUALQUER RobotCommand - envolver um comando diferente " +
+                                "nao exige mudar uma linha aqui. E o ponto central do AOP: a preocupacao transversal e escrita uma vez so.")
                 .equalsCase("dois comandos diferentes envolvidos pelo mesmo decorator produzem o log correto",
                         "java.util.List<String> log = new java.util.ArrayList<>(); " +
                                 "RobotCommand move = () -> log.add(\"MOVE\"); " +
@@ -303,6 +315,10 @@ public class AopDecoratorModuleSeeder implements ModuleSeeder {
                             }
                         }
                         """)
+                .solutionAnnotation(
+                        "try {\n                    inner.execute();\n                } catch (RuntimeException e) {\n                    log.add(\"FAILURE: \" + e.getMessage());\n                    throw e;\n                }",
+                        "O catch registra a falha e IMEDIATAMENTE relanca a mesma excecao (throw e;) - auditoria " +
+                                "observa, nunca engole o erro. E o equivalente na mao de um @AfterThrowing.")
                 .equalsCase("execucao bem sucedida nao registra nada no log",
                         "java.util.List<String> log = new java.util.ArrayList<>(); " +
                                 "RobotCommand inner = () -> { }; " +

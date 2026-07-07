@@ -140,6 +140,33 @@
       border: 1px solid #30363d;
       color: #e6edf3;
     }
+
+    .solution-annotations {
+      .annotation {
+        margin-bottom: 12px;
+        padding: 10px 12px;
+        border-radius: 6px;
+        background: #161b22;
+        border-left: 3px solid #d29922;
+
+        .annotation-excerpt {
+          white-space: pre;
+          overflow-x: auto;
+          font-family: Consolas, 'Courier New', monospace;
+          font-size: 12.5px;
+          line-height: 1.4;
+          color: #e6edf3;
+          margin: 0 0 6px;
+        }
+
+        .annotation-explanation {
+          font-size: 13px;
+          line-height: 1.5;
+          color: #c9d1d9;
+          margin: 0;
+        }
+      }
+    }
   }
 }
 

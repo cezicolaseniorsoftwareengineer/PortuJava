@@ -3,6 +3,7 @@ package com.biotechpay.lab.seed.support;
 import com.biotechpay.lab.domain.ComparisonMode;
 import com.biotechpay.lab.domain.Exercise;
 import com.biotechpay.lab.domain.LearningModule;
+import com.biotechpay.lab.domain.SolutionAnnotation;
 import com.biotechpay.lab.domain.TestCase;
 
 /**
@@ -28,6 +29,16 @@ public class ExerciseBuilder {
 
     public ExerciseBuilder referenceSolution(String code) {
         exercise.setReferenceSolution(code);
+        return this;
+    }
+
+    /**
+     * Pairs a short excerpt of the referenceSolution with why it's written that way - surfaced
+     * alongside the full solution once a student explicitly reveals it, so the answer explains
+     * itself instead of just being a wall of code to copy.
+     */
+    public ExerciseBuilder solutionAnnotation(String codeExcerpt, String explanation) {
+        exercise.getSolutionAnnotations().add(new SolutionAnnotation(codeExcerpt, explanation));
         return this;
     }
 

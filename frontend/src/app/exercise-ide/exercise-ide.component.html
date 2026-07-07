@@ -40,6 +40,16 @@
           <li *ngFor="let step of solution.steps">{{ step }}</li>
         </ol>
 
+        <ng-container *ngIf="solution.annotations.length > 0">
+          <h3>Por que cada parte</h3>
+          <div class="solution-annotations">
+            <div class="annotation" *ngFor="let a of solution.annotations">
+              <pre class="annotation-excerpt">{{ a.codeExcerpt }}</pre>
+              <p class="annotation-explanation">{{ a.explanation }}</p>
+            </div>
+          </div>
+        </ng-container>
+
         <h3>Codigo da solucao</h3>
         <pre class="solution-code">{{ solution.solutionCode }}</pre>
 

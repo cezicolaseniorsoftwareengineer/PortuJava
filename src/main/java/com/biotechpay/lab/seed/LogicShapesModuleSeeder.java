@@ -152,6 +152,14 @@ public class LogicShapesModuleSeeder implements ModuleSeeder {
                             }
                         }
                         """)
+                .solutionAnnotation(
+                        "int max = nums[0];",
+                        "O estado inicial e o PRIMEIRO elemento do array, nunca 0 - um array so de numeros " +
+                                "negativos expoe esse erro na hora: se comecasse em 0, nunca encontraria o verdadeiro maximo negativo.")
+                .solutionAnnotation(
+                        "if (n > max) {\n        max = n;\n    }",
+                        "O corpo do loop e uma unica decisao: compara o item atual com o estado guardado, e " +
+                                "atualiza se for maior. Esse e o shape inteiro - loop, consulta o estado, decide, atualiza.")
                 .equalsCase("max de {4, 2, 7, 2, 9, 4, 1, 8} e 9",
                         "ArrayStats s = new ArrayStats(); int[] nums = {4, 2, 7, 2, 9, 4, 1, 8};",
                         "s.max(nums)", "9", true)
@@ -229,6 +237,10 @@ public class LogicShapesModuleSeeder implements ModuleSeeder {
                             }
                         }
                         """)
+                .solutionAnnotation(
+                        "freq.put(c, freq.getOrDefault(c, 0) + 1);",
+                        "getOrDefault(c, 0) devolve 0 na primeira vez que o caractere aparece, sem precisar de um " +
+                                "if separado para 'ja existe ou nao' - essa linha E o padrao HashMap inteiro.")
                 .equalsCase("frequency(\"abracadabra\") conta a=5, b=2, r=2, c=1, d=1",
                         "FrequencyCounter f = new FrequencyCounter();",
                         "f.frequency(\"abracadabra\")",
@@ -305,6 +317,10 @@ public class LogicShapesModuleSeeder implements ModuleSeeder {
                             }
                         }
                         """)
+                .solutionAnnotation(
+                        "if (seen.contains(n)) {\n        return n;\n    }\n    seen.add(n);",
+                        "A ordem importa: CONSULTA o Set antes de adicionar. Se adicionasse primeiro, todo " +
+                                "elemento pareceria repetido, porque acabou de ser inserido antes da checagem.")
                 .equalsCase("primeiro repetido de {4, 2, 7, 2, 9, 4, 1, 8} e 2, nao 4",
                         "DuplicateFinder d = new DuplicateFinder(); int[] nums = {4, 2, 7, 2, 9, 4, 1, 8};",
                         "d.firstRepeated(nums)", "2", true)
@@ -390,6 +406,10 @@ public class LogicShapesModuleSeeder implements ModuleSeeder {
                             }
                         }
                         """)
+                .solutionAnnotation(
+                        "if (sum < target) {\n        left++;\n    } else {\n        right--;\n    }",
+                        "So um ponteiro se move por iteracao, e a direcao depende da comparacao: soma pequena " +
+                                "avanca a esquerda (valores maiores), soma grande recua a direita (valores menores) - aproveitando o array ja ordenado.")
                 .equalsCase("em {1, 2, 4, 7, 8, 9} com target 10, o par e {1, 9}",
                         "PairFinder p = new PairFinder(); int[] nums = {1, 2, 4, 7, 8, 9};",
                         "p.pairWithSum(nums, 10)", "new int[]{1, 9}", true)
@@ -471,6 +491,10 @@ public class LogicShapesModuleSeeder implements ModuleSeeder {
                             }
                         }
                         """)
+                .solutionAnnotation(
+                        "windowSum += nums[i];\n                    windowSum -= nums[i - k];",
+                        "Em vez de recalcular a soma inteira da janela a cada passo, soma quem ENTRA (nums[i]) e " +
+                                "subtrai quem SAI (nums[i - k]) - essa unica troca transforma O(n*k) em O(n).")
                 .equalsCase("maior soma de 3 consecutivos em {4, 2, 7, 2, 9, 4, 1, 8} e 18",
                         "WindowScanner w = new WindowScanner(); int[] nums = {4, 2, 7, 2, 9, 4, 1, 8};",
                         "w.maxWindowSum(nums, 3)", "18", true)
@@ -561,6 +585,14 @@ public class LogicShapesModuleSeeder implements ModuleSeeder {
                             }
                         }
                         """)
+                .solutionAnnotation(
+                        "if (stack.isEmpty()) {\n                            return false;\n                        }",
+                        "Um fechamento chegando com a pilha vazia significa que nao ha nenhuma abertura pendente " +
+                                "para ele casar - e invalido antes mesmo de comparar o tipo de parentese.")
+                .solutionAnnotation(
+                        "return stack.isEmpty();",
+                        "No final, so e valido se a pilha ESVAZIOU - se sobrou alguma abertura sem fechamento " +
+                                "correspondente, ainda ha algo pendente.")
                 .equalsCase("\"({[]})\" e balanceada",
                         "BracketValidator v = new BracketValidator();",
                         "v.isBalanced(\"({[]})\")", "true", true)
@@ -647,6 +679,14 @@ public class LogicShapesModuleSeeder implements ModuleSeeder {
                             }
                         }
                         """)
+                .solutionAnnotation(
+                        "queue.offer(queue.poll());",
+                        "Essa unica linha simula o circulo: tira quem esta na frente e recoloca no fim da fila - " +
+                                "e a 'rotacao' que faz uma fila linear se comportar como um circulo de jogadores.")
+                .solutionAnnotation(
+                        "queue.poll();\n                }\n                return queue.poll();",
+                        "O poll() de dentro do while elimina o jogador; o poll() final (fora do loop) retorna " +
+                                "quem sobrou, quando a fila chega a ter so um jogador.")
                 .equalsCase("{A, B, C, D, E} com step 2: elimina B, D, A, E - sobra C",
                         "TurnSimulator t = new TurnSimulator(); String[] players = {\"A\", \"B\", \"C\", \"D\", \"E\"};",
                         "t.lastRemaining(players, 2)", "\"C\"", true)

@@ -18,9 +18,15 @@ export interface HintView {
   hasMore: boolean;
 }
 
+export interface SolutionAnnotation {
+  codeExcerpt: string;
+  explanation: string;
+}
+
 export interface SolutionView {
   solutionCode: string;
   steps: string[];
+  annotations: SolutionAnnotation[];
 }
 
 export interface TestCaseFeedback {

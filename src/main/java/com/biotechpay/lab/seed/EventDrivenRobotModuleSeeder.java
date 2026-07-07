@@ -118,6 +118,14 @@ public class EventDrivenRobotModuleSeeder implements ModuleSeeder {
                             }
                         }
                         """)
+                .solutionAnnotation(
+                        "private final java.util.List<SensorListener> listeners = new java.util.ArrayList<>();",
+                        "Robot guarda os listeners numa lista, mas nunca sabe o que cada um faz com o evento - " +
+                                "essa e a essencia do Observer: quem dispara o evento e totalmente desacoplado de quem reage a ele.")
+                .solutionAnnotation(
+                        "for (SensorListener listener : listeners) {\n        listener.onObstacleDetected(distanceCm);\n    }",
+                        "notifyObstacle percorre TODOS os listeners registrados, na ordem em que foram " +
+                                "adicionados - suportar multiplos observadores e o que torna o padrao util de verdade.")
                 .equalsCase("um listener registrado recebe a distancia notificada",
                         "Robot r = new Robot(); int[] captured = new int[1]; " +
                                 "r.addListener(d -> captured[0] = d); r.notifyObstacle(15);",
@@ -228,6 +236,14 @@ public class EventDrivenRobotModuleSeeder implements ModuleSeeder {
                             }
                         }
                         """)
+                .solutionAnnotation(
+                        "private final java.util.List<ObstacleListener> obstacleListeners = new java.util.ArrayList<>();\n    private final java.util.List<BatteryListener> batteryListeners = new java.util.ArrayList<>();",
+                        "Duas listas completamente separadas, uma por tipo de evento - e isso que garante que um " +
+                                "ObstacleListener jamais seja notificado de um evento de bateria.")
+                .solutionAnnotation(
+                        "public void notifyLowBattery(int percentage) {\n        for (BatteryListener listener : batteryListeners) {",
+                        "notifyLowBattery so percorre batteryListeners - cada canal de evento tem seu proprio " +
+                                "caminho de notificacao, sem cruzar com o outro.")
                 .equalsCase("obstacle listener recebe a distancia no evento correto",
                         "Robot r = new Robot(); int[] captured = new int[1]; " +
                                 "r.addObstacleListener(d -> captured[0] = d); r.notifyObstacle(30);",
@@ -309,6 +325,13 @@ public class EventDrivenRobotModuleSeeder implements ModuleSeeder {
                             }
                         }
                         """)
+                .solutionAnnotation(
+                        "private String state = \"IDLE\";",
+                        "Estado inicial definido no campo - todo Robot nasce IDLE.")
+                .solutionAnnotation(
+                        "if (level < 20) {\n        state = \"RETURNING_TO_BASE\";\n    }",
+                        "A mudanca de estado e uma REACAO ao evento (nivel abaixo do limiar), nao uma chamada " +
+                                "externa forcando o estado - o robo decide sozinho, com base no que percebe.")
                 .equalsCase("bateria fraca muda o estado para RETURNING_TO_BASE",
                         "Robot r = new Robot(); r.checkBattery(15);", "r.getState()", "\"RETURNING_TO_BASE\"", true)
                 .equalsCase("bateria normal mantem o estado IDLE",
