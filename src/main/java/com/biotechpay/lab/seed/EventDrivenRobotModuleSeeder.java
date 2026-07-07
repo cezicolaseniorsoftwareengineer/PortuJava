@@ -195,10 +195,21 @@ public class EventDrivenRobotModuleSeeder implements ModuleSeeder {
                         public class Robot {
                             // TODO: duas listas separadas, uma por tipo de listener.
 
-                            public void addObstacleListener(ObstacleListener listener) { }
-                            public void addBatteryListener(BatteryListener listener) { }
-                            public void notifyObstacle(int distanceCm) { }
-                            public void notifyLowBattery(int percentage) { }
+                            public void addObstacleListener(ObstacleListener listener) {
+                                // TODO: adicione a listener na lista de obstacle listeners.
+                            }
+
+                            public void addBatteryListener(BatteryListener listener) {
+                                // TODO: adicione a listener na lista de battery listeners.
+                            }
+
+                            public void notifyObstacle(int distanceCm) {
+                                // TODO: percorra a lista de obstacle listeners chamando onObstacleDetected.
+                            }
+
+                            public void notifyLowBattery(int percentage) {
+                                // TODO: percorra a lista de battery listeners chamando onLowBattery.
+                            }
                         }
                         """,
                         "BÁSICO", 1, 12)
