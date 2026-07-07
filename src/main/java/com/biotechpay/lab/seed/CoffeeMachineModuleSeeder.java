@@ -86,19 +86,20 @@ public class CoffeeMachineModuleSeeder implements ModuleSeeder {
                         """,
                         """
                         public class CoffeeMachine {
-                            // TODO: guarde waterMl e beansGrams em campos privados.
-                            // TODO: valide no construtor - lance IllegalArgumentException se algum for negativo.
+                            private int waterMl;
+                            private int beansGrams;
 
                             public CoffeeMachine(int waterMl, int beansGrams) {
-
+                                // TODO: valide - lance IllegalArgumentException se waterMl ou beansGrams
+                                // for negativo; depois guarde os dois valores nos campos.
                             }
 
                             public int getWaterMl() {
-                                return 0;
+                                return waterMl;
                             }
 
                             public int getBeansGrams() {
-                                return 0;
+                                return beansGrams;
                             }
                         }
                         """,
