@@ -80,7 +80,7 @@ public class ExerciseService {
 
     private Exercise findExercise(String exerciseId) {
         return exerciseRepository.findByExerciseId(exerciseId)
-                .orElseThrow(() -> new IllegalArgumentException("Exercicio nao encontrado: " + exerciseId));
+                .orElseThrow(() -> new IllegalArgumentException("Exercício não encontrado: " + exerciseId));
     }
 
     public record ExerciseDetail(

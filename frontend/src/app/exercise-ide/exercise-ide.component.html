@@ -19,7 +19,7 @@
         <li *ngFor="let hint of hints">{{ hint.text }}</li>
       </ol>
       <button type="button" (click)="revealNextHint()" [disabled]="loadingHint || !hasMoreHints">
-        {{ hasMoreHints ? 'Revelar proxima dica' : 'Sem mais dicas' }}
+        {{ hasMoreHints ? 'Revelar próxima dica' : 'Sem mais dicas' }}
       </button>
     </div>
 
@@ -27,7 +27,7 @@
       <h2>Resposta completa</h2>
 
       <ng-container *ngIf="!solution">
-        <p class="spoiler-note">Tente resolver sozinho primeiro - revelar a resposta mostra a solucao inteira de uma vez.</p>
+        <p class="spoiler-note">Tente resolver sozinho primeiro - revelar a resposta mostra a solução inteira de uma vez.</p>
         <button type="button" class="reveal-solution" (click)="revealSolution()" [disabled]="loadingSolution">
           {{ loadingSolution ? 'Carregando...' : 'Revelar resposta completa' }}
         </button>
@@ -50,7 +50,7 @@
           </div>
         </ng-container>
 
-        <h3>Codigo da solucao</h3>
+        <h3>Código da solução</h3>
         <pre class="solution-code">{{ solution.solutionCode }}</pre>
 
         <button type="button" (click)="hideSolution()">Esconder resposta</button>
@@ -71,7 +71,7 @@
     </div>
 
     <div class="results" *ngIf="runResult">
-      <h2>Saida (execucao livre, sem correcao)</h2>
+      <h2>Saída (execução livre, sem correção)</h2>
       <pre *ngIf="runResult.success" class="output ok">{{ runResult.output }}</pre>
       <pre *ngIf="!runResult.success" class="output error">{{ runResult.errors.join('\n') }}</pre>
       <p *ngIf="runResult.timedOut" class="warning">Tempo limite excedido.</p>
@@ -80,16 +80,16 @@
     <div class="results" *ngIf="submissionResult">
       <h2>
         Resultado: {{ submissionResult.passedTests }}/{{ submissionResult.totalTests }} testes
-        <span *ngIf="submissionResult.allPassed" class="badge ok">Exercicio resolvido</span>
+        <span *ngIf="submissionResult.allPassed" class="badge ok">Exercício resolvido</span>
       </h2>
 
       <div *ngIf="!submissionResult.compileSuccess" class="output error">
-        <p>Erro de compilacao:</p>
+        <p>Erro de compilação:</p>
         <pre>{{ submissionResult.compileErrors.join('\n') }}</pre>
       </div>
 
       <p *ngIf="submissionResult.executionTimedOut" class="warning">
-        Sua solucao nao terminou a tempo. Verifique loops infinitos.
+        Sua solução não terminou a tempo. Verifique loops infinitos.
       </p>
 
       <ul class="test-list" *ngIf="submissionResult.compileSuccess">
@@ -98,12 +98,12 @@
           <span class="description">{{ test.description }}</span>
           <span class="hidden-tag" *ngIf="test.hidden">(teste oculto)</span>
           <span class="actual" *ngIf="test.actualValueSummary">obtido: {{ test.actualValueSummary }}</span>
-          <span class="actual" *ngIf="test.exceptionSummary">excecao: {{ test.exceptionSummary }}</span>
+          <span class="actual" *ngIf="test.exceptionSummary">exceção: {{ test.exceptionSummary }}</span>
         </li>
       </ul>
     </div>
   </section>
 </div>
 
-<div class="loading" *ngIf="loading">Carregando exercicio...</div>
+<div class="loading" *ngIf="loading">Carregando exercício...</div>
 <div class="load-error" *ngIf="loadError">{{ loadError }}</div>

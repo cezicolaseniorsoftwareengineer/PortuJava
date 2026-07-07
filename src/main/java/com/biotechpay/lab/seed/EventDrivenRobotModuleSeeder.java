@@ -32,11 +32,11 @@ public class EventDrivenRobotModuleSeeder implements ModuleSeeder {
     public LearningModule seed() {
         LearningModule module = moduleRepository.save(new LearningModule(
                 moduleCode(),
-                "Orientacao a Eventos: Robo com Sensores",
+                "Orientação a Eventos: Robô com Sensores",
                 "EVENT_DRIVEN",
-                "Um robo que reage a sensores sem que o codigo que dispara o evento saiba quem vai " +
-                        "reagir a ele. O padrao Observer e a base de arquiteturas orientadas a eventos " +
-                        "usadas em sistemas reais, de UI a microservicos.",
+                "Um robô que reage a sensores sem que o código que dispara o evento saiba quem vai " +
+                        "reagir a ele. O padrão Observer é a base de arquiteturas orientadas a eventos " +
+                        "usadas em sistemas reais, de UI a microsserviços.",
                 1));
 
         exerciseRepository.save(buildObserverBasic(module));
@@ -50,12 +50,12 @@ public class EventDrivenRobotModuleSeeder implements ModuleSeeder {
         return ExerciseBuilder.of(
                         "robot-01-observer-basic",
                         module,
-                        "Observer basico",
+                        "Observer básico",
                         """
                         ## Contexto
 
-                        Um robo detecta obstaculos, mas nao deveria saber o que fazer quando isso \
-                        acontece - isso e responsabilidade de quem estiver "escutando".
+                        Um robô detecta obstáculos, mas não deveria saber o que fazer quando isso \
+                        acontece - isso é responsabilidade de quem estiver "escutando".
 
                         ## Objetivo
 
@@ -66,9 +66,9 @@ public class EventDrivenRobotModuleSeeder implements ModuleSeeder {
                         - `void notifyObstacle(int distanceCm)`: chama `onObstacleDetected` de TODOS os \
                         listeners registrados, na ordem em que foram adicionados.
 
-                        ## Criterio de sucesso
+                        ## Critério de sucesso
 
-                        `Robot` nunca conhece o que os listeners fazem - ele so os notifica. Multiplos \
+                        `Robot` nunca conhece o que os listeners fazem - ele só os notifica. Múltiplos \
                         listeners devem ser suportados.
                         """,
                         """
@@ -121,22 +121,22 @@ public class EventDrivenRobotModuleSeeder implements ModuleSeeder {
                 .solutionAnnotation(
                         "private final java.util.List<SensorListener> listeners = new java.util.ArrayList<>();",
                         "Robot guarda os listeners numa lista, mas nunca sabe o que cada um faz com o evento - " +
-                                "essa e a essencia do Observer: quem dispara o evento e totalmente desacoplado de quem reage a ele.")
+                                "essa é a essência do Observer: quem dispara o evento é totalmente desacoplado de quem reage a ele.")
                 .solutionAnnotation(
                         "for (SensorListener listener : listeners) {\n        listener.onObstacleDetected(distanceCm);\n    }",
                         "notifyObstacle percorre TODOS os listeners registrados, na ordem em que foram " +
-                                "adicionados - suportar multiplos observadores e o que torna o padrao util de verdade.")
-                .equalsCase("um listener registrado recebe a distancia notificada",
+                                "adicionados - suportar múltiplos observadores é o que torna o padrão útil de verdade.")
+                .equalsCase("um listener registrado recebe a distância notificada",
                         "Robot r = new Robot(); int[] captured = new int[1]; " +
                                 "r.addListener(d -> captured[0] = d); r.notifyObstacle(15);",
                         "captured[0]", "15", true)
-                .equalsCase("dois listeners registrados sao ambos notificados",
+                .equalsCase("dois listeners registrados são ambos notificados",
                         "Robot r = new Robot(); int[] a = new int[1]; int[] b = new int[1]; " +
                                 "r.addListener(d -> a[0] = d); r.addListener(d -> b[0] = d); r.notifyObstacle(20);",
                         "a[0] + b[0]", "40", true)
-                .equalsCase("notificar sem listeners registrados nao lanca excecao",
+                .equalsCase("notificar sem listeners registrados não lança exceção",
                         "Robot r = new Robot(); r.notifyObstacle(5); boolean ok = true;", "ok", "true", false)
-                .hint("SensorListener e uma interface funcional - pode ser implementada com lambda: d -> ...")
+                .hint("SensorListener é uma interface funcional - pode ser implementada com lambda: d -> ...")
                 .hint("addListener guarda o listener numa List<SensorListener>.")
                 .hint("notifyObstacle percorre a lista e chama onObstacleDetected(distanceCm) em cada um.")
                 .build();
@@ -146,12 +146,12 @@ public class EventDrivenRobotModuleSeeder implements ModuleSeeder {
         return ExerciseBuilder.of(
                         "robot-02-multiple-events",
                         module,
-                        "Multiplos tipos de evento",
+                        "Múltiplos tipos de evento",
                         """
                         ## Contexto
 
-                        Um robo real tem mais de um tipo de sensor. Cada tipo de evento deve chegar so \
-                        em quem se inscreveu para aquele tipo especifico.
+                        Um robô real tem mais de um tipo de sensor. Cada tipo de evento deve chegar só \
+                        em quem se inscreveu para aquele tipo específico.
 
                         ## Objetivo
 
@@ -162,10 +162,10 @@ public class EventDrivenRobotModuleSeeder implements ModuleSeeder {
                         - `addObstacleListener(ObstacleListener)` / `notifyObstacle(int distanceCm)`.
                         - `addBatteryListener(BatteryListener)` / `notifyLowBattery(int percentage)`.
 
-                        ## Criterio de sucesso
+                        ## Critério de sucesso
 
                         Um `ObstacleListener` nunca deve ser chamado quando `notifyLowBattery` disparar, \
-                        e vice-versa - os dois canais sao completamente independentes.
+                        e vice-versa - os dois canais são completamente independentes.
                         """,
                         """
                         interface ObstacleListener {
@@ -201,7 +201,7 @@ public class EventDrivenRobotModuleSeeder implements ModuleSeeder {
                             public void notifyLowBattery(int percentage) { }
                         }
                         """,
-                        "BASICO", 1, 12)
+                        "BÁSICO", 1, 12)
                 .referenceSolution("""
                         interface ObstacleListener {
                             void onObstacleDetected(int distanceCm);
@@ -238,13 +238,13 @@ public class EventDrivenRobotModuleSeeder implements ModuleSeeder {
                         """)
                 .solutionAnnotation(
                         "private final java.util.List<ObstacleListener> obstacleListeners = new java.util.ArrayList<>();\n    private final java.util.List<BatteryListener> batteryListeners = new java.util.ArrayList<>();",
-                        "Duas listas completamente separadas, uma por tipo de evento - e isso que garante que um " +
+                        "Duas listas completamente separadas, uma por tipo de evento - é isso que garante que um " +
                                 "ObstacleListener jamais seja notificado de um evento de bateria.")
                 .solutionAnnotation(
                         "public void notifyLowBattery(int percentage) {\n        for (BatteryListener listener : batteryListeners) {",
-                        "notifyLowBattery so percorre batteryListeners - cada canal de evento tem seu proprio " +
-                                "caminho de notificacao, sem cruzar com o outro.")
-                .equalsCase("obstacle listener recebe a distancia no evento correto",
+                        "notifyLowBattery só percorre batteryListeners - cada canal de evento tem seu próprio " +
+                                "caminho de notificação, sem cruzar com o outro.")
+                .equalsCase("obstacle listener recebe a distância no evento correto",
                         "Robot r = new Robot(); int[] captured = new int[1]; " +
                                 "r.addObstacleListener(d -> captured[0] = d); r.notifyObstacle(30);",
                         "captured[0]", "30", true)
@@ -252,16 +252,16 @@ public class EventDrivenRobotModuleSeeder implements ModuleSeeder {
                         "Robot r = new Robot(); int[] captured = new int[1]; " +
                                 "r.addBatteryListener(p -> captured[0] = p); r.notifyLowBattery(12);",
                         "captured[0]", "12", true)
-                .equalsCase("obstacle listener nao e chamado por evento de bateria",
+                .equalsCase("obstacle listener não é chamado por evento de bateria",
                         "Robot r = new Robot(); int[] captured = new int[]{-1}; " +
                                 "r.addObstacleListener(d -> captured[0] = d); r.notifyLowBattery(10);",
                         "captured[0]", "-1", false)
-                .equalsCase("multiplos obstacle listeners sao todos notificados",
+                .equalsCase("múltiplos obstacle listeners são todos notificados",
                         "Robot r = new Robot(); int[] a = new int[1]; int[] b = new int[1]; " +
                                 "r.addObstacleListener(d -> a[0] = d); r.addObstacleListener(d -> b[0] = d); r.notifyObstacle(7);",
                         "a[0] + b[0]", "14", false)
                 .hint("Use duas listas independentes: uma para ObstacleListener, outra para BatteryListener.")
-                .hint("notifyObstacle so percorre a lista de ObstacleListener; notifyLowBattery so a de BatteryListener.")
+                .hint("notifyObstacle só percorre a lista de ObstacleListener; notifyLowBattery só a de BatteryListener.")
                 .build();
     }
 
@@ -269,25 +269,25 @@ public class EventDrivenRobotModuleSeeder implements ModuleSeeder {
         return ExerciseBuilder.of(
                         "robot-03-event-driven-reaction",
                         module,
-                        "Reacao interna a um evento",
+                        "Reação interna a um evento",
                         """
                         ## Contexto
 
-                        Nem todo evento vem de fora - as vezes o proprio robo detecta uma condicao \
-                        interna (bateria fraca) e precisa reagir mudando seu proprio estado.
+                        Nem todo evento vem de fora - às vezes o próprio robô detecta uma condição \
+                        interna (bateria fraca) e precisa reagir mudando seu próprio estado.
 
                         ## Objetivo
 
                         Implemente `public class Robot` com estado inicial `"IDLE"` e:
 
                         - `String getState()`.
-                        - `void checkBattery(int level)`: se `level < 20`, o robo reage ao evento de \
-                        bateria fraca mudando seu estado para `"RETURNING_TO_BASE"`. Caso contrario, \
+                        - `void checkBattery(int level)`: se `level < 20`, o robô reage ao evento de \
+                        bateria fraca mudando seu estado para `"RETURNING_TO_BASE"`. Caso contrário, \
                         o estado permanece `"IDLE"`.
 
-                        ## Criterio de sucesso
+                        ## Critério de sucesso
 
-                        A mudanca de estado acontece como REACAO ao evento (nivel abaixo do limiar), \
+                        A mudança de estado acontece como REAÇÃO ao evento (nível abaixo do limiar), \
                         nunca por uma chamada direta de fora que force o estado.
                         """,
                         """
@@ -330,18 +330,18 @@ public class EventDrivenRobotModuleSeeder implements ModuleSeeder {
                         "Estado inicial definido no campo - todo Robot nasce IDLE.")
                 .solutionAnnotation(
                         "if (level < 20) {\n        state = \"RETURNING_TO_BASE\";\n    }",
-                        "A mudanca de estado e uma REACAO ao evento (nivel abaixo do limiar), nao uma chamada " +
-                                "externa forcando o estado - o robo decide sozinho, com base no que percebe.")
+                        "A mudança de estado é uma REAÇÃO ao evento (nível abaixo do limiar), não uma chamada " +
+                                "externa forçando o estado - o robô decide sozinho, com base no que percebe.")
                 .equalsCase("bateria fraca muda o estado para RETURNING_TO_BASE",
                         "Robot r = new Robot(); r.checkBattery(15);", "r.getState()", "\"RETURNING_TO_BASE\"", true)
-                .equalsCase("bateria normal mantem o estado IDLE",
+                .equalsCase("bateria normal mantém o estado IDLE",
                         "Robot r = new Robot(); r.checkBattery(50);", "r.getState()", "\"IDLE\"", true)
-                .equalsCase("limite exato 20 ainda e considerado normal",
+                .equalsCase("limite exato 20 ainda é considerado normal",
                         "Robot r = new Robot(); r.checkBattery(20);", "r.getState()", "\"IDLE\"", false)
-                .equalsCase("um abaixo do limite ja aciona a reacao",
+                .equalsCase("um abaixo do limite já aciona a reação",
                         "Robot r = new Robot(); r.checkBattery(19);", "r.getState()", "\"RETURNING_TO_BASE\"", false)
-                .hint("O estado inicial e IDLE, definido no campo.")
-                .hint("A condicao e level < 20 (estrito) - 20 exato ainda e normal.")
+                .hint("O estado inicial é IDLE, definido no campo.")
+                .hint("A condição é level < 20 (estrito) - 20 exato ainda é normal.")
                 .build();
     }
 }

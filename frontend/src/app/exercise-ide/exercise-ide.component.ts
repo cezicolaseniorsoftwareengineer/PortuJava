@@ -54,7 +54,7 @@ export class ExerciseIdeComponent implements OnInit {
   ngOnInit(): void {
     const exerciseId = this.route.snapshot.paramMap.get('exerciseId');
     if (!exerciseId) {
-      this.loadError = 'Nenhum exercicio informado na rota.';
+      this.loadError = 'Nenhum exercício informado na rota.';
       this.loading = false;
       return;
     }
@@ -65,7 +65,7 @@ export class ExerciseIdeComponent implements OnInit {
         this.loading = false;
       },
       error: () => {
-        this.loadError = 'Nao foi possivel carregar o exercicio.';
+        this.loadError = 'Não foi possível carregar o exercício.';
         this.loading = false;
       }
     });
@@ -140,7 +140,7 @@ export class ExerciseIdeComponent implements OnInit {
         this.loadingSolution = false;
       },
       error: () => {
-        this.solutionError = 'Nao foi possivel carregar a resposta deste exercicio.';
+        this.solutionError = 'Não foi possível carregar a resposta deste exercício.';
         this.loadingSolution = false;
       }
     });

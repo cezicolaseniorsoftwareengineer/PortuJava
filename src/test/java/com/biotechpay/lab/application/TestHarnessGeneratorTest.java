@@ -60,7 +60,7 @@ class TestHarnessGeneratorTest {
 
         assertThat(output).contains("RESULT#0#PASS");
         assertThat(output).contains("RESULT#1#FAIL#java.lang.IllegalArgumentException");
-        assertThat(output).contains("RESULT#2#FAIL#nenhuma excecao foi lancada");
+        assertThat(output).contains("RESULT#2#FAIL#nenhuma exceção foi lançada");
     }
 
     @Test

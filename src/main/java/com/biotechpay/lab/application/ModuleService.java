@@ -44,7 +44,7 @@ public class ModuleService {
 
     public ModuleSummary getModule(String moduleCode) {
         LearningModule module = moduleRepository.findByModuleCode(moduleCode)
-                .orElseThrow(() -> new IllegalArgumentException("Modulo nao encontrado: " + moduleCode));
+                .orElseThrow(() -> new IllegalArgumentException("Módulo não encontrado: " + moduleCode));
         User user = userService.getOrCreateDefaultUser();
         return toSummary(module, progressByExerciseId(user));
     }

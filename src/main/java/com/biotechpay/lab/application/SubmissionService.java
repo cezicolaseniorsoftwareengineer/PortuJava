@@ -35,8 +35,8 @@ public class SubmissionService {
     private static final Pattern MAIN_METHOD = Pattern.compile(
             "(?:public\\s+static|static\\s+public)\\s+void\\s+main\\s*\\(\\s*String\\s*(?:\\[\\s*\\]|\\.\\.\\.)\\s*\\w*\\s*\\)");
     private static final String NO_MAIN_METHOD_MESSAGE =
-            "Compilado com sucesso. Esta classe nao tem um metodo main - ela foi escrita para ser " +
-                    "corrigida, nao executada diretamente. Clique em \"Enviar\" para rodar os testes deste desafio.";
+            "Compilado com sucesso. Esta classe não tem um método main - ela foi escrita para ser " +
+                    "corrigida, não executada diretamente. Clique em \"Enviar\" para rodar os testes deste desafio.";
 
     private final ExerciseRepository exerciseRepository;
     private final SubmissionRepository submissionRepository;
@@ -64,13 +64,13 @@ public class SubmissionService {
         String requiredExerciseId = Objects.requireNonNull(exerciseId, "exerciseId");
         String requiredSubmittedCode = Objects.requireNonNull(submittedCode, "submittedCode");
         Exercise exercise = exerciseRepository.findByExerciseId(requiredExerciseId)
-                .orElseThrow(() -> new IllegalArgumentException("Exercicio nao encontrado: " + requiredExerciseId));
+                .orElseThrow(() -> new IllegalArgumentException("Exercício não encontrado: " + requiredExerciseId));
         User user = userService.getOrCreateDefaultUser();
 
         String studentClassName = extractPublicTypeName(requiredSubmittedCode);
         if (studentClassName == null) {
             return persistAndBuildResult(user, exercise, requiredSubmittedCode,
-                    new Grading(false, List.of("Nao foi possivel encontrar uma classe, interface, enum ou record publico no seu codigo."),
+                    new Grading(false, List.of("Não foi possível encontrar uma classe, interface, enum ou record público no seu código."),
                             false, false, List.of()));
         }
 
@@ -97,7 +97,7 @@ public class SubmissionService {
             if (harnessAuthoringBug) {
                 log.error("Harness compile failure for exercise {} (authoring bug in a TestCase expression): {}",
                         exercise.getExerciseId(), compileAndRun.errors());
-                return new Grading(false, List.of("Erro interno de correcao. Tente novamente ou contate o suporte."),
+                return new Grading(false, List.of("Erro interno de correção. Tente novamente ou contate o suporte."),
                         false, false, List.of());
             }
 
@@ -222,7 +222,7 @@ public class SubmissionService {
         String className = extractPublicTypeName(code);
         if (className == null) {
             return new JavaCodeCompiler.CompileAndRunResult(false,
-                    List.of("Nao foi possivel encontrar uma classe, interface, enum ou record publico no seu codigo."),
+                    List.of("Não foi possível encontrar uma classe, interface, enum ou record público no seu código."),
                     List.of(), "", false, false);
         }
 
@@ -263,7 +263,7 @@ public class SubmissionService {
 
     public List<SubmissionHistoryEntry> getHistory(String exerciseId) {
         Exercise exercise = exerciseRepository.findByExerciseId(exerciseId)
-                .orElseThrow(() -> new IllegalArgumentException("Exercicio nao encontrado: " + exerciseId));
+                .orElseThrow(() -> new IllegalArgumentException("Exercício não encontrado: " + exerciseId));
         User user = userService.getOrCreateDefaultUser();
         return submissionRepository.findByUserAndExerciseOrderBySubmittedAtDesc(user, exercise).stream()
                 .map(submission -> new SubmissionHistoryEntry(

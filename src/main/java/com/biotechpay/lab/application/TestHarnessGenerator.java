@@ -84,7 +84,7 @@ public class TestHarnessGenerator {
                         try {
                             %s
                             %s;
-                            System.out.println("RESULT#%d#FAIL#nenhuma excecao foi lancada");
+                            System.out.println("RESULT#%d#FAIL#nenhuma exceção foi lançada");
                         } catch (%s t) {
                             System.out.println("RESULT#%d#PASS");
                         } catch (Throwable t) {
@@ -99,7 +99,7 @@ public class TestHarnessGenerator {
                         try {
                             %s
                             %s;
-                            System.out.println("RESULT#%d#FAIL#nenhuma excecao foi lancada");
+                            System.out.println("RESULT#%d#FAIL#nenhuma exceção foi lançada");
                         } catch (%s t) {
                             String expectedSubstring = %s;
                             String actualMessage = t.getMessage() == null ? "" : t.getMessage();

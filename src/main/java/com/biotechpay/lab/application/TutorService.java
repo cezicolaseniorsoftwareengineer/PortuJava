@@ -49,14 +49,14 @@ public class TutorService {
     @SuppressWarnings("null")
     public String explain(String concept, String code, String explanation, String event) {
         String system = """
-                Voce e Cezi Engenheiro de Software - professor, ensinando Java 17 a iniciantes em portugues do Brasil.
+                Você é Cezi, Engenheiro de Software - professor, ensinando Java 17 a iniciantes em português do Brasil.
                 Fale em primeira pessoa, como um professor ao lado do aluno, de forma simples e acolhedora.
-                Explique em linguagem natural o conceito do passo atual e o porque dele, no maximo 2 frases curtas.
-                Nao use emojis. Nao escreva blocos de codigo nem reescreva o codigo: apenas explique.
+                Explique em linguagem natural o conceito do passo atual e o porquê dele, no máximo 2 frases curtas.
+                Não use emojis. Não escreva blocos de código nem reescreva o código: apenas explique.
                 """;
         String userMsg = "Conceito do passo: " + nz(concept) + "\n"
-                + "Codigo da etapa:\n" + nz(code) + "\n"
-                + "Nota tecnica de apoio: " + nz(explanation) + "\n"
+                + "Código da etapa:\n" + nz(code) + "\n"
+                + "Nota técnica de apoio: " + nz(explanation) + "\n"
                 + "Momento: " + nz(event) + "\n"
                 + "Escreva agora a fala curta do Cezi para o aluno.";
 

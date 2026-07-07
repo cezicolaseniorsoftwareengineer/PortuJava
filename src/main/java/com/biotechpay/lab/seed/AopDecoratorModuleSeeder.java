@@ -34,11 +34,11 @@ public class AopDecoratorModuleSeeder implements ModuleSeeder {
     public LearningModule seed() {
         LearningModule module = moduleRepository.save(new LearningModule(
                 moduleCode(),
-                "Aspectos na Mao: Decorators de Robo",
+                "Aspectos na Mão: Decorators de Robô",
                 "AOP_SIMULATED",
                 "Antes de usar @Aspect do Spring, entenda o que ele faz por baixo dos panos: um " +
-                        "decorator que envolve o codigo de negocio com uma preocupacao transversal " +
-                        "(logging, auditoria) sem que o codigo de negocio saiba disso.",
+                        "decorator que envolve o código de negócio com uma preocupação transversal " +
+                        "(logging, auditoria) sem que o código de negócio saiba disso.",
                 2));
 
         exerciseRepository.save(buildManualWrapper(module));
@@ -56,9 +56,9 @@ public class AopDecoratorModuleSeeder implements ModuleSeeder {
                         """
                         ## Contexto
 
-                        `@Around` do Spring AOP intercepta uma chamada, roda algo antes, deixa o metodo \
-                        original rodar, e roda algo depois. Antes de usar a anotacao magica, construa \
-                        esse mecanismo na mao.
+                        `@Around` do Spring AOP intercepta uma chamada, roda algo antes, deixa o método \
+                        original rodar, e roda algo depois. Antes de usar a anotação mágica, construa \
+                        esse mecanismo na mão.
 
                         ## Objetivo
 
@@ -70,10 +70,10 @@ public class AopDecoratorModuleSeeder implements ModuleSeeder {
                         2. Chame `inner.execute()`.
                         3. Adicione `"AFTER"` ao log.
 
-                        So uma classe do arquivo pode ser `public` - use `LoggingRobotCommand` para isso; \
+                        Só uma classe do arquivo pode ser `public` - use `LoggingRobotCommand` para isso; \
                         `RobotCommand` fica sem modificador (package-private).
 
-                        ## Criterio de sucesso
+                        ## Critério de sucesso
 
                         O log deve conter exatamente `BEFORE`, depois o que o comando interno registrar, \
                         depois `AFTER` - nessa ordem.
@@ -105,7 +105,7 @@ public class AopDecoratorModuleSeeder implements ModuleSeeder {
                             }
                         }
                         """,
-                        "BASICO", 0, 12)
+                        "BÁSICO", 0, 12)
                 .referenceSolution("""
                         interface RobotCommand {
                             void execute();
@@ -129,23 +129,23 @@ public class AopDecoratorModuleSeeder implements ModuleSeeder {
                         """)
                 .solutionAnnotation(
                         "private final RobotCommand inner;\n    private final java.util.List<String> log;",
-                        "O decorator guarda uma REFERENCIA ao comando original (inner) - ele nao substitui o " +
+                        "O decorator guarda uma REFERÊNCIA ao comando original (inner) - ele não substitui o " +
                                 "comando, ele o envolve.")
                 .solutionAnnotation(
                         "log.add(\"BEFORE\");\n        inner.execute();\n        log.add(\"AFTER\");",
-                        "Essa e a estrutura de um @Around do Spring AOP, na mao: algo antes, o metodo original " +
-                                "roda no meio, algo depois. inner.execute() e o 'proceed()' do mundo real.")
-                .equalsCase("log registra BEFORE, a acao interna, e AFTER nesta ordem",
+                        "Essa é a estrutura de um @Around do Spring AOP, na mão: algo antes, o método original " +
+                                "roda no meio, algo depois. inner.execute() é o 'proceed()' do mundo real.")
+                .equalsCase("log registra BEFORE, a ação interna, e AFTER nesta ordem",
                         "java.util.List<String> log = new java.util.ArrayList<>(); " +
                                 "RobotCommand inner = () -> log.add(\"MOVE\"); " +
                                 "RobotCommand wrapped = new LoggingRobotCommand(inner, log); wrapped.execute();",
                         "String.join(\",\", log)", "\"BEFORE,MOVE,AFTER\"", true)
-                .equalsCase("duas execucoes acumulam seis entradas no log",
+                .equalsCase("duas execuções acumulam seis entradas no log",
                         "java.util.List<String> log = new java.util.ArrayList<>(); " +
                                 "RobotCommand inner = () -> log.add(\"TURN\"); " +
                                 "RobotCommand wrapped = new LoggingRobotCommand(inner, log); wrapped.execute(); wrapped.execute();",
                         "log.size()", "6", false)
-                .hint("RobotCommand e uma interface funcional - pode usar lambda: () -> log.add(\"MOVE\")")
+                .hint("RobotCommand é uma interface funcional - pode usar lambda: () -> log.add(\"MOVE\")")
                 .hint("execute() sempre segue a ordem: BEFORE, inner.execute(), AFTER.")
                 .build();
     }
@@ -154,20 +154,20 @@ public class AopDecoratorModuleSeeder implements ModuleSeeder {
         return ExerciseBuilder.of(
                         "aop-02-cross-cutting-multiple",
                         module,
-                        "Reuso da preocupacao transversal",
+                        "Reuso da preocupação transversal",
                         """
                         ## Contexto
 
-                        O ponto central do AOP: a MESMA logica de logging deve funcionar para QUALQUER \
-                        comando, sem duplicar codigo de logging dentro de cada comando.
+                        O ponto central do AOP: a MESMA lógica de logging deve funcionar para QUALQUER \
+                        comando, sem duplicar código de logging dentro de cada comando.
 
                         ## Objetivo
 
-                        Implemente a mesma estrutura do exercicio anterior (`RobotCommand` + \
+                        Implemente a mesma estrutura do exercício anterior (`RobotCommand` + \
                         `LoggingRobotCommand`) e comprove que o MESMO decorator funciona para comandos \
                         diferentes, sem alterar `LoggingRobotCommand`.
 
-                        ## Criterio de sucesso
+                        ## Critério de sucesso
 
                         Envolver dois comandos diferentes com `LoggingRobotCommand` produz um log \
                         combinado correto, sem que `LoggingRobotCommand` precise saber o que cada \
@@ -189,7 +189,7 @@ public class AopDecoratorModuleSeeder implements ModuleSeeder {
                         }
 
                         public class LoggingRobotCommand implements RobotCommand {
-                            // TODO: igual ao exercicio anterior.
+                            // TODO: igual ao exercício anterior.
 
                             public LoggingRobotCommand(RobotCommand inner, java.util.List<String> log) {
 
@@ -200,7 +200,7 @@ public class AopDecoratorModuleSeeder implements ModuleSeeder {
                             }
                         }
                         """,
-                        "BASICO", 1, 10)
+                        "BÁSICO", 1, 10)
                 .referenceSolution("""
                         interface RobotCommand {
                             void execute();
@@ -225,14 +225,14 @@ public class AopDecoratorModuleSeeder implements ModuleSeeder {
                 .solutionAnnotation(
                         "public void execute() {\n        log.add(\"BEFORE\");\n        inner.execute();\n        log.add(\"AFTER\");\n    }",
                         "Essa mesma classe funciona para QUALQUER RobotCommand - envolver um comando diferente " +
-                                "nao exige mudar uma linha aqui. E o ponto central do AOP: a preocupacao transversal e escrita uma vez so.")
+                                "não exige mudar uma linha aqui. É o ponto central do AOP: a preocupação transversal é escrita uma vez só.")
                 .equalsCase("dois comandos diferentes envolvidos pelo mesmo decorator produzem o log correto",
                         "java.util.List<String> log = new java.util.ArrayList<>(); " +
                                 "RobotCommand move = () -> log.add(\"MOVE\"); " +
                                 "RobotCommand turn = () -> log.add(\"TURN\"); " +
                                 "new LoggingRobotCommand(move, log).execute(); new LoggingRobotCommand(turn, log).execute();",
                         "String.join(\",\", log)", "\"BEFORE,MOVE,AFTER,BEFORE,TURN,AFTER\"", true)
-                .hint("Nao precisa mudar nada em LoggingRobotCommand - so criar duas instancias, uma por comando.")
+                .hint("Não precisa mudar nada em LoggingRobotCommand - só criar duas instâncias, uma por comando.")
                 .build();
     }
 
@@ -244,8 +244,8 @@ public class AopDecoratorModuleSeeder implements ModuleSeeder {
                         """
                         ## Contexto
 
-                        Alguns aspectos so agem quando algo da errado - e o equivalente a `@AfterThrowing` \
-                        do Spring AOP: audita a falha, mas deixa a excecao seguir seu curso normal.
+                        Alguns aspectos só agem quando algo dá errado - é o equivalente a `@AfterThrowing` \
+                        do Spring AOP: audita a falha, mas deixa a exceção seguir seu curso normal.
 
                         ## Objetivo
 
@@ -253,14 +253,14 @@ public class AopDecoratorModuleSeeder implements ModuleSeeder {
                         `public class AuditOnFailureCommand implements RobotCommand` (construtor recebe \
                         `RobotCommand inner` e `java.util.List<String> log`):
 
-                        - Se `inner.execute()` completar sem excecao, o log permanece vazio.
-                        - Se `inner.execute()` lancar uma `RuntimeException`, registre \
-                        `"FAILURE: " + mensagem` no log e **relance a mesma excecao** (auditoria nunca \
+                        - Se `inner.execute()` completar sem exceção, o log permanece vazio.
+                        - Se `inner.execute()` lançar uma `RuntimeException`, registre \
+                        `"FAILURE: " + mensagem` no log e **relance a mesma exceção** (auditoria nunca \
                         deve engolir o erro).
 
-                        ## Criterio de sucesso
+                        ## Critério de sucesso
 
-                        A excecao original sempre continua se propagando - a auditoria observa, nunca \
+                        A exceção original sempre continua se propagando - a auditoria observa, nunca \
                         intercepta silenciosamente.
                         """,
                         """
@@ -279,7 +279,7 @@ public class AopDecoratorModuleSeeder implements ModuleSeeder {
                         }
 
                         public class AuditOnFailureCommand implements RobotCommand {
-                            // TODO: se inner.execute() lancar RuntimeException, registre e relance.
+                            // TODO: se inner.execute() lançar RuntimeException, registre e relance.
 
                             public AuditOnFailureCommand(RobotCommand inner, java.util.List<String> log) {
 
@@ -290,7 +290,7 @@ public class AopDecoratorModuleSeeder implements ModuleSeeder {
                             }
                         }
                         """,
-                        "INTERMEDIARIO", 2, 15)
+                        "INTERMEDIÁRIO", 2, 15)
                 .referenceSolution("""
                         interface RobotCommand {
                             void execute();
@@ -317,14 +317,14 @@ public class AopDecoratorModuleSeeder implements ModuleSeeder {
                         """)
                 .solutionAnnotation(
                         "try {\n                    inner.execute();\n                } catch (RuntimeException e) {\n                    log.add(\"FAILURE: \" + e.getMessage());\n                    throw e;\n                }",
-                        "O catch registra a falha e IMEDIATAMENTE relanca a mesma excecao (throw e;) - auditoria " +
-                                "observa, nunca engole o erro. E o equivalente na mao de um @AfterThrowing.")
-                .equalsCase("execucao bem sucedida nao registra nada no log",
+                        "O catch registra a falha e IMEDIATAMENTE relança a mesma exceção (throw e;) - auditoria " +
+                                "observa, nunca engole o erro. É o equivalente na mão de um @AfterThrowing.")
+                .equalsCase("execução bem sucedida não registra nada no log",
                         "java.util.List<String> log = new java.util.ArrayList<>(); " +
                                 "RobotCommand inner = () -> { }; " +
                                 "new AuditOnFailureCommand(inner, log).execute();",
                         "log.size()", "0", true)
-                .equalsCase("falha e auditada E relancada",
+                .equalsCase("falha é auditada E relançada",
                         "java.util.List<String> log = new java.util.ArrayList<>(); " +
                                 "RobotCommand inner = () -> { throw new RuntimeException(\"boom\"); }; " +
                                 "RobotCommand wrapped = new AuditOnFailureCommand(inner, log); " +
@@ -332,7 +332,7 @@ public class AopDecoratorModuleSeeder implements ModuleSeeder {
                                 "try { wrapped.execute(); } catch (RuntimeException e) { rethrown = true; }",
                         "rethrown && log.get(0).contains(\"boom\")", "true", true)
                 .hint("Use try/catch (RuntimeException e) ao redor de inner.execute().")
-                .hint("Depois de registrar no log, use 'throw e;' para relancar a mesma excecao.")
+                .hint("Depois de registrar no log, use 'throw e;' para relançar a mesma exceção.")
                 .build();
     }
 }

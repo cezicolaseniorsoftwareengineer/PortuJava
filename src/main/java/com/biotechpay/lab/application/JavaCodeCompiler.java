@@ -160,7 +160,8 @@ public class JavaCodeCompiler {
 
     private ProcessOutcome executeCompiledClass(File classDir, String className) {
         try {
-            ProcessBuilder pb = new ProcessBuilder("java", "-cp", classDir.getAbsolutePath(), className);
+            ProcessBuilder pb = new ProcessBuilder("java", "-Dfile.encoding=UTF-8", "-Dstdout.encoding=UTF-8",
+                    "-cp", classDir.getAbsolutePath(), className);
             pb.redirectErrorStream(true);
             Process process = pb.start();
             return runBounded(process, RUN_TIMEOUT_SECONDS);

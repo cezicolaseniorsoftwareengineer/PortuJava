@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * Rule-engine track stub: layered if/else decisions with an explicit fallback, modeling "se isso,
- * senao aquilo, e se tudo mais falhar" business logic for everyday automation (alarms, irrigation,
+ * senão aquilo, e se tudo mais falhar" business logic for everyday automation (alarms, irrigation,
  * access control) rather than toy conditionals.
  */
 @Component
@@ -32,11 +32,11 @@ public class RuleEngineModuleSeeder implements ModuleSeeder {
     public LearningModule seed() {
         LearningModule module = moduleRepository.save(new LearningModule(
                 moduleCode(),
-                "Motor de Regras: Automacao do Dia a Dia",
+                "Motor de Regras: Automação do Dia a Dia",
                 "RULE_ENGINE",
-                "Sistemas de automacao domestica e de negocio raramente sao um unico if - sao regras " +
+                "Sistemas de automação doméstica e de negócio raramente são um único if - são regras " +
                         "em camadas, com prioridade entre elas e um caminho de fallback seguro quando " +
-                        "nenhuma regra especifica se aplica.",
+                        "nenhuma regra específica se aplica.",
                 3));
 
         exerciseRepository.save(buildAlarmDecision(module));
@@ -50,12 +50,12 @@ public class RuleEngineModuleSeeder implements ModuleSeeder {
         return ExerciseBuilder.of(
                         "routine-01-alarm-decision",
                         module,
-                        "Decisao do despertador",
+                        "Decisão do despertador",
                         """
                         ## Contexto
 
-                        Um despertador inteligente nao tem uma regra so - ele prioriza sinais diferentes: \
-                        o usuario pediu soneca? E fim de semana? E horario de trabalho?
+                        Um despertador inteligente não tem uma regra só - ele prioriza sinais diferentes: \
+                        o usuário pediu soneca? É fim de semana? É horário de trabalho?
 
                         ## Objetivo
 
@@ -66,13 +66,13 @@ public class RuleEngineModuleSeeder implements ModuleSeeder {
                         Prioridade das regras (a primeira que combinar decide, nesta ordem):
 
                         1. Se `userSnoozed` for `true` -> `"ADIAR_5_MIN"` (soneca sempre vence).
-                        2. Senao, se NAO for dia de semana -> `"SILENCIAR"` (fim de semana, sem alarme).
-                        3. Senao, se `hour` estiver entre 6 e 9 (inclusive) -> `"TOCAR_ALARME"`.
+                        2. Senão, se NÃO for dia de semana -> `"SILENCIAR"` (fim de semana, sem alarme).
+                        3. Senão, se `hour` estiver entre 6 e 9 (inclusive) -> `"TOCAR_ALARME"`.
                         4. Caso nenhuma regra acima combine -> `"MANTER_ESTADO"` (fallback).
 
-                        ## Criterio de sucesso
+                        ## Critério de sucesso
 
-                        A ordem de prioridade importa: soneca vence fim de semana, que vence horario de \
+                        A ordem de prioridade importa: soneca vence fim de semana, que vence horário de \
                         trabalho, que vence o fallback.
                         """,
                         """
@@ -107,25 +107,25 @@ public class RuleEngineModuleSeeder implements ModuleSeeder {
                         """)
                 .solutionAnnotation(
                         "if (userSnoozed) {\n        return \"ADIAR_5_MIN\";\n    }",
-                        "A checagem de maior prioridade vem primeiro - soneca vence qualquer outra regra, entao " +
-                                "e a primeira pergunta que o metodo faz.")
+                        "A checagem de maior prioridade vem primeiro - soneca vence qualquer outra regra, então " +
+                                "é a primeira pergunta que o método faz.")
                 .solutionAnnotation(
                         "return \"MANTER_ESTADO\";",
-                        "O fallback e a ultima linha, alcancada so se nenhuma das tres regras anteriores " +
-                                "combinar - um motor de regras sempre precisa de um caminho seguro para quando nada especifico se aplica.")
-                .equalsCase("dia de semana, horario de trabalho, sem soneca -> toca o alarme",
+                        "O fallback é a última linha, alcançada só se nenhuma das três regras anteriores " +
+                                "combinar - um motor de regras sempre precisa de um caminho seguro para quando nada específico se aplica.")
+                .equalsCase("dia de semana, horário de trabalho, sem soneca -> toca o alarme",
                         "AlarmDecision a = new AlarmDecision();", "a.decideAction(7, true, false)", "\"TOCAR_ALARME\"", true)
-                .equalsCase("fim de semana, mesmo horario -> silencia",
+                .equalsCase("fim de semana, mesmo horário -> silencia",
                         "AlarmDecision a = new AlarmDecision();", "a.decideAction(7, false, false)", "\"SILENCIAR\"", true)
-                .equalsCase("soneca vence mesmo em dia de semana no horario de trabalho",
+                .equalsCase("soneca vence mesmo em dia de semana no horário de trabalho",
                         "AlarmDecision a = new AlarmDecision();", "a.decideAction(7, true, true)", "\"ADIAR_5_MIN\"", false)
-                .equalsCase("dia de semana fora do horario de trabalho -> fallback",
+                .equalsCase("dia de semana fora do horário de trabalho -> fallback",
                         "AlarmDecision a = new AlarmDecision();", "a.decideAction(14, true, false)", "\"MANTER_ESTADO\"", true)
-                .equalsCase("soneca vence ate no fim de semana",
+                .equalsCase("soneca vence até no fim de semana",
                         "AlarmDecision a = new AlarmDecision();", "a.decideAction(7, false, true)", "\"ADIAR_5_MIN\"", false)
                 .hint("Cheque userSnoozed PRIMEIRO - ele vence qualquer outra regra.")
-                .hint("So depois de descartar soneca e que faz sentido checar fim de semana.")
-                .hint("O fallback MANTER_ESTADO so acontece se nenhuma das tres regras acima combinar.")
+                .hint("Só depois de descartar soneca é que faz sentido checar fim de semana.")
+                .hint("O fallback MANTER_ESTADO só acontece se nenhuma das três regras acima combinar.")
                 .build();
     }
 
@@ -133,13 +133,13 @@ public class RuleEngineModuleSeeder implements ModuleSeeder {
         return ExerciseBuilder.of(
                         "routine-02-irrigation-system",
                         module,
-                        "Sistema de irrigacao",
+                        "Sistema de irrigação",
                         """
                         ## Contexto
 
                         Irrigar automaticamente parece simples ("se o solo estiver seco, irrigue"), mas \
-                        um sistema real precisa respeitar overrides manuais e previsao de chuva antes \
-                        de gastar agua.
+                        um sistema real precisa respeitar overrides manuais e previsão de chuva antes \
+                        de gastar água.
 
                         ## Objetivo
 
@@ -150,13 +150,13 @@ public class RuleEngineModuleSeeder implements ModuleSeeder {
                         Prioridade das regras, nesta ordem:
 
                         1. Se `manualOverride` for `true` -> `"IRRIGAR_MANUAL"` (vence tudo o mais).
-                        2. Senao, se `rainForecast` for `true` -> `"NAO_IRRIGAR"` (chuva a caminho, nao desperdice agua).
-                        3. Senao, se `soilMoisturePercent < 30` -> `"IRRIGAR"`.
-                        4. Caso contrario -> `"NAO_IRRIGAR"` (fallback seguro: sem necessidade clara, nao irriga).
+                        2. Senão, se `rainForecast` for `true` -> `"NAO_IRRIGAR"` (chuva a caminho, não desperdice água).
+                        3. Senão, se `soilMoisturePercent < 30` -> `"IRRIGAR"`.
+                        4. Caso contrário -> `"NAO_IRRIGAR"` (fallback seguro: sem necessidade clara, não irriga).
 
-                        ## Criterio de sucesso
+                        ## Critério de sucesso
 
-                        `manualOverride` vence QUALQUER outra condicao, inclusive solo seco com chuva prevista.
+                        `manualOverride` vence QUALQUER outra condição, inclusive solo seco com chuva prevista.
                         """,
                         """
                         public class IrrigationSystem {
@@ -190,24 +190,24 @@ public class RuleEngineModuleSeeder implements ModuleSeeder {
                         """)
                 .solutionAnnotation(
                         "if (manualOverride) {\n        return \"IRRIGAR_MANUAL\";\n    }",
-                        "manualOverride e a PRIMEIRA checagem - vence ate chuva prevista e solo seco. Um override " +
-                                "manual sempre tem a ultima palavra sobre a automacao.")
+                        "manualOverride é a PRIMEIRA checagem - vence até chuva prevista e solo seco. Um override " +
+                                "manual sempre tem a última palavra sobre a automação.")
                 .solutionAnnotation(
                         "if (rainForecast) {\n        return \"NAO_IRRIGAR\";\n    }",
-                        "So chega aqui se nao houver override. Chuva prevista impede irrigacao mesmo com solo " +
-                                "seco - nao faz sentido gastar agua se ela esta a caminho de graca.")
+                        "Só chega aqui se não houver override. Chuva prevista impede irrigação mesmo com solo " +
+                                "seco - não faz sentido gastar água se ela está a caminho de graça.")
                 .equalsCase("solo seco, sem chuva prevista, sem override -> irriga",
                         "IrrigationSystem s = new IrrigationSystem();", "s.decideIrrigation(15, false, false)", "\"IRRIGAR\"", true)
-                .equalsCase("chuva prevista impede irrigacao mesmo com solo seco",
+                .equalsCase("chuva prevista impede irrigação mesmo com solo seco",
                         "IrrigationSystem s = new IrrigationSystem();", "s.decideIrrigation(15, true, false)", "\"NAO_IRRIGAR\"", true)
                 .equalsCase("override manual vence tudo, inclusive chuva prevista",
                         "IrrigationSystem s = new IrrigationSystem();", "s.decideIrrigation(15, true, true)", "\"IRRIGAR_MANUAL\"", false)
-                .equalsCase("solo umido sem chuva -> fallback nao irriga",
+                .equalsCase("solo úmido sem chuva -> fallback não irriga",
                         "IrrigationSystem s = new IrrigationSystem();", "s.decideIrrigation(80, false, false)", "\"NAO_IRRIGAR\"", true)
                 .equalsCase("override manual vence mesmo com solo seco e sem chuva",
                         "IrrigationSystem s = new IrrigationSystem();", "s.decideIrrigation(15, false, true)", "\"IRRIGAR_MANUAL\"", false)
-                .hint("manualOverride e a PRIMEIRA checagem - nada mais importa se ele for true.")
-                .hint("rainForecast so e checado depois de descartar o override manual.")
+                .hint("manualOverride é a PRIMEIRA checagem - nada mais importa se ele for true.")
+                .hint("rainForecast só é checado depois de descartar o override manual.")
                 .build();
     }
 
@@ -215,12 +215,12 @@ public class RuleEngineModuleSeeder implements ModuleSeeder {
         return ExerciseBuilder.of(
                         "routine-03-combined-criteria",
                         module,
-                        "Criterios combinados com validacao",
+                        "Critérios combinados com validação",
                         """
                         ## Contexto
 
-                        Regras de negocio combinam multiplas condicoes com E/OU, e antes de avaliar \
-                        qualquer regra, e preciso garantir que a entrada faz sentido.
+                        Regras de negócio combinam múltiplas condições com E/OU, e antes de avaliar \
+                        qualquer regra, é preciso garantir que a entrada faz sentido.
 
                         ## Objetivo
 
@@ -228,16 +228,16 @@ public class RuleEngineModuleSeeder implements ModuleSeeder {
 
                         `String evaluateAccess(int hour, boolean isHoliday, boolean hasKeycard)`
 
-                        - Precondicao: se `hour` for menor que 0 ou maior que 23, lance \
+                        - Precondição: se `hour` for menor que 0 ou maior que 23, lance \
                         `IllegalArgumentException` ANTES de avaliar qualquer regra.
-                        - Se `hasKeycard` E NAO for feriado E `hour` estiver entre 8 e 18 (inclusive), \
+                        - Se `hasKeycard` E NÃO for feriado E `hour` estiver entre 8 e 18 (inclusive), \
                         retorne `"ACESSO_LIBERADO"`.
-                        - Em qualquer outro caso valido, retorne `"ACESSO_NEGADO"` (fallback).
+                        - Em qualquer outro caso válido, retorne `"ACESSO_NEGADO"` (fallback).
 
-                        ## Criterio de sucesso
+                        ## Critério de sucesso
 
-                        A validacao de entrada acontece ANTES da logica de negocio, e feriado bloqueia \
-                        o acesso mesmo com cartao valido e horario correto.
+                        A validação de entrada acontece ANTES da lógica de negócio, e feriado bloqueia \
+                        o acesso mesmo com cartão válido e horário correto.
                         """,
                         """
                         public class AccessControl {
@@ -252,7 +252,7 @@ public class RuleEngineModuleSeeder implements ModuleSeeder {
                             }
                         }
                         """,
-                        "INTERMEDIARIO", 2, 15)
+                        "INTERMEDIÁRIO", 2, 15)
                 .referenceSolution("""
                         public class AccessControl {
                             public String evaluateAccess(int hour, boolean isHoliday, boolean hasKeycard) {
@@ -268,24 +268,24 @@ public class RuleEngineModuleSeeder implements ModuleSeeder {
                         """)
                 .solutionAnnotation(
                         "if (hour < 0 || hour > 23) {\n        throw new IllegalArgumentException(\"hour must be between 0 and 23\");\n    }",
-                        "A validacao de entrada acontece ANTES de qualquer regra de negocio - nunca avalia " +
-                                "logica de acesso com um dado que nem faz sentido existir.")
+                        "A validação de entrada acontece ANTES de qualquer regra de negócio - nunca avalia " +
+                                "lógica de acesso com um dado que nem faz sentido existir.")
                 .solutionAnnotation(
                         "if (hasKeycard && !isHoliday && hour >= 8 && hour <= 18) {",
-                        "A liberacao exige as QUATRO condicoes simultaneamente (E logico) - falhar em qualquer " +
-                                "uma delas, incluindo feriado, ja e suficiente para negar.")
-                .equalsCase("cartao valido, horario comercial, sem feriado -> acesso liberado",
+                        "A liberação exige as QUATRO condições simultaneamente (E lógico) - falhar em qualquer " +
+                                "uma delas, incluindo feriado, já é suficiente para negar.")
+                .equalsCase("cartão válido, horário comercial, sem feriado -> acesso liberado",
                         "AccessControl a = new AccessControl();", "a.evaluateAccess(10, false, true)", "\"ACESSO_LIBERADO\"", true)
-                .equalsCase("sem cartao -> acesso negado mesmo no horario certo",
+                .equalsCase("sem cartão -> acesso negado mesmo no horário certo",
                         "AccessControl a = new AccessControl();", "a.evaluateAccess(10, false, false)", "\"ACESSO_NEGADO\"", true)
-                .equalsCase("feriado bloqueia mesmo com cartao e horario validos",
+                .equalsCase("feriado bloqueia mesmo com cartão e horário válidos",
                         "AccessControl a = new AccessControl();", "a.evaluateAccess(10, true, true)", "\"ACESSO_NEGADO\"", false)
-                .throwsCase("hora invalida lanca IllegalArgumentException antes de avaliar regras",
+                .throwsCase("hora inválida lança IllegalArgumentException antes de avaliar regras",
                         "AccessControl a = new AccessControl();", "a.evaluateAccess(24, false, true)", "java.lang.IllegalArgumentException", true)
-                .equalsCase("fora do horario comercial -> acesso negado",
+                .equalsCase("fora do horário comercial -> acesso negado",
                         "AccessControl a = new AccessControl();", "a.evaluateAccess(19, false, true)", "\"ACESSO_NEGADO\"", false)
-                .hint("A validacao de hour (0-23) e a PRIMEIRA coisa que o metodo faz.")
-                .hint("A regra de liberacao e um E de quatro condicoes: cartao, nao-feriado, hora >= 8, hora <= 18.")
+                .hint("A validação de hour (0-23) é a PRIMEIRA coisa que o método faz.")
+                .hint("A regra de liberação é um E de quatro condições: cartão, não-feriado, hora >= 8, hora <= 18.")
                 .build();
     }
 }

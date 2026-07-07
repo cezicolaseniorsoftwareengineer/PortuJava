@@ -74,11 +74,11 @@ class SubmissionServiceTest {
     @BeforeEach
     void seedExercise() {
         LearningModule module = moduleRepository
-                .save(new LearningModule("oop-test-module", "Modulo de teste", "OOP", "desc", 0));
+                .save(new LearningModule("oop-test-module", "Módulo de teste", "OOP", "desc", 0));
 
         exercise = new Exercise(
                 "adder-" + UUID.randomUUID(), module, "Somador",
-                "Implemente Adder.add(a, b) retornando a soma dos dois numeros.",
+                "Implemente Adder.add(a, b) retornando a soma dos dois números.",
                 "public class Adder { public int add(int a, int b) { } }",
                 "public class Adder {\n}\n", "INICIANTE", 0, 5);
 
