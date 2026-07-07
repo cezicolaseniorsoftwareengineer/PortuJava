@@ -1,0 +1,137 @@
+:host {
+  display: block;
+}
+
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: var(--app-header-height);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 20px;
+  background: #161b22;
+  border-bottom: 1px solid #30363d;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  flex: none;
+
+  .logo {
+    width: 26px;
+    height: 26px;
+  }
+
+  .wordmark {
+    color: #e6edf3;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.01em;
+  }
+}
+
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  width: 36px;
+  height: 36px;
+  margin-left: auto;
+  background: transparent;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  cursor: pointer;
+
+  span {
+    display: block;
+    width: 16px;
+    height: 2px;
+    margin: 0 auto;
+    background: #e6edf3;
+    border-radius: 1px;
+  }
+}
+
+.tracks {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  overflow-x: auto;
+  // The header has a fixed height (exercise-ide's layout math subtracts it exactly), so the nav
+  // must never wrap to a second row - if there's not enough width for all 6 tracks, it scrolls
+  // horizontally instead of growing the header.
+  scrollbar-width: thin;
+
+  a {
+    color: #c9d1d9;
+    text-decoration: none;
+    font-size: 13px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+    flex: none;
+
+    &:hover {
+      background: #21262d;
+      color: #7ee787;
+    }
+  }
+}
+
+// Tablet: tracks need more horizontal scroll room before hitting the mobile hamburger breakpoint,
+// so shrink the touch targets instead of wrapping.
+@media (max-width: 1100px) {
+  .tracks a {
+    font-size: 12px;
+    padding: 5px 8px;
+  }
+}
+
+// Mobile: collapse the track list into a dropdown panel triggered by the hamburger button, so the
+// header itself always stays a single fixed-height row regardless of how many tracks exist.
+@media (max-width: 760px) {
+  .app-header {
+    padding: 0 14px;
+  }
+
+  .menu-toggle {
+    display: flex;
+  }
+
+  .tracks {
+    display: none;
+    position: fixed;
+    top: var(--app-header-height);
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    gap: 0;
+    margin-left: 0;
+    background: #161b22;
+    border-bottom: 1px solid #30363d;
+    max-height: calc(100vh - var(--app-header-height));
+    max-height: calc(100dvh - var(--app-header-height));
+    overflow-y: auto;
+
+    &.open {
+      display: flex;
+    }
+
+    a {
+      padding: 14px 16px;
+      border-radius: 0;
+      border-bottom: 1px solid #21262d;
+    }
+  }
+}
