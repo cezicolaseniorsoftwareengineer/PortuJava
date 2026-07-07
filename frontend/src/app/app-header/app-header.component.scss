@@ -7,7 +7,7 @@
   top: 0;
   left: 0;
   right: 0;
-  z-index: 100;
+  z-index: 200;
   height: var(--app-header-height);
   display: flex;
   align-items: center;
@@ -28,6 +28,7 @@
   .logo {
     width: 26px;
     height: 26px;
+    flex: none;
   }
 
   .wordmark {
@@ -35,103 +36,132 @@
     font-weight: 700;
     font-size: 16px;
     letter-spacing: 0.01em;
+    white-space: nowrap;
   }
+}
+
+// A single "Trilhas" menu button, IDE-menu-bar style, instead of one link per track - this is what
+// keeps the header exactly --app-header-height tall regardless of window width or how many tracks
+// exist, which the exercise IDE's viewport-height layout math depends on.
+.tracks-menu {
+  position: relative;
+  margin-left: auto;
+  flex: none;
 }
 
 .menu-toggle {
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  gap: 4px;
-  width: 36px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   height: 36px;
-  margin-left: auto;
-  background: transparent;
+  padding: 0 14px;
+  background: #21262d;
+  color: #e6edf3;
   border: 1px solid #30363d;
   border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
 
-  span {
-    display: block;
-    width: 16px;
-    height: 2px;
-    margin: 0 auto;
-    background: #e6edf3;
-    border-radius: 1px;
+  .chevron {
+    width: 10px;
+    height: 7px;
+    transition: transform 0.15s ease;
+  }
+
+  &:hover {
+    border-color: #7ee787;
   }
 }
 
-.tracks {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  gap: 4px;
-  margin-left: auto;
-  overflow-x: auto;
-  // The header has a fixed height (exercise-ide's layout math subtracts it exactly), so the nav
-  // must never wrap to a second row - if there's not enough width for all 6 tracks, it scrolls
-  // horizontally instead of growing the header.
-  scrollbar-width: thin;
+.tracks-menu.open .menu-toggle {
+  border-color: #7ee787;
+  color: #7ee787;
+
+  .chevron {
+    transform: rotate(180deg);
+  }
+}
+
+.tracks-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 340px;
+  max-width: calc(100vw - 40px);
+  max-height: calc(100vh - var(--app-header-height) - 24px);
+  max-height: calc(100dvh - var(--app-header-height) - 24px);
+  overflow-y: auto;
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 10px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+  padding: 6px;
+  z-index: 201;
 
   a {
-    color: #c9d1d9;
-    text-decoration: none;
-    font-size: 13px;
-    padding: 6px 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
     border-radius: 6px;
-    white-space: nowrap;
-    flex: none;
+    text-decoration: none;
+    color: #e6edf3;
 
     &:hover {
       background: #21262d;
+    }
+
+    .paradigm {
+      flex: none;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
       color: #7ee787;
+      width: 64px;
+    }
+
+    .title {
+      flex: 1;
+      font-size: 13px;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .progress {
+      flex: none;
+      font-size: 11px;
+      color: #8b949e;
     }
   }
 }
 
-// Tablet: tracks need more horizontal scroll room before hitting the mobile hamburger breakpoint,
-// so shrink the touch targets instead of wrapping.
-@media (max-width: 1100px) {
-  .tracks a {
-    font-size: 12px;
-    padding: 5px 8px;
-  }
+.tracks-menu.open .tracks-dropdown {
+  display: block;
 }
 
-// Mobile: collapse the track list into a dropdown panel triggered by the hamburger button, so the
-// header itself always stays a single fixed-height row regardless of how many tracks exist.
+.backdrop {
+  position: fixed;
+  inset: 0;
+  top: var(--app-header-height);
+  z-index: 150;
+  background: transparent;
+}
+
 @media (max-width: 760px) {
   .app-header {
     padding: 0 14px;
   }
 
-  .menu-toggle {
-    display: flex;
+  .wordmark {
+    font-size: 15px;
   }
 
-  .tracks {
-    display: none;
-    position: fixed;
-    top: var(--app-header-height);
-    left: 0;
-    right: 0;
-    flex-direction: column;
-    gap: 0;
-    margin-left: 0;
-    background: #161b22;
-    border-bottom: 1px solid #30363d;
-    max-height: calc(100vh - var(--app-header-height));
-    max-height: calc(100dvh - var(--app-header-height));
-    overflow-y: auto;
-
-    &.open {
-      display: flex;
-    }
-
-    a {
-      padding: 14px 16px;
-      border-radius: 0;
-      border-bottom: 1px solid #21262d;
-    }
+  .tracks-dropdown {
+    right: -14px;
+    width: calc(100vw - 28px);
   }
 }

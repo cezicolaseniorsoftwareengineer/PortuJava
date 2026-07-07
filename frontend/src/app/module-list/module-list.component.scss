@@ -1,23 +1,36 @@
 :host {
   display: block;
   min-height: 100vh;
+  min-height: 100dvh;
   background: #0d1117;
   color: #e6edf3;
   font-family: 'Segoe UI', system-ui, sans-serif;
 }
 
 .page {
-  max-width: 900px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: calc(var(--app-header-height) + 24px) 24px 40px;
+  padding: calc(var(--app-header-height) + 32px) 32px 48px;
+}
+
+h1 {
+  margin: 0 0 8px;
+  font-size: clamp(22px, 3vw, 30px);
+}
+
+.subtitle {
+  color: #8b949e;
+  margin-bottom: 28px;
+  font-size: 15px;
 }
 
 .promise {
+  max-width: 900px;
   background: #12241a;
   border: 1px solid #1a7f37;
   border-radius: 10px;
   padding: 18px 20px;
-  margin-bottom: 32px;
+  margin-bottom: 36px;
 
   h2 {
     margin: 0 0 8px;
@@ -33,31 +46,39 @@
   }
 }
 
-h1 {
-  margin: 0 0 8px;
-}
-
-.subtitle {
-  color: #8b949e;
-  margin-bottom: 32px;
-}
-
 .loading {
   color: #8b949e;
 }
 
+// Dashboard-style responsive grid: as many columns as comfortably fit at minmax(340px, 1fr) each,
+// collapsing to a single column once the viewport can't fit two - no separate breakpoint needed for
+// the column count itself, only for spacing/density below.
+.modules {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 20px;
+  align-items: start;
+}
+
 .module-card {
+  display: flex;
+  flex-direction: column;
   background: #161b22;
   border: 1px solid #30363d;
   border-radius: 10px;
   padding: 20px;
-  margin-bottom: 20px;
   scroll-margin-top: calc(var(--app-header-height) + 12px);
+  transition: border-color 0.15s ease;
+
+  &:hover {
+    border-color: #3fb950;
+  }
 
   header {
     display: flex;
     align-items: baseline;
-    gap: 12px;
+    flex-wrap: wrap;
+    gap: 8px 12px;
     margin-bottom: 8px;
 
     .paradigm {
@@ -69,19 +90,22 @@ h1 {
 
     h2 {
       margin: 0;
-      font-size: 18px;
+      font-size: 17px;
       flex: 1;
+      min-width: 150px;
     }
 
     .progress {
       font-size: 12px;
       color: #8b949e;
+      white-space: nowrap;
     }
   }
 
   .description {
     color: #c9d1d9;
-    font-size: 14px;
+    font-size: 13.5px;
+    line-height: 1.5;
     margin-bottom: 16px;
   }
 }
@@ -89,13 +113,14 @@ h1 {
 .exercise-list {
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: 0 0 0 auto;
+  width: 100%;
 
   li a {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 10px 12px;
+    padding: 9px 10px;
     border-radius: 6px;
     text-decoration: none;
     color: #e6edf3;
@@ -117,14 +142,52 @@ h1 {
 
     .title {
       flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 13.5px;
     }
 
     .difficulty, .minutes {
-      font-size: 11px;
+      flex: none;
+      font-size: 10.5px;
       color: #8b949e;
       background: #21262d;
       padding: 2px 8px;
       border-radius: 999px;
+      white-space: nowrap;
+    }
+  }
+}
+
+@media (max-width: 1024px) {
+  .page {
+    padding: calc(var(--app-header-height) + 24px) 20px 40px;
+  }
+
+  .modules {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding: calc(var(--app-header-height) + 20px) 16px 32px;
+  }
+
+  .modules {
+    grid-template-columns: 1fr;
+  }
+
+  .module-card {
+    padding: 16px;
+  }
+
+  .exercise-list li a {
+    .difficulty, .minutes {
+      display: none;
     }
   }
 }

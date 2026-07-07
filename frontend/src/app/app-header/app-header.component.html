@@ -13,11 +13,20 @@
     <span class="wordmark">PortuJava</span>
   </a>
 
-  <button type="button" class="menu-toggle" (click)="toggleMenu()" [attr.aria-expanded]="menuOpen" aria-label="Abrir menu de trilhas">
-    <span></span><span></span><span></span>
-  </button>
+  <div class="tracks-menu" [class.open]="menuOpen">
+    <button type="button" class="menu-toggle" (click)="toggleMenu()" [attr.aria-expanded]="menuOpen">
+      <span>Trilhas</span>
+      <svg class="chevron" viewBox="0 0 12 8" aria-hidden="true"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
 
-  <nav class="tracks" [class.open]="menuOpen">
-    <a *ngFor="let m of modules" routerLink="/" [fragment]="m.moduleCode" (click)="closeMenu()">{{ m.title }}</a>
-  </nav>
+    <nav class="tracks-dropdown">
+      <a *ngFor="let m of modules" routerLink="/" [fragment]="m.moduleCode" (click)="closeMenu()">
+        <span class="paradigm">{{ m.paradigm }}</span>
+        <span class="title">{{ m.title }}</span>
+        <span class="progress">{{ m.solvedCount }}/{{ m.totalCount }}</span>
+      </a>
+    </nav>
+  </div>
+
+  <div class="backdrop" *ngIf="menuOpen" (click)="closeMenu()"></div>
 </header>
