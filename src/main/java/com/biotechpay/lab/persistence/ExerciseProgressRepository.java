@@ -13,4 +13,5 @@ import java.util.Optional;
 public interface ExerciseProgressRepository extends JpaRepository<ExerciseProgress, Long> {
     Optional<ExerciseProgress> findByUserAndExercise(User user, Exercise exercise);
     List<ExerciseProgress> findByUser(User user);
+    void deleteByUser(User user);
 }

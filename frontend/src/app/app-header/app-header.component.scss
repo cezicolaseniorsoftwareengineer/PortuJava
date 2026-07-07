@@ -137,6 +137,34 @@
       color: #8b949e;
     }
   }
+
+  .dropdown-divider {
+    height: 1px;
+    margin: 6px 4px;
+    background: #30363d;
+  }
+
+  .reset-progress {
+    width: 100%;
+    display: block;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: #f85149;
+    font-size: 13px;
+    text-align: left;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      background: rgba(248, 81, 73, 0.12);
+    }
+
+    &:disabled {
+      color: #8b949e;
+      cursor: default;
+    }
+  }
 }
 
 .tracks-menu.open .tracks-dropdown {

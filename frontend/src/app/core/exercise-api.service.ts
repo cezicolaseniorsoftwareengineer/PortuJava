@@ -26,4 +26,8 @@ export class ExerciseApiService {
   getSolution(exerciseId: string): Observable<SolutionView> {
     return this.http.get<SolutionView>(`${this.base}/api/exercises/${exerciseId}/solution`);
   }
+
+  resetAllProgress(): Observable<void> {
+    return this.http.delete<void>(`${this.base}/api/exercise-progress`);
+  }
 }

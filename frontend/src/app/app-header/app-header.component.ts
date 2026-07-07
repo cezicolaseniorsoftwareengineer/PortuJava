@@ -20,6 +20,7 @@ import { ModuleSummary } from '../core/exercise.models';
 export class AppHeaderComponent implements OnInit {
   modules: ModuleSummary[] = [];
   menuOpen = false;
+  resetting = false;
 
   constructor(private readonly exerciseApi: ExerciseApiService) {}
 
@@ -41,5 +42,20 @@ export class AppHeaderComponent implements OnInit {
   @HostListener('document:keydown.escape')
   onEscape(): void {
     this.menuOpen = false;
+  }
+
+  resetProgress(): void {
+    this.closeMenu();
+    const confirmed = window.confirm(
+      'Isso vai apagar o progresso de todos os exercícios e o histórico de envios, e não pode ser desfeito. Reiniciar tudo?'
+    );
+    if (!confirmed || this.resetting) {
+      return;
+    }
+    this.resetting = true;
+    this.exerciseApi.resetAllProgress().subscribe({
+      next: () => { window.location.href = '/'; },
+      error: () => { this.resetting = false; }
+    });
   }
 }

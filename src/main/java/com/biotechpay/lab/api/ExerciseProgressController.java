@@ -5,9 +5,11 @@ import com.biotechpay.lab.domain.ExerciseProgress;
 import com.biotechpay.lab.domain.ExerciseStatus;
 import com.biotechpay.lab.domain.User;
 import com.biotechpay.lab.persistence.ExerciseProgressRepository;
+import com.biotechpay.lab.persistence.SubmissionRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,10 +29,14 @@ import java.util.List;
 public class ExerciseProgressController {
 
     private final ExerciseProgressRepository progressRepository;
+    private final SubmissionRepository submissionRepository;
     private final UserService userService;
 
-    public ExerciseProgressController(ExerciseProgressRepository progressRepository, UserService userService) {
+    public ExerciseProgressController(ExerciseProgressRepository progressRepository,
+                                       SubmissionRepository submissionRepository,
+                                       UserService userService) {
         this.progressRepository = progressRepository;
+        this.submissionRepository = submissionRepository;
         this.userService = userService;
     }
 
@@ -41,6 +47,19 @@ public class ExerciseProgressController {
                 .map(ExerciseProgressController::toEntry)
                 .toList();
         return ResponseEntity.ok(entries);
+    }
+
+    /**
+     * Resets every exercise back to NOT_STARTED and wipes submission history for the default user -
+     * a deliberate "start over" action for a single-user practice tool, not a soft/per-exercise undo.
+     */
+    @DeleteMapping
+    @Transactional
+    public ResponseEntity<Void> resetAllProgress() {
+        User user = userService.getOrCreateDefaultUser();
+        progressRepository.deleteByUser(user);
+        submissionRepository.deleteByUser(user);
+        return ResponseEntity.noContent().build();
     }
 
     private static ProgressEntry toEntry(ExerciseProgress progress) {

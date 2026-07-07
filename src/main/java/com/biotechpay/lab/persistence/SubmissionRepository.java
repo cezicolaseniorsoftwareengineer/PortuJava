@@ -11,4 +11,5 @@ import java.util.List;
 @Repository
 public interface SubmissionRepository extends JpaRepository<Submission, Long> {
     List<Submission> findByUserAndExerciseOrderBySubmittedAtDesc(User user, Exercise exercise);
+    void deleteByUser(User user);
 }

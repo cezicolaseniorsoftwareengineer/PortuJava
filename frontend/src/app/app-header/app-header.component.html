@@ -25,6 +25,10 @@
         <span class="title">{{ m.title }}</span>
         <span class="progress">{{ m.solvedCount }}/{{ m.totalCount }}</span>
       </a>
+      <div class="dropdown-divider"></div>
+      <button type="button" class="reset-progress" (click)="resetProgress()" [disabled]="resetting">
+        {{ resetting ? 'Reiniciando...' : 'Reiniciar progresso' }}
+      </button>
     </nav>
   </div>
 
