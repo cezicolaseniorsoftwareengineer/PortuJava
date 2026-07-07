@@ -81,7 +81,7 @@ public class DsaFoundationsModuleSeeder implements ModuleSeeder {
                         """
                         public class MathOps {
                             public long factorial(int n) {
-                                // TODO: caso base (n <= 1) e caso recursivo (n * factorial(n - 1)).
+                                // TODO: caso base (n <= 1) retorna 1; caso recursivo retorna n * factorial(n - 1).
                                 return 0;
                             }
                         }
@@ -155,12 +155,12 @@ public class DsaFoundationsModuleSeeder implements ModuleSeeder {
                         """
                         public class TaskHistory {
                             public String lastUndo(String[] actions) {
-                                // TODO: use Deque como pilha (push/pop) - LIFO.
+                                // TODO: empilhe tudo com push, depois retorne stack.pop() - LIFO.
                                 return null;
                             }
 
                             public String firstPrintJob(String[] jobs) {
-                                // TODO: use Deque como fila (offer/poll) - FIFO.
+                                // TODO: enfileire tudo com offer, depois retorne queue.poll() - FIFO.
                                 return null;
                             }
                         }
@@ -243,7 +243,8 @@ public class DsaFoundationsModuleSeeder implements ModuleSeeder {
                         """
                         public class Search {
                             public int binarySearch(int[] sortedArr, int target) {
-                                // TODO: left/right ponteiros, calcule o meio, compare e descarte metade.
+                                // TODO: left/right ponteiros, calcule o meio, compare e descarte metade;
+                                // retorne o índice se encontrar, mantenha -1 se sair do loop sem achar.
                                 return -1;
                             }
                         }

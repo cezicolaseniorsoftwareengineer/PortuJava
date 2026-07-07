@@ -207,6 +207,7 @@ public class CoffeeMachineModuleSeeder implements ModuleSeeder {
 
                             public String brew(String drinkType) {
                                 // TODO: tabela de custo, checagem de recurso, desconto só no caminho de sucesso.
+                                // Retorne "UNKNOWN_DRINK", "INSUFFICIENT_RESOURCES" ou "BREWING" conforme o caso.
                                 return null;
                             }
                         }
@@ -356,6 +357,7 @@ public class CoffeeMachineModuleSeeder implements ModuleSeeder {
 
                             public String brew(Drink drink) {
                                 // TODO: use drink.waterCost()/drink.beansCost() - sem instanceof.
+                                // Retorne "INSUFFICIENT_RESOURCES" ou "BREWING" conforme o caso.
                                 return null;
                             }
                         }
@@ -520,6 +522,7 @@ public class CoffeeMachineModuleSeeder implements ModuleSeeder {
 
                             public String brew(PaymentMethod payment) {
                                 // TODO: checar recurso, só então cobrar, só então descontar.
+                                // Retorne "INSUFFICIENT_RESOURCES", "PAYMENT_DECLINED" ou "BREWING".
                                 return null;
                             }
                         }

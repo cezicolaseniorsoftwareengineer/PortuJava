@@ -84,6 +84,7 @@ public class RuleEngineModuleSeeder implements ModuleSeeder {
                         public class AlarmDecision {
                             public String decideAction(int hour, boolean isWeekday, boolean userSnoozed) {
                                 // TODO: implemente as 4 regras, nesta ordem de prioridade.
+                                // Retorne "ADIAR_5_MIN", "SILENCIAR", "TOCAR_ALARME" ou "MANTER_ESTADO".
                                 return null;
                             }
                         }
@@ -167,6 +168,7 @@ public class RuleEngineModuleSeeder implements ModuleSeeder {
                         public class IrrigationSystem {
                             public String decideIrrigation(int soilMoisturePercent, boolean rainForecast, boolean manualOverride) {
                                 // TODO: implemente as 4 regras, nesta ordem de prioridade.
+                                // Retorne "IRRIGAR_MANUAL", "NAO_IRRIGAR" ou "IRRIGAR".
                                 return null;
                             }
                         }
@@ -248,6 +250,7 @@ public class RuleEngineModuleSeeder implements ModuleSeeder {
                         public class AccessControl {
                             public String evaluateAccess(int hour, boolean isHoliday, boolean hasKeycard) {
                                 // TODO: valide hour primeiro, depois avalie a regra combinada.
+                                // Retorne "ACESSO_LIBERADO" ou "ACESSO_NEGADO".
                                 return null;
                             }
                         }

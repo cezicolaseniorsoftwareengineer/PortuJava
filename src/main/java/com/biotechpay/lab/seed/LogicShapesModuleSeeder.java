@@ -106,17 +106,17 @@ public class LogicShapesModuleSeeder implements ModuleSeeder {
                         """
                         public class ArrayStats {
                             public int max(int[] nums) {
-                                // TODO: estado inicial = nums[0]; atualize quando n > max.
+                                // TODO: estado inicial = nums[0]; atualize quando n > max; retorne max no final.
                                 return 0;
                             }
 
                             public int min(int[] nums) {
-                                // TODO: estado inicial = nums[0]; atualize quando n < min.
+                                // TODO: estado inicial = nums[0]; atualize quando n < min; retorne min no final.
                                 return 0;
                             }
 
                             public int sum(int[] nums) {
-                                // TODO: estado inicial = 0; acumule cada n.
+                                // TODO: estado inicial = 0; acumule cada n; retorne sum no final.
                                 return 0;
                             }
                         }
@@ -221,7 +221,7 @@ public class LogicShapesModuleSeeder implements ModuleSeeder {
                         public class FrequencyCounter {
                             public java.util.Map<Character, Integer> frequency(String text) {
                                 // TODO: para cada char de text.toCharArray(),
-                                // use getOrDefault(c, 0) + 1 para acumular a contagem.
+                                // use getOrDefault(c, 0) + 1 para acumular a contagem; retorne freq no final.
                                 return null;
                             }
                         }
@@ -298,7 +298,7 @@ public class LogicShapesModuleSeeder implements ModuleSeeder {
                         public class DuplicateFinder {
                             public int firstRepeated(int[] nums) {
                                 // TODO: mantenha um java.util.Set<Integer> seen;
-                                // se seen.contains(n), n é o primeiro repetido; senão seen.add(n).
+                                // se seen.contains(n), retorne n (é o primeiro repetido); senão seen.add(n).
                                 return -1;
                             }
                         }
@@ -381,7 +381,8 @@ public class LogicShapesModuleSeeder implements ModuleSeeder {
                         public class PairFinder {
                             public int[] pairWithSum(int[] sortedNums, int target) {
                                 // TODO: left = 0, right = length - 1;
-                                // soma menor que target -> left++; maior -> right--; igual -> achou.
+                                // soma menor que target -> left++; maior -> right--;
+                                // igual -> retorne new int[]{sortedNums[left], sortedNums[right]}.
                                 return new int[0];
                             }
                         }
@@ -469,7 +470,7 @@ public class LogicShapesModuleSeeder implements ModuleSeeder {
                         public class WindowScanner {
                             public int maxWindowSum(int[] nums, int k) {
                                 // TODO: some os k primeiros; depois, para cada i a partir de k,
-                                // windowSum += nums[i] - nums[i - k] e guarde o máximo.
+                                // windowSum += nums[i] - nums[i - k] e guarde o máximo; retorne-o no final.
                                 return 0;
                             }
                         }
@@ -555,7 +556,7 @@ public class LogicShapesModuleSeeder implements ModuleSeeder {
                         public class BracketValidator {
                             public boolean isBalanced(String s) {
                                 // TODO: abertura -> push; fechamento -> pilha vazia é inválido,
-                                // senão pop e confira o par. No final, válido se a pilha esvaziou.
+                                // senão pop e confira o par. No final, retorne stack.isEmpty().
                                 return false;
                             }
                         }
@@ -657,7 +658,8 @@ public class LogicShapesModuleSeeder implements ModuleSeeder {
                         public class TurnSimulator {
                             public String lastRemaining(String[] players, int step) {
                                 // TODO: enfileire todos; enquanto size() > 1,
-                                // rotacione step - 1 vezes com offer(poll()) e elimine com poll().
+                                // rotacione step - 1 vezes com offer(poll()) e elimine com poll();
+                                // no final, retorne queue.poll() (o único jogador restante).
                                 return null;
                             }
                         }
