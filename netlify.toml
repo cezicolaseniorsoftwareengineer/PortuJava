@@ -1,0 +1,13 @@
+[build]
+  base = "frontend"
+  command = "npm run build:netlify"
+  publish = "dist/netlify"
+
+# Angular client-side routing: any path not matching a real static file falls back to index.html,
+# so a deep link (e.g. /exercicios/coffee-01-encapsulation) or a hard refresh resolves through the
+# Angular router instead of 404ing. Mirrors what SpaRoutingConfig.java does for the Railway-embedded
+# deploy.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

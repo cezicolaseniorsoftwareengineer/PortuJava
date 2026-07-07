@@ -69,9 +69,10 @@ trusting them.
 
 ### Railway (backend + embedded frontend, one service)
 
-The repo ships a multi-stage `Dockerfile` (Maven+JDK build stage → JRE-only runtime stage) and a
-`railway.json` that pins Railway to build from it (`"builder": "DOCKERFILE"`), so Railway's
-auto-detection never has to guess between the root `pom.xml` and `frontend/package.json`.
+The repo ships a multi-stage `Dockerfile` (Maven+JDK build stage → JDK runtime stage — the runtime
+image needs the full JDK, not just a JRE, because `JavaCodeCompiler` shells out to `javac` to grade
+every submission) and a `railway.json` that pins Railway to build from it (`"builder": "DOCKERFILE"`),
+so Railway's auto-detection never has to guess between the root `pom.xml` and `frontend/package.json`.
 
 1. Create a new Railway project from this GitHub repo. Railway will use the Dockerfile automatically.
 2. No environment variables are required to boot: `server.port=${PORT:62828}` already reads the
@@ -88,16 +89,26 @@ auto-detection never has to guess between the root `pom.xml` and `frontend/packa
    `DB_PATH=/data/portujava`. Without a volume, every redeploy starts with a fresh, empty database —
    acceptable for iterating on the app itself, not for tracking real practice progress long-term.
 
-### Frontend on Netlify instead (optional, not wired up yet)
+### Frontend on Netlify instead (wired up, optional)
 
-The backend is already CORS-ready for this (`ALLOWED_ORIGINS`), but splitting the Angular build out
-to Netlify additionally needs, on the frontend side: an `environments/environment.prod.ts` pointing
-`apiBaseUrl` at the Railway backend's public URL, the two API services (`ExerciseApiService`,
-`SubmissionApiService`) prefixing requests with it instead of relative `/api/...` paths, a separate
-`ng build` output target (today's `angular.json` outputs straight into
-`src/main/resources/static` for the embedded-monolith setup), and a `netlify.toml` with an SPA
-fallback redirect to `index.html`. None of that exists yet — right now the Angular app is only
-built to run embedded in the same Spring Boot origin it calls.
+The Angular app can also be deployed standalone on Netlify, calling the Railway backend
+cross-origin, instead of being embedded in the same Spring Boot origin:
+
+- `frontend/src/environments/environment.ts` (default: `apiBaseUrl: ''`, relative paths — used by
+  the embedded-monolith build above, unchanged) vs `environment.netlify.ts`
+  (`apiBaseUrl: 'https://portujava-production.up.railway.app'`), swapped in via the `netlify`
+  build configuration's `fileReplacements` in `angular.json`.
+- `ExerciseApiService` / `SubmissionApiService` prefix every request with `environment.apiBaseUrl`.
+- `npm run build:netlify` (i.e. `ng build --configuration=netlify`) outputs to `frontend/dist/netlify`
+  — a separate directory from `src/main/resources/static`, so it never interferes with the Railway
+  build.
+- Root `netlify.toml`: `base = "frontend"`, `command = "npm run build:netlify"`,
+  `publish = "dist/netlify"`, plus an SPA fallback redirect (`/* → /index.html`) so deep links and
+  hard refreshes resolve through the Angular router instead of 404ing.
+
+To deploy: point Netlify at this repo (it picks up `netlify.toml` automatically, no dashboard
+configuration needed). `ALLOWED_ORIGINS` on Railway defaults to `*`, so no backend change is required
+for the Netlify origin to call it; optionally tighten it to the real Netlify URL once assigned.
 
 ## Architecture notes
 
