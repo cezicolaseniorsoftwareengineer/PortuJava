@@ -8,10 +8,10 @@ import com.biotechpay.lab.seed.support.ExerciseBuilder;
 import org.springframework.stereotype.Component;
 
 /**
- * The "pentatonic scale" of logic track: seven core shapes (loop with state, HashMap, HashSet,
- * two pointers, sliding window, stack, queue) that cover most everyday logic problems. Each shape
- * is one graded exercise built around the mantra: input -> data structure -> state -> transition
- * rule -> output.
+ * Core logic patterns track: seven recurring patterns (loop with state, HashMap, HashSet,
+ * two pointers, sliding window, stack, queue) that cover most everyday logic problems. Each
+ * pattern is one graded exercise built around the same structure: input -> data structure ->
+ * state -> transition rule -> output.
  */
 @Component
 public class LogicShapesModuleSeeder implements ModuleSeeder {
@@ -33,13 +33,14 @@ public class LogicShapesModuleSeeder implements ModuleSeeder {
     public LearningModule seed() {
         LearningModule module = moduleRepository.save(new LearningModule(
                 moduleCode(),
-                "Os 7 Shapes da Logica",
+                "Os 7 Padroes Fundamentais de Logica",
                 "LOGIC_SHAPES",
-                "A pentatonica da programacao: quase todo exercicio de logica e variacao de 7 " +
-                        "movimentos - loop com estado, HashMap, HashSet, dois ponteiros, janela " +
-                        "deslizante, pilha e fila. A frase para decorar: entrada -> estrutura de " +
-                        "dados -> estado -> regra de transicao -> saida. Voce nao precisa decorar " +
-                        "mil exercicios; precisa decorar esses movimentos ate a mao fazer sozinha.",
+                "Quase todo exercicio de logica de programacao e uma variacao de 7 padroes: loop " +
+                        "com estado, HashMap, HashSet, dois ponteiros, janela deslizante, pilha e " +
+                        "fila. O raciocinio se repete sempre: entrada -> estrutura de dados -> " +
+                        "estado -> regra de transicao -> saida. Voce nao precisa memorizar mil " +
+                        "exercicios diferentes; precisa reconhecer esses 7 padroes e aplicar cada " +
+                        "um ate virar automatico.",
                 5));
 
         exerciseRepository.save(buildLoopWithState(module));
@@ -57,16 +58,16 @@ public class LogicShapesModuleSeeder implements ModuleSeeder {
         return ExerciseBuilder.of(
                         "shape-01-loop-with-state",
                         module,
-                        "Shape 1: loop com estado",
+                        "Padrao 1: loop com estado",
                         """
                         ## Contexto
 
-                        Este e o primeiro shape da pentatonica. O padrao mental:
+                        Este e o primeiro dos 7 padroes. O raciocinio:
 
                         > Eu tenho uma colecao. Eu mantenho um estado. A cada item, eu decido se \
                         atualizo esse estado. No final, o estado e a resposta.
 
-                        A escala mestre para decorar:
+                        O modelo para aplicar sempre:
 
                         ```java
                         for (T item : collection) {
@@ -78,7 +79,7 @@ public class LogicShapesModuleSeeder implements ModuleSeeder {
                         // 5. retorno o estado final
                         ```
 
-                        Com esse unico movimento voce resolve: maior, menor, soma, media, contador, \
+                        Com esse unico padrao voce resolve: maior, menor, soma, media, contador, \
                         busca e validacao.
 
                         ## Objetivo
@@ -159,7 +160,7 @@ public class LogicShapesModuleSeeder implements ModuleSeeder {
                 .solutionAnnotation(
                         "if (n > max) {\n        max = n;\n    }",
                         "O corpo do loop e uma unica decisao: compara o item atual com o estado guardado, e " +
-                                "atualiza se for maior. Esse e o shape inteiro - loop, consulta o estado, decide, atualiza.")
+                                "atualiza se for maior. Esse e o padrao inteiro - loop, consulta o estado, decide, atualiza.")
                 .equalsCase("max de {4, 2, 7, 2, 9, 4, 1, 8} e 9",
                         "ArrayStats s = new ArrayStats(); int[] nums = {4, 2, 7, 2, 9, 4, 1, 8};",
                         "s.max(nums)", "9", true)
@@ -185,11 +186,11 @@ public class LogicShapesModuleSeeder implements ModuleSeeder {
         return ExerciseBuilder.of(
                         "shape-02-hashmap-frequency",
                         module,
-                        "Shape 2: HashMap de frequencia",
+                        "Padrao 2: HashMap de frequencia",
                         """
                         ## Contexto
 
-                        O shape mais importante depois do loop. O pensamento para decorar:
+                        O padrao mais importante depois do loop. O raciocinio:
 
                         > Quando eu preciso lembrar algo que ja passou, uso HashMap ou HashSet.
 
@@ -205,7 +206,7 @@ public class LogicShapesModuleSeeder implements ModuleSeeder {
                         - Retorna um mapa de cada caractere para quantas vezes ele aparece em `text`.
                         - String vazia retorna um mapa vazio.
 
-                        A linha central e `freq.put(c, freq.getOrDefault(c, 0) + 1);` - decore-a.
+                        A linha central do padrao e `freq.put(c, freq.getOrDefault(c, 0) + 1);`.
 
                         ## Criterio de sucesso
 
@@ -261,11 +262,11 @@ public class LogicShapesModuleSeeder implements ModuleSeeder {
         return ExerciseBuilder.of(
                         "shape-03-hashset-first-repeated",
                         module,
-                        "Shape 3: HashSet para duplicidade",
+                        "Padrao 3: HashSet para duplicidade",
                         """
                         ## Contexto
 
-                        Decore a divisao de trabalho:
+                        Entenda a divisao de trabalho:
 
                         > HashSet responde: ja vi isso antes? \
                         HashMap responde: quantas vezes, onde, ou com qual valor?
@@ -343,11 +344,11 @@ public class LogicShapesModuleSeeder implements ModuleSeeder {
         return ExerciseBuilder.of(
                         "shape-04-two-pointers",
                         module,
-                        "Shape 4: dois ponteiros",
+                        "Padrao 4: dois ponteiros",
                         """
                         ## Contexto
 
-                        Shape classico de entrevista. O padrao mental:
+                        Padrao classico de entrevista tecnica. O raciocinio:
 
                         > Se esta ordenado, eu posso andar pelas pontas. \
                         Se a soma ficou pequena, avanco a esquerda. \
@@ -432,16 +433,16 @@ public class LogicShapesModuleSeeder implements ModuleSeeder {
         return ExerciseBuilder.of(
                         "shape-05-sliding-window",
                         module,
-                        "Shape 5: janela deslizante",
+                        "Padrao 5: janela deslizante",
                         """
                         ## Contexto
 
-                        A ideia para decorar:
+                        A ideia central:
 
                         > Eu nao recalculo tudo. Eu adiciono quem entrou e removo quem saiu.
 
                         Recalcular a soma de cada janela do zero custa O(n*k). Deslizar a janela \
-                        (somar quem entra, subtrair quem sai) custa O(n). E o shape que transforma \
+                        (somar quem entra, subtrair quem sai) custa O(n). E o padrao que transforma \
                         solucoes lentas em rapidas.
 
                         ## Objetivo
@@ -517,7 +518,7 @@ public class LogicShapesModuleSeeder implements ModuleSeeder {
         return ExerciseBuilder.of(
                         "shape-06-stack-brackets",
                         module,
-                        "Shape 6: pilha",
+                        "Padrao 6: pilha",
                         """
                         ## Contexto
 
@@ -618,7 +619,7 @@ public class LogicShapesModuleSeeder implements ModuleSeeder {
         return ExerciseBuilder.of(
                         "shape-07-queue-hot-potato",
                         module,
-                        "Shape 7: fila",
+                        "Padrao 7: fila",
                         """
                         ## Contexto
 
