@@ -206,8 +206,10 @@ public class CoffeeMachineModuleSeeder implements ModuleSeeder {
                             public int getBeansGrams() { return beansGrams; }
 
                             public String brew(String drinkType) {
-                                // TODO: tabela de custo, checagem de recurso, desconto só no caminho de sucesso.
-                                // Retorne "UNKNOWN_DRINK", "INSUFFICIENT_RESOURCES" ou "BREWING" conforme o caso.
+                                // TODO: declare waterCost/beansCost e preencha por tipo:
+                                // "ESPRESSO" -> 30/18; "AMERICANO" -> 150/18; outro valor -> retorne "UNKNOWN_DRINK".
+                                // Depois, se faltar água ou pó, retorne "INSUFFICIENT_RESOURCES" sem descontar;
+                                // senão desconte waterMl/beansGrams e retorne "BREWING".
                                 return null;
                             }
                         }
