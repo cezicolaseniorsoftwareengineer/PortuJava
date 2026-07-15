@@ -2,39 +2,47 @@
   <h1>PortuJava - Trilhas de Programação Real</h1>
   <p class="subtitle">Escolha uma trilha. Cada exercício compila de verdade e roda contra testes reais.</p>
 
-  <section class="promise">
-    <h2>O que você ganha ao dominar as 6 trilhas</h2>
-    <p>
-      25 exercícios, corrigidos por compilador real - não por comparação de texto. Ao terminar
-      todos, você terá implementado com as próprias mãos: encapsulamento e máquinas de estado,
-      o padrão Observer por trás de arquiteturas orientadas a eventos, o mecanismo que o Spring AOP
-      esconde atrás de uma anotação, motores de decisão em camadas, e os 7 padrões que resolvem
-      a maioria dos problemas de lógica em entrevistas técnicas. Nenhum exercício conta como
-      resolvido por digitar o texto certo - só conta quando compila e passa nos testes.
-    </p>
-  </section>
-
-  <div class="loading" *ngIf="loading">Carregando trilhas...</div>
-
-  <div class="modules" *ngIf="!loading">
-    <section class="module-card" [id]="module.moduleCode" *ngFor="let module of modules">
-      <header>
-        <span class="paradigm">{{ module.paradigm }}</span>
-        <h2>{{ module.title }}</h2>
-        <span class="progress">{{ module.solvedCount }}/{{ module.totalCount }} resolvidos</span>
-      </header>
-      <p class="description">{{ module.description }}</p>
-
-      <ul class="exercise-list">
-        <li *ngFor="let exercise of module.exercises">
-          <a [routerLink]="['/exercicios', exercise.exerciseId]">
-            <span class="status-dot" [class.solved]="exercise.status === 'SOLVED'" [class.in-progress]="exercise.status === 'IN_PROGRESS'"></span>
-            <span class="title">{{ exercise.title }}</span>
-            <span class="difficulty">{{ exercise.difficulty }}</span>
-            <span class="minutes">~{{ exercise.estimatedMinutes }} min</span>
-          </a>
-        </li>
-      </ul>
+  @if (!loading) {
+    <section class="promise">
+      <h2>{{ totalModuleCount }} trilhas, {{ totalExerciseCount }} exercícios e uma nova missão bancária real</h2>
+      <p>
+        Você já concluiu {{ solvedExerciseCount }} de {{ totalExerciseCount }} exercícios. Além das
+        trilhas de fundamentos, a sessão "Construindo um banco inteiro sozinho Real" inicia uma
+        progressão auditável por dinheiro decimal, dupla entrada, idempotência, concorrência,
+        reconciliação e integrações de pagamento. Nenhum exercício conta como resolvido por digitar
+        o texto certo: só conta quando o código compila e passa nos testes.
+      </p>
     </section>
-  </div>
+  }
+
+  @if (loading) {
+    <div class="loading">Carregando trilhas...</div>
+  }
+
+  @if (!loading) {
+    <div class="modules">
+      @for (module of modules; track module) {
+        <section class="module-card" [id]="module.moduleCode">
+          <header>
+            <span class="paradigm">{{ module.paradigm }}</span>
+            <h2>{{ module.title }}</h2>
+            <span class="progress">{{ module.solvedCount }}/{{ module.totalCount }} resolvidos</span>
+          </header>
+          <p class="description">{{ module.description }}</p>
+          <ul class="exercise-list">
+            @for (exercise of module.exercises; track exercise) {
+              <li>
+                <a [routerLink]="['/exercicios', exercise.exerciseId]">
+                  <span class="status-dot" [class.solved]="exercise.status === 'SOLVED'" [class.in-progress]="exercise.status === 'IN_PROGRESS'"></span>
+                  <span class="title">{{ exercise.title }}</span>
+                  <span class="difficulty">{{ exercise.difficulty }}</span>
+                  <span class="minutes">~{{ exercise.estimatedMinutes }} min</span>
+                </a>
+              </li>
+            }
+          </ul>
+        </section>
+      }
+    </div>
+  }
 </div>

@@ -13,4 +13,13 @@ public interface ModuleSeeder {
     String moduleCode();
 
     LearningModule seed();
+
+    /**
+     * Gives a seeder a safe upgrade path when its module already exists in a player's database.
+     * Existing tracks default to no-op; evolving tracks can add newly published exercises without
+     * deleting progress or recreating the module.
+     */
+    default void synchronize(LearningModule existingModule) {
+        // Existing immutable tracks require no incremental synchronization.
+    }
 }

@@ -9,8 +9,8 @@ import java.util.List;
 /**
  * Orchestrator only - each learning track is a separate ModuleSeeder (see CoffeeMachineModuleSeeder).
  * Replaces the old 1853-line DataSeeder god-class: adding a track means adding one ModuleSeeder file,
- * not editing a monolith. Seeding is per-module: a track added after the first launch still reaches
- * existing player databases (the old count() == 0 guard skipped everything once any module existed).
+ * not editing a monolith. New modules are seeded once; existing modules may synchronize newly
+ * published exercises without deleting player progress.
  */
 @Component
 public class ContentSeeder implements CommandLineRunner {
@@ -26,8 +26,11 @@ public class ContentSeeder implements CommandLineRunner {
     @Override
     public void run(String... args) {
         for (ModuleSeeder seeder : moduleSeeders) {
-            if (moduleRepository.findByModuleCode(seeder.moduleCode()).isEmpty()) {
+            var existingModule = moduleRepository.findByModuleCode(seeder.moduleCode());
+            if (existingModule.isEmpty()) {
                 seeder.seed();
+            } else {
+                seeder.synchronize(existingModule.orElseThrow());
             }
         }
     }

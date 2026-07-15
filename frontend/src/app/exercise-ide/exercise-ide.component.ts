@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -9,11 +9,10 @@ import { SubmissionApiService } from '../core/submission-api.service';
 import { ExerciseDetail, HintView, ScratchRunResult, SolutionView, SubmissionResult } from '../core/exercise.models';
 
 @Component({
-  selector: 'app-exercise-ide',
-  standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, MonacoEditorModule],
-  templateUrl: './exercise-ide.component.html',
-  styleUrl: './exercise-ide.component.scss'
+    selector: 'app-exercise-ide',
+    imports: [FormsModule, RouterLink, MonacoEditorModule],
+    templateUrl: './exercise-ide.component.html',
+    styleUrl: './exercise-ide.component.scss'
 })
 export class ExerciseIdeComponent implements OnInit {
   exercise: ExerciseDetail | null = null;

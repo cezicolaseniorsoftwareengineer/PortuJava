@@ -20,11 +20,13 @@
     </button>
 
     <nav class="tracks-dropdown">
-      <a *ngFor="let m of modules" routerLink="/" [fragment]="m.moduleCode" (click)="closeMenu()">
-        <span class="paradigm">{{ m.paradigm }}</span>
-        <span class="title">{{ m.title }}</span>
-        <span class="progress">{{ m.solvedCount }}/{{ m.totalCount }}</span>
-      </a>
+      @for (m of modules; track m) {
+        <a routerLink="/" [fragment]="m.moduleCode" (click)="closeMenu()">
+          <span class="paradigm">{{ m.paradigm }}</span>
+          <span class="title">{{ m.title }}</span>
+          <span class="progress">{{ m.solvedCount }}/{{ m.totalCount }}</span>
+        </a>
+      }
       <div class="dropdown-divider"></div>
       <button type="button" class="reset-progress" (click)="resetProgress()" [disabled]="resetting">
         {{ resetting ? 'Reiniciando...' : 'Reiniciar progresso' }}
@@ -32,5 +34,7 @@
     </nav>
   </div>
 
-  <div class="backdrop" *ngIf="menuOpen" (click)="closeMenu()"></div>
+  @if (menuOpen) {
+    <div class="backdrop" (click)="closeMenu()"></div>
+  }
 </header>

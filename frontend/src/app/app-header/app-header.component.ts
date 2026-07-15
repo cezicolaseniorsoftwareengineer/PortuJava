@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, HostListener, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
@@ -11,11 +11,10 @@ import { ModuleSummary } from '../core/exercise.models';
  * present - and populated - on the exercise IDE route, which never loads that data on its own.
  */
 @Component({
-  selector: 'app-header',
-  standalone: true,
-  imports: [CommonModule, RouterLink],
-  templateUrl: './app-header.component.html',
-  styleUrl: './app-header.component.scss'
+    selector: 'app-header',
+    imports: [RouterLink],
+    templateUrl: './app-header.component.html',
+    styleUrl: './app-header.component.scss'
 })
 export class AppHeaderComponent implements OnInit {
   modules: ModuleSummary[] = [];
