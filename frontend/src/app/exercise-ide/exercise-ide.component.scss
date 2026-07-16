@@ -1,5 +1,8 @@
 :host {
   display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
   margin-top: var(--app-header-height);
   min-height: calc(100vh - var(--app-header-height));
   min-height: calc(100dvh - var(--app-header-height));
@@ -10,6 +13,9 @@
 
 .ide {
   display: grid;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
   // minmax(0, 1fr) so wide content (pre blocks, long test output) cannot blow the column out.
   grid-template-columns: minmax(320px, 40%) minmax(0, 1fr);
   height: calc(100vh - var(--app-header-height));
@@ -18,6 +24,7 @@
 
 .statement-panel {
   min-width: 0;
+  max-width: 100%;
   padding: 24px;
   overflow-y: auto;
   border-right: 1px solid #30363d;
@@ -67,6 +74,7 @@
   }
 
   .statement-text {
+    margin: 0;
     white-space: pre-wrap;
     overflow-wrap: break-word;
     font-family: inherit;
@@ -127,11 +135,14 @@
       font-size: 13.5px;
       line-height: 1.6;
       color: #c9d1d9;
+      padding-left: 20px;
     }
 
     .solution-code {
-      white-space: pre;
-      overflow-x: auto;
+      white-space: pre-wrap;
+      overflow-x: hidden;
+      overflow-wrap: anywhere;
+      word-break: break-word;
       font-family: Consolas, 'Courier New', monospace;
       font-size: 13px;
       line-height: 1.5;
@@ -151,8 +162,10 @@
         border-left: 3px solid #d29922;
 
         .annotation-excerpt {
-          white-space: pre;
-          overflow-x: auto;
+          white-space: pre-wrap;
+          overflow-x: hidden;
+          overflow-wrap: anywhere;
+          word-break: break-word;
           font-family: Consolas, 'Courier New', monospace;
           font-size: 12.5px;
           line-height: 1.4;
@@ -176,10 +189,15 @@
   flex-direction: column;
   min-width: 0;
   min-height: 0;
+  max-width: 100%;
+  overflow: hidden;
 
   .editor {
     flex: 1 1 55%;
     min-height: 200px;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
   }
 
   .actions {
@@ -219,6 +237,9 @@
     flex: 1 1 45%;
     overflow-y: auto;
     padding: 16px;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
     background: #010409;
 
     h2 {
@@ -228,6 +249,7 @@
     }
 
     .output {
+      margin: 0;
       white-space: pre-wrap;
       overflow-wrap: anywhere;
       font-size: 13px;
@@ -334,6 +356,15 @@
     border-right: none;
     border-bottom: 1px solid #30363d;
     padding: 16px;
+
+    .meta span {
+      white-space: normal;
+    }
+
+    .hints button,
+    .solution button {
+      min-height: 44px;
+    }
   }
 
   .editor-panel {
@@ -357,6 +388,12 @@
     .results {
       flex: none;
       overflow-y: visible;
+
+      .badge.ok {
+        display: inline-block;
+        margin: 6px 0 0;
+        white-space: normal;
+      }
     }
   }
 }

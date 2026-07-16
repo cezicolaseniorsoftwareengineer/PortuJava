@@ -8,6 +8,8 @@
 }
 
 .page {
+  width: 100%;
+  min-width: 0;
   max-width: 1400px;
   margin: 0 auto;
   padding: calc(var(--app-header-height) + 32px) 32px 48px;
@@ -55,7 +57,7 @@ h1 {
 // the column count itself, only for spacing/density below.
 .modules {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr));
   gap: 20px;
   align-items: start;
 }
@@ -67,6 +69,7 @@ h1 {
   border: 1px solid #30363d;
   border-radius: 10px;
   padding: 20px;
+  min-width: 0;
   scroll-margin-top: calc(var(--app-header-height) + 12px);
   transition: border-color 0.15s ease;
 
@@ -93,12 +96,13 @@ h1 {
       font-size: 17px;
       flex: 1;
       min-width: 150px;
+      overflow-wrap: anywhere;
     }
 
     .progress {
       font-size: 12px;
       color: #8b949e;
-      white-space: nowrap;
+      white-space: normal;
     }
   }
 
@@ -117,7 +121,8 @@ h1 {
   width: 100%;
 
   li a {
-    display: flex;
+    display: grid;
+    grid-template-columns: 8px minmax(0, 1fr) auto;
     align-items: center;
     gap: 10px;
     padding: 9px 10px;
@@ -141,16 +146,21 @@ h1 {
     }
 
     .title {
-      flex: 1;
       min-width: 0;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      white-space: normal;
+      overflow-wrap: anywhere;
       font-size: 13.5px;
     }
 
+    .exercise-meta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 6px;
+      min-width: 0;
+    }
+
     .difficulty, .minutes {
-      flex: none;
       font-size: 10.5px;
       color: #8b949e;
       background: #21262d;
@@ -167,7 +177,7 @@ h1 {
   }
 
   .modules {
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
     gap: 16px;
   }
 }
@@ -186,8 +196,12 @@ h1 {
   }
 
   .exercise-list li a {
-    .difficulty, .minutes {
-      display: none;
+    grid-template-columns: 8px minmax(0, 1fr);
+    align-items: start;
+
+    .exercise-meta {
+      grid-column: 2;
+      justify-content: flex-start;
     }
   }
 }

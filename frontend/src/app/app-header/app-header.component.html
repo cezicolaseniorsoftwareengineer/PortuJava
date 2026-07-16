@@ -13,17 +13,20 @@
     <span class="wordmark">PortuJava</span>
   </a>
 
-  <a class="project-lab-link" routerLink="/laboratorio-repositorio" (click)="closeMenu()">
-    Laboratório de Repositório
+  <a class="project-lab-link" routerLink="/laboratorio-repositorio" (click)="closeMenu()"
+     aria-label="Abrir Laboratório de Repositório">
+    <span class="project-label-full">Laboratório de Repositório</span>
+    <span class="project-label-short" aria-hidden="true">Lab</span>
   </a>
 
   <div class="tracks-menu" [class.open]="menuOpen">
-    <button type="button" class="menu-toggle" (click)="toggleMenu()" [attr.aria-expanded]="menuOpen">
+    <button type="button" class="menu-toggle" (click)="toggleMenu()" [attr.aria-expanded]="menuOpen"
+            aria-label="Abrir menu de trilhas" aria-controls="tracks-menu-panel">
       <span>Trilhas</span>
       <svg class="chevron" viewBox="0 0 12 8" aria-hidden="true"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
 
-    <nav class="tracks-dropdown">
+    <nav id="tracks-menu-panel" class="tracks-dropdown">
       @for (m of modules; track m) {
         <a routerLink="/" [fragment]="m.moduleCode" (click)="closeMenu()">
           <span class="paradigm">{{ m.paradigm }}</span>

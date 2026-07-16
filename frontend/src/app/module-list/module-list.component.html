@@ -34,8 +34,10 @@
                 <a [routerLink]="['/exercicios', exercise.exerciseId]">
                   <span class="status-dot" [class.solved]="exercise.status === 'SOLVED'" [class.in-progress]="exercise.status === 'IN_PROGRESS'"></span>
                   <span class="title">{{ exercise.title }}</span>
-                  <span class="difficulty">{{ exercise.difficulty }}</span>
-                  <span class="minutes">~{{ exercise.estimatedMinutes }} min</span>
+                  <span class="exercise-meta">
+                    <span class="difficulty">{{ exercise.difficulty }}</span>
+                    <span class="minutes">~{{ exercise.estimatedMinutes }} min</span>
+                  </span>
                 </a>
               </li>
             }

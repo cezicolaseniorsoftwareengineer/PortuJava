@@ -29,6 +29,15 @@ describe('BankProjectLabComponent', () => {
       .toBe('# Objetivo');
   });
 
+  it('wraps repository content inside the mobile viewport', () => {
+    component.newPath = 'README.md';
+    component.createFile();
+    fixture.detectChanges();
+
+    const textarea = fixture.nativeElement.querySelector('textarea') as HTMLTextAreaElement;
+    expect(textarea.wrap).toBe('soft');
+  });
+
   it('rejects paths that escape the virtual repository', () => {
     component.newPath = '../secret.txt';
     component.createFile();

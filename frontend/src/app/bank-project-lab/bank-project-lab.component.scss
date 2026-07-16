@@ -1,5 +1,8 @@
 :host {
   display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
   min-height: 100vh;
   background: #0d1117;
   color: #e6edf3;
@@ -7,6 +10,8 @@
 }
 
 .lab-page {
+  width: 100%;
+  min-width: 0;
   max-width: 1500px;
   margin: 0 auto;
   padding: calc(var(--app-header-height) + 28px) 28px 56px;
@@ -21,6 +26,7 @@
 }
 
 h1, h2, h3, p { margin-top: 0; }
+h1, h2, h3, p, li { overflow-wrap: anywhere; }
 
 h1 { margin-bottom: 10px; font-size: clamp(25px, 3vw, 34px); }
 h2 { font-size: 18px; }
@@ -81,7 +87,7 @@ code {
 
 .workspace {
   display: grid;
-  grid-template-columns: minmax(280px, 34%) 1fr;
+  grid-template-columns: minmax(280px, 34%) minmax(0, 1fr);
   min-height: 580px;
   margin-top: 24px;
   overflow: hidden;
@@ -181,6 +187,8 @@ button {
   display: flex;
   min-width: 0;
   flex-direction: column;
+  max-width: 100%;
+  overflow: hidden;
 
   textarea {
     width: 100%;
@@ -193,6 +201,9 @@ button {
     font-family: 'Cascadia Code', Consolas, monospace;
     font-size: 13px;
     line-height: 1.55;
+    white-space: pre-wrap;
+    overflow-x: hidden;
+    overflow-wrap: anywhere;
   }
 }
 
@@ -226,7 +237,7 @@ button {
 
 .gate-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(290px, 100%), 1fr));
   gap: 12px;
   margin-top: 18px;
 
@@ -264,4 +275,88 @@ button {
   .git-guide { grid-template-columns: 1fr; }
   .git-guide > p { grid-column: auto; }
   .gates-section > header { flex-direction: column; }
+}
+
+@media (max-width: 560px) {
+  .lab-page {
+    padding: calc(var(--app-header-height) + 16px) 10px 32px;
+  }
+
+  .lab-intro,
+  .gates-section > header {
+    gap: 16px;
+  }
+
+  .score {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .architecture-note,
+  .git-guide,
+  .gates-section {
+    padding: 14px;
+  }
+
+  .new-file-form > div {
+    flex-wrap: wrap;
+
+    input {
+      flex: 1 1 100%;
+    }
+
+    button {
+      width: 100%;
+      min-height: 44px;
+    }
+  }
+
+  .file-list button {
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .editor-header {
+    align-items: flex-start;
+    padding-top: 8px;
+    padding-bottom: 8px;
+
+    code {
+      overflow: visible;
+      text-overflow: clip;
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+  }
+
+  .editor-panel textarea {
+    min-height: 360px;
+    padding: 14px;
+  }
+
+  .git-guide pre {
+    overflow-x: hidden;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  .gate-actions {
+    width: 100%;
+
+    button {
+      width: 100%;
+      min-height: 44px;
+    }
+  }
+
+  .gate-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .gate-heading {
+    flex-wrap: wrap;
+    gap: 6px 12px;
+  }
 }

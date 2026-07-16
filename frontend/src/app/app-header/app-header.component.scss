@@ -12,6 +12,9 @@
   display: flex;
   align-items: center;
   gap: 16px;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
   padding: 0 20px;
   background: #161b22;
   border-bottom: 1px solid #30363d;
@@ -42,6 +45,7 @@
 
 .project-lab-link {
   margin-left: auto;
+  min-width: 0;
   border: 1px solid #238636;
   border-radius: 6px;
   padding: 8px 12px;
@@ -54,6 +58,10 @@
   &:hover {
     background: #12241a;
   }
+}
+
+.project-label-short {
+  display: none;
 }
 
 // A single "Trilhas" menu button, IDE-menu-bar style, instead of one link per track - this is what
@@ -196,7 +204,8 @@
 
 @media (max-width: 760px) {
   .app-header {
-    padding: 0 14px;
+    gap: 8px;
+    padding: 0 10px;
   }
 
   .wordmark {
@@ -204,13 +213,47 @@
   }
 
   .tracks-dropdown {
-    right: -14px;
-    width: calc(100vw - 28px);
+    position: fixed;
+    top: calc(var(--app-header-height) + 8px);
+    right: 10px;
+    left: 10px;
+    width: auto;
+    max-width: none;
+
+    a {
+      align-items: flex-start;
+
+      .title {
+        overflow: visible;
+        text-overflow: clip;
+        white-space: normal;
+        overflow-wrap: anywhere;
+      }
+    }
   }
 
   .project-lab-link {
-    max-width: 118px;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    min-height: 44px;
+    padding: 8px 10px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .project-label-full { display: none; }
+  .project-label-short { display: inline; }
+
+  .menu-toggle {
+    min-height: 44px;
+    padding: 0 10px;
+  }
+}
+
+@media (max-width: 420px) {
+  .brand {
+    gap: 0;
+  }
+
+  .wordmark {
+    display: none;
   }
 }
