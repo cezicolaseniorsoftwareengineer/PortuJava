@@ -1,0 +1,138 @@
+<main class="lab-page">
+  <header class="lab-intro">
+    <div>
+      <span class="eyebrow">CAPSTONE INTEGRADO</span>
+      <h1>Laboratório de Repositório Bancário</h1>
+      <p>
+        Comece com zero arquivos e construa outro banco dentro do PortuJava. Os arquivos ficam salvos
+        neste navegador. Os gates estruturais não executam shell nem substituem compilação, testes,
+        revisão humana, homologação regulatória ou validação em produção.
+      </p>
+    </div>
+    <div class="score" aria-live="polite">
+      <strong>{{ passedGateCount }}/{{ gateResults.length }}</strong>
+      <span>gates aprovados</span>
+    </div>
+  </header>
+
+  <section class="architecture-note">
+    <h2>Onde a árvore começa?</h2>
+    <p>
+      Na raiz do produto. Para este monorepo: <code>backend/src/main</code> contém o backend,
+      <code>frontend/src</code> contém a interface, <code>contracts</code> contém contratos versionados,
+      <code>infrastructure</code> contém entrega e operação, e <code>docs</code> preserva decisões.
+      Não comece por <code>data</code>: banco de dados é uma dependência persistente, não a raiz da arquitetura.
+    </p>
+  </section>
+
+  <section class="workspace" aria-label="Repositório virtual">
+    <aside class="file-panel">
+      <div class="panel-title">
+        <h2>Arquivos</h2>
+        <span>{{ paths.length }}</span>
+      </div>
+      <form (ngSubmit)="createFile()" class="new-file-form">
+        <label for="new-path">Novo caminho relativo</label>
+        <div>
+          <input id="new-path" name="newPath" [(ngModel)]="newPath"
+                 placeholder="backend/src/main/.../Money.java" autocomplete="off">
+          <button type="submit">Criar</button>
+        </div>
+        @if (pathError) { <p class="error">{{ pathError }}</p> }
+      </form>
+
+      <nav class="file-list" aria-label="Arquivos do projeto">
+        @for (path of paths; track path) {
+          <button type="button" [class.selected]="path === selectedPath" (click)="select(path)">
+            {{ path }}
+          </button>
+        } @empty {
+          <p>Repositório vazio. Crie o primeiro arquivo deliberadamente.</p>
+        }
+      </nav>
+      <button type="button" class="danger" (click)="reset()" [disabled]="paths.length === 0">
+        Reiniciar repositório vazio
+      </button>
+    </aside>
+
+    <section class="editor-panel">
+      @if (selectedPath) {
+        <div class="editor-header">
+          <code>{{ selectedPath }}</code>
+          <button type="button" (click)="deleteSelected()">Excluir</button>
+        </div>
+        <textarea [(ngModel)]="selectedContent" aria-label="Conteúdo do arquivo"
+                  spellcheck="false" placeholder="Escreva o conteúdo do arquivo..."></textarea>
+        <p class="autosave">Salvamento local automático.</p>
+      } @else {
+        <div class="empty-editor">
+          <h2>Nenhum arquivo selecionado</h2>
+          <p>Crie ou selecione um arquivo. O primeiro gate revela a árvore mínima esperada.</p>
+        </div>
+      }
+    </section>
+  </section>
+
+  <section class="git-guide">
+    <div>
+      <h2>Windows PowerShell</h2>
+      <pre><code>git status --short
+git diff --check
+.\mvnw.cmd test
+git add &lt;arquivos-revisados&gt;
+git commit -m "Implement verified bank increment"
+git push origin &lt;branch&gt;</code></pre>
+    </div>
+    <div>
+      <h2>macOS, Ubuntu e Linux em Bash</h2>
+      <pre><code>git status --short
+git diff --check
+./mvnw test
+git add &lt;arquivos-revisados&gt;
+git commit -m "Implement verified bank increment"
+git push origin &lt;branch&gt;</code></pre>
+    </div>
+    <p>
+      Substitua os marcadores, revise o diff antes de adicionar e nunca versiona segredos. O commit
+      registra uma unidade testada; o push apenas publica essa unidade no remoto.
+    </p>
+  </section>
+
+  <section class="gates-section">
+    <header>
+      <div>
+        <span class="eyebrow">GOVERNANÇA EXECUTÁVEL</span>
+        <h2>Gates incrementais das fases 3 a 22</h2>
+      </div>
+      <div class="gate-actions">
+        <button type="button" class="primary" (click)="runGates()">Executar gates</button>
+        <button type="button" (click)="exportRepositoryZip()" [disabled]="paths.length === 0">
+          Exportar repositório ZIP
+        </button>
+        <button type="button" (click)="exportEvidence()">Exportar evidência JSON</button>
+      </div>
+    </header>
+    @if (lastGateRun) { <p class="last-run">Última execução: {{ lastGateRun }}</p> }
+
+    <div class="gate-grid">
+      @for (result of gateResults; track result.phase) {
+        <article [class.passed]="result.passed">
+          <div class="gate-heading">
+            <span>{{ result.phase === 0 ? 'ARQUITETURA' : 'FASE ' + result.phase }}</span>
+            <strong>{{ result.passed ? 'APROVADO' : 'BLOQUEADO' }}</strong>
+          </div>
+          <h3>{{ result.title }}</h3>
+          <p>{{ result.purpose }}</p>
+          @if (!result.passed) {
+            <details>
+              <summary>{{ result.missing.length }} requisito(s) pendente(s)</summary>
+              <ul>
+                @for (missing of result.missing; track missing) { <li><code>{{ missing }}</code></li> }
+              </ul>
+            </details>
+          }
+        </article>
+      }
+    </div>
+  </section>
+</main>

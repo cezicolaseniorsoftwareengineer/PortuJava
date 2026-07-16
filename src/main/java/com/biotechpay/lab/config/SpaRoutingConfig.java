@@ -5,9 +5,9 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
- * Angular uses path-based routing, so a hard refresh or a shared link on /exercicios/... reaches the
- * server directly and used to 404 (Whitelabel). Forward the client-side routes to index.html and let
- * the Angular router resolve them; API and static asset paths are untouched.
+ * Angular uses path-based routing, so hard refreshes and shared links reach the server first.
+ * Forward every known client route to index.html and let Angular resolve it; API and static asset
+ * paths remain untouched.
  */
 @Configuration
 public class SpaRoutingConfig implements WebMvcConfigurer {
@@ -15,5 +15,6 @@ public class SpaRoutingConfig implements WebMvcConfigurer {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/exercicios/**").setViewName("forward:/index.html");
+        registry.addViewController("/laboratorio-repositorio").setViewName("forward:/index.html");
     }
 }

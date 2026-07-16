@@ -40,12 +40,27 @@
   }
 }
 
+.project-lab-link {
+  margin-left: auto;
+  border: 1px solid #238636;
+  border-radius: 6px;
+  padding: 8px 12px;
+  color: #7ee787;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+
+  &:hover {
+    background: #12241a;
+  }
+}
+
 // A single "Trilhas" menu button, IDE-menu-bar style, instead of one link per track - this is what
 // keeps the header exactly --app-header-height tall regardless of window width or how many tracks
 // exist, which the exercise IDE's viewport-height layout math depends on.
 .tracks-menu {
   position: relative;
-  margin-left: auto;
   flex: none;
 }
 
@@ -191,5 +206,11 @@
   .tracks-dropdown {
     right: -14px;
     width: calc(100vw - 28px);
+  }
+
+  .project-lab-link {
+    max-width: 118px;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }

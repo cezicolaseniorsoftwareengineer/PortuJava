@@ -21,6 +21,9 @@ assertions) through a generated JUnit-free test harness.
 | Motor de Regras: Automação do Dia a Dia | Layered decision rules with an explicit fallback |
 | Algoritmos e Estruturas de Dados | Recursion, choosing the right structure, binary search |
 | Os 7 Shapes da Lógica | The "pentatonic scale" of everyday logic: loop-with-state, HashMap, HashSet, two pointers, sliding window, stack, queue |
+| Construindo um banco inteiro sozinho Real | 22 phases from financial invariants to deployment, incident response, reconciliation and technical defense |
+| Como pensar antes, durante e depois do código | Evidence, invariants, adversarial review, architecture, Git and production delivery |
+| Entrevistas: 30 desafios HackerRank + LeetCode style | 30 original challenges in Basic, Medium, Intermediate and Advanced levels |
 
 Every exercise ships a `referenceSolution` that is graded through the same compiler-backed path a
 student's submission goes through — if the reference doesn't pass its own tests, the build fails.
@@ -34,18 +37,20 @@ student's submission goes through — if the reference doesn't pass its own test
 - Responsive two-panel IDE (statement + editor) that adapts across desktop, tablet and mobile
 - Per-track content seeding that reaches an existing player database when a new track ships,
   without wiping progress
+- A persistent in-browser blank repository lab with phase gates and ZIP export for local Git/deploy
 
 ## Stack
 
 - **Backend:** Java 17, Spring Boot 3, Spring Data JPA, Spring Security (permissive — single-machine
   tool, no auth surface yet), H2 (file-based, survives restarts)
-- **Frontend:** Angular 18 (standalone components), Monaco Editor
+- **Frontend:** Angular 21 (standalone components), Monaco Editor
 - **Build:** Maven, orchestrating an `ng build` via `frontend-maven-plugin` into
   `src/main/resources/static`
 
 ## Running locally
 
-Requires JDK 17 and Maven. Node/npm are fetched automatically by the Maven build.
+Requires JDK 17 and Maven. Node/npm are fetched automatically by the Maven build. The Maven goal
+uses a colon: `spring-boot:run`; `mvn spring-boot run` is not valid Maven syntax.
 
 ```bash
 mvn spring-boot:run
@@ -54,6 +59,10 @@ mvn spring-boot:run
 The app compiles the frontend, starts on a fixed port (`62828`), and opens
 `http://localhost:62828/` in your default browser automatically. Disable the auto-open with
 `--app.open-browser=false`.
+
+The capstone repository is created inside the app at
+`http://localhost:62828/laboratorio-repositorio`. Export `bank-platform.zip`, extract it locally,
+then use the PowerShell or Bash Git sequence taught by the Distinguished engineering track.
 
 ## Testing
 

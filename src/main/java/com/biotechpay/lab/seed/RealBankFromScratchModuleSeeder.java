@@ -35,10 +35,10 @@ public class RealBankFromScratchModuleSeeder implements ModuleSeeder {
                 moduleCode(),
                 "Construindo um banco inteiro sozinho Real",
                 "ENGENHARIA BANCÁRIA",
-                "Construa o banco real por fases: primeiro as invariantes que protegem dinheiro; " +
-                        "depois os agregados de cliente, conta, carteira, moeda, limites, tarifas " +
-                        "e planos. Cada desafio compila e executa testes reais antes da introdução " +
-                        "de Spring, persistência, Redis, mensageria ou integrações com PSP.",
+                "Construa outro banco do zero em 22 fases: invariantes financeiras, modelagem, " +
+                        "identidade, ledger, Pix, integrações, reconciliação, risco, operação, " +
+                        "frontend e entrega. As fases 3 a 22 possuem gates executáveis e são " +
+                        "integradas no Laboratório de Repositório vazio do PortuJava.",
                 7));
 
         synchronize(module);
@@ -59,6 +59,7 @@ public class RealBankFromScratchModuleSeeder implements ModuleSeeder {
         saveIfMissing(buildCasBalance(existingModule));
         saveIfMissing(buildAtomicTransfer(existingModule));
         BankModelingPhaseExercises.build(existingModule).forEach(this::saveIfMissing);
+        BankDeliveryPhaseExercises.build(existingModule).forEach(this::saveIfMissing);
     }
 
     private void saveIfMissing(Exercise exercise) {

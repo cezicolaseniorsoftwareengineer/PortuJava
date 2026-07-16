@@ -45,7 +45,10 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "jszip"
+            ]
           },
           "configurations": {
             "production": {

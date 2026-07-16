@@ -10,5 +10,10 @@ export const routes: Routes = [
     path: 'exercicios/:exerciseId',
     loadComponent: () =>
       import('./exercise-ide/exercise-ide.component').then((m) => m.ExerciseIdeComponent)
+  },
+  {
+    path: 'laboratorio-repositorio',
+    loadComponent: () =>
+      import('./bank-project-lab/bank-project-lab.component').then((m) => m.BankProjectLabComponent)
   }
 ];

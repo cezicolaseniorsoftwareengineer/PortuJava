@@ -44,31 +44,15 @@ class RealBankFromScratchModuleSeederTest {
         assertThat(module.getParadigm()).isEqualTo("ENGENHARIA BANCÁRIA");
         assertThat(module.getExercises())
                 .extracting(Exercise::getExerciseId)
-                .containsExactly(
-                        "bank-real-01-money-value-object",
-                        "bank-real-02-balanced-posting",
-                        "bank-real-03-payment-state-machine",
-                        "bank-real-04-financial-idempotency",
-                        "bank-real-05-atomic-account",
-                        "bank-real-06-tamper-evident-journal",
-                        "bank-real-07-reconciliation-decision",
-                        "bank-real-08-ambiguous-gateway-result",
-                        "bank-real-09-atomic-journal-sequence",
-                        "bank-real-10-cas-versioned-balance",
-                        "bank-real-11-atomic-transfer",
-                        "bank-real-12-customer-profile",
-                        "bank-real-13-account-lifecycle",
-                        "bank-real-14-multi-currency-wallet",
-                        "bank-real-15-payment-limit-policy",
-                        "bank-real-16-fee-and-plan-policy");
+                .containsExactlyElementsOf(expectedExerciseIds());
     }
 
     @Test
     void everyExerciseDeclaresAnInvariantAndAdversarialChecks() {
         LearningModule module = moduleRepository.findByModuleCode(MODULE_CODE).orElseThrow();
 
-        assertThat(module.getExercises()).hasSize(16).allSatisfy(exercise -> {
-            assertThat(exercise.getStatementMarkdown()).containsAnyOf("## Invariante", "## Contexto real");
+        assertThat(module.getExercises()).hasSize(36).allSatisfy(exercise -> {
+            assertThat(exercise.getStatementMarkdown()).containsAnyOf("## Invariante", "## Contexto real", "## Fase");
             assertThat(exercise.getTestCases()).hasSizeGreaterThanOrEqualTo(4);
             assertThat(exercise.getTestCases()).anyMatch(testCase -> !testCase.isVisible());
             assertThat(exercise.getHints()).hasSizeGreaterThanOrEqualTo(2);
@@ -88,6 +72,18 @@ class RealBankFromScratchModuleSeederTest {
                         "bank-real-14-multi-currency-wallet",
                         "bank-real-15-payment-limit-policy",
                         "bank-real-16-fee-and-plan-policy");
+    }
+
+    @Test
+    void phasesThreeThroughTwentyTwoEachHaveAnExecutableReleaseGate() {
+        LearningModule module = moduleRepository.findByModuleCode(MODULE_CODE).orElseThrow();
+
+        assertThat(module.getExercises().subList(16, 36)).hasSize(20);
+        for (int phase = 3; phase <= 22; phase++) {
+            String phaseMarker = "phase-%02d".formatted(phase);
+            assertThat(module.getExercises().subList(16, 36))
+                    .anyMatch(exercise -> exercise.getExerciseId().contains(phaseMarker));
+        }
     }
 
     @Test
@@ -134,22 +130,46 @@ class RealBankFromScratchModuleSeederTest {
 
         assertThat(exerciseRepository.findByModuleOrderBySortOrderAsc(module))
                 .extracting(Exercise::getExerciseId)
-                .containsExactly(
-                        "bank-real-01-money-value-object",
-                        "bank-real-02-balanced-posting",
-                        "bank-real-03-payment-state-machine",
-                        "bank-real-04-financial-idempotency",
-                        "bank-real-05-atomic-account",
-                        "bank-real-06-tamper-evident-journal",
-                        "bank-real-07-reconciliation-decision",
-                        "bank-real-08-ambiguous-gateway-result",
-                        "bank-real-09-atomic-journal-sequence",
-                        "bank-real-10-cas-versioned-balance",
-                        "bank-real-11-atomic-transfer",
-                        "bank-real-12-customer-profile",
-                        "bank-real-13-account-lifecycle",
-                        "bank-real-14-multi-currency-wallet",
-                        "bank-real-15-payment-limit-policy",
-                        "bank-real-16-fee-and-plan-policy");
+                .containsExactlyElementsOf(expectedExerciseIds());
+    }
+
+    private static List<String> expectedExerciseIds() {
+        return List.of(
+                "bank-real-01-money-value-object",
+                "bank-real-02-balanced-posting",
+                "bank-real-03-payment-state-machine",
+                "bank-real-04-financial-idempotency",
+                "bank-real-05-atomic-account",
+                "bank-real-06-tamper-evident-journal",
+                "bank-real-07-reconciliation-decision",
+                "bank-real-08-ambiguous-gateway-result",
+                "bank-real-09-atomic-journal-sequence",
+                "bank-real-10-cas-versioned-balance",
+                "bank-real-11-atomic-transfer",
+                "bank-real-12-customer-profile",
+                "bank-real-13-account-lifecycle",
+                "bank-real-14-multi-currency-wallet",
+                "bank-real-15-payment-limit-policy",
+                "bank-real-16-fee-and-plan-policy",
+                "bank-real-17-phase-03-identity-access",
+                "bank-real-18-phase-04-payment-authorization",
+                "bank-real-19-phase-05-passkeys",
+                "bank-real-20-phase-06-auditable-ledger",
+                "bank-real-21-phase-07-internal-transfers",
+                "bank-real-22-phase-08-pix-key",
+                "bank-real-23-phase-09-pix-qr-emv",
+                "bank-real-24-phase-10-baas-adapters",
+                "bank-real-25-phase-11-webhooks-settlement",
+                "bank-real-26-phase-12-reconciliation",
+                "bank-real-27-phase-13-charges",
+                "bank-real-28-phase-14-treasury",
+                "bank-real-29-phase-15-kyc-privacy-aml",
+                "bank-real-30-phase-16-fraud",
+                "bank-real-31-phase-17-distributed-controls",
+                "bank-real-32-phase-18-bank-operations",
+                "bank-real-33-phase-19-bank-frontend",
+                "bank-real-34-phase-20-governed-ai",
+                "bank-real-35-phase-21-supply-chain",
+                "bank-real-36-phase-22-capstone");
     }
 }
