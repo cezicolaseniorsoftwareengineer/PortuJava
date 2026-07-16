@@ -41,73 +41,74 @@
         </header>
 
         <div class="map-stage">
-          <svg class="brazil-map" viewBox="40 35 560 690" role="img"
+          <svg class="brazil-map" [attr.viewBox]="mapViewBox" role="img"
                aria-labelledby="brazil-map-title brazil-map-description">
-            <title id="brazil-map-title">Mapa estilizado da jornada PortuJava pelo Brasil</title>
+            <title id="brazil-map-title">Mapa geográfico da jornada PortuJava pelo Brasil</title>
             <desc id="brazil-map-description">
-              Uma rota animada passa por vinte e seis estados e pelo Distrito Federal até São Paulo.
+              Mapa com o contorno e as fronteiras dos vinte e seis estados e do Distrito Federal,
+              coloridos por região e identificados pelo nome e pela sigla.
             </desc>
             <defs>
-              <linearGradient id="land-gradient" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0" stop-color="#f7e6ad"/>
-                <stop offset="1" stop-color="#d4b76f"/>
-              </linearGradient>
-              <filter id="land-shadow" x="-20%" y="-20%" width="140%" height="140%">
-                <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#1b2b22" flood-opacity=".35"/>
+              <filter id="puzzle-shadow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#432409" flood-opacity=".5"/>
+              </filter>
+              <filter id="flag-shadow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#2d1807" flood-opacity=".55"/>
               </filter>
             </defs>
 
-            <g class="cloud cloud-one" aria-hidden="true">
-              <circle cx="112" cy="120" r="13"/><circle cx="130" cy="112" r="18"/><circle cx="151" cy="122" r="12"/>
+            <g class="state-layer" filter="url(#puzzle-shadow)" aria-hidden="true">
+              @for (state of mapStates; track state.code) {
+                <path class="state-shape"
+                      [class.unlocked]="isMapStateUnlocked(state)"
+                      [class.completed]="isMapStateCompleted(state)"
+                      [class.current]="isMapStateCurrent(state)"
+                      [class.selected]="selectedStopCode === state.code"
+                      [attr.data-state]="state.code"
+                      [attr.data-region]="regionFor(state.code)"
+                      [attr.d]="state.path"
+                      (click)="selectMapState(state)"/>
+              }
             </g>
-            <g class="cloud cloud-two" aria-hidden="true">
-              <circle cx="485" cy="160" r="10"/><circle cx="500" cy="150" r="16"/><circle cx="520" cy="160" r="11"/>
+
+            <g class="state-label-layer" aria-hidden="true">
+              @for (label of stateLabels; track label.code) {
+                <text class="state-name"
+                      text-anchor="middle"
+                      dominant-baseline="middle"
+                      [attr.data-state-label]="label.code"
+                      [attr.transform]="'translate(' + label.x + ' ' + label.y + ')'"
+                      [attr.font-size]="label.fontSize">
+                  @for (line of label.lines; track $index) {
+                    <tspan x="0"
+                           [attr.dy]="$first ? (label.lines.length > 1 ? '-0.35em' : '0') : '1.08em'">{{ line }}</tspan>
+                  }
+                </text>
+              }
             </g>
 
-            <path class="land" filter="url(#land-shadow)"
-                  d="M221 49 L304 55 L345 91 L412 79 L463 111 L523 151 L548 218 L532 281 L558 339 L528 382 L510 440 L470 475 L449 534 L411 579 L392 641 L347 699 L311 663 L286 609 L248 567 L218 516 L178 478 L145 425 L116 374 L96 316 L121 264 L105 207 L143 162 L171 104 Z"/>
-            <path class="river" d="M166 190 C230 235 275 180 337 226 S421 270 470 245" aria-hidden="true"/>
-            <path class="coast-detail" d="M523 151 Q545 220 532 281 M510 440 Q470 482 449 534 Q411 579 392 641" aria-hidden="true"/>
-
-            <polyline class="route route-base" [attr.points]="routePoints" pathLength="100" aria-hidden="true"/>
-            <polyline class="route route-completed" [attr.points]="routePoints" pathLength="100"
-                      stroke-dasharray="100" [attr.stroke-dashoffset]="100 - completedRoutePercent" aria-hidden="true"/>
-
-            @for (stop of stops; track stop.code; let index = $index) {
-              <g class="state-stop"
-                 [class.unlocked]="isStopUnlocked(index)"
-                 [class.completed]="isStopCompleted(index)"
-                 [class.current]="isCurrentStop(index)"
-                 [class.selected]="selectedStopCode === stop.code"
-                 [attr.transform]="'translate(' + stop.x + ' ' + stop.y + ')'"
-                 [attr.role]="isStopUnlocked(index) ? 'button' : null"
-                 [attr.tabindex]="isStopUnlocked(index) ? 0 : -1"
-                 [attr.aria-label]="stop.name + (isStopUnlocked(index) ? ', desbloqueado' : ', bloqueado')"
-                 (click)="selectStop(stop)"
-                 (keydown.enter)="selectStop(stop)"
-                 (keydown.space)="$event.preventDefault(); selectStop(stop)">
-                <circle class="stop-hit" r="20"/>
-                @if (isCurrentStop(index)) { <circle class="stop-pulse" r="16"/> }
-                <circle class="stop-marker" r="9"/>
-                <text class="stop-label" y="-14" text-anchor="middle">{{ stop.code }}</text>
-                @if (isStopCompleted(index)) { <path class="check" d="M-4 0l3 3 6-7"/> }
-                @if (!isStopUnlocked(index)) { <path class="lock" d="M-3 0v-3a3 3 0 0 1 6 0v3m-7 0h8v7h-8z"/> }
-              </g>
-            }
-
-            <g class="destination" transform="translate(382 528)" aria-hidden="true">
-              <path d="M0-34l5 14 15-1-12 9 5 15-13-9-13 9 5-15-12-9 15 1z"/>
-            </g>
-            <g class="compass" transform="translate(535 650)" aria-hidden="true">
-              <circle r="35"/><path d="M0-25l8 20-8 30-8-30z"/><text y="-41" text-anchor="middle">N</text>
+            <g class="flag-inset" transform="translate(34 528)" filter="url(#flag-shadow)" aria-hidden="true">
+              <rect class="flag-frame" width="150" height="98" rx="5"/>
+              <rect class="flag-field" x="7" y="7" width="136" height="84" rx="2"/>
+              <path class="flag-diamond" d="M75 18L132 49L75 80L18 49Z"/>
+              <circle class="flag-globe" cx="75" cy="49" r="20"/>
+              <path class="flag-band" d="M56 45Q75 36 95 47"/>
+              <text class="flag-motto" x="75" y="46" text-anchor="middle">ORDEM E PROGRESSO</text>
             </g>
           </svg>
 
           <div class="map-legend" aria-label="Legenda do mapa">
-            <span><i class="done"></i> concluído</span>
-            <span><i class="now"></i> posição atual</span>
-            <span><i class="locked"></i> bloqueado</span>
+            <span><i class="north"></i> Norte</span>
+            <span><i class="northeast"></i> Nordeste</span>
+            <span><i class="central-west"></i> Centro-Oeste</span>
+            <span><i class="southeast"></i> Sudeste</span>
+            <span><i class="south"></i> Sul</span>
           </div>
+          <p class="map-source">
+            Malha geográfica oficial simplificada para aplicações web:
+            <a [href]="mapSource"
+               target="_blank" rel="noopener noreferrer">IBGE</a>.
+          </p>
         </div>
 
         <div class="state-selector" aria-label="Selecionar marco da jornada">

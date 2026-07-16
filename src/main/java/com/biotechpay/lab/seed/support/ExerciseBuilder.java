@@ -1,5 +1,6 @@
 package com.biotechpay.lab.seed.support;
 
+import com.biotechpay.lab.application.ReferenceSolutionFormatter;
 import com.biotechpay.lab.domain.ComparisonMode;
 import com.biotechpay.lab.domain.Exercise;
 import com.biotechpay.lab.domain.LearningModule;
@@ -28,7 +29,7 @@ public class ExerciseBuilder {
     }
 
     public ExerciseBuilder referenceSolution(String code) {
-        exercise.setReferenceSolution(code);
+        exercise.setReferenceSolution(ReferenceSolutionFormatter.format(code));
         return this;
     }
 

@@ -41,19 +41,23 @@
               <li>{{ step }}</li>
             }
           </ol>
-          @if (solution.annotations.length > 0) {
+          @if (solutionAnnotations.length > 0) {
             <h3>Por que cada parte</h3>
             <div class="solution-annotations">
-              @for (a of solution.annotations; track a) {
+              @for (a of solutionAnnotations; track a.codeExcerpt) {
                 <div class="annotation">
-                  <pre class="annotation-excerpt">{{ a.codeExcerpt }}</pre>
+                  <pre class="annotation-excerpt"><code>@for (line of a.codeLines; track $index) {<span class="code-line"
+                        [style.padding-left.ch]="line.indent"
+                        [style.text-indent.ch]="-line.indent">{{ line.text }}</span>}</code></pre>
                   <p class="annotation-explanation">{{ a.explanation }}</p>
                 </div>
               }
             </div>
           }
           <h3>Código da solução</h3>
-          <pre class="solution-code">{{ solution.solutionCode }}</pre>
+          <pre class="solution-code" tabindex="0" aria-label="Código Java completo da solução"><code>@for (line of solutionCodeLines; track $index) {<span class="code-line"
+                [style.padding-left.ch]="line.indent"
+                [style.text-indent.ch]="-line.indent">{{ line.text }}</span>}</code></pre>
           <button type="button" (click)="hideSolution()">Esconder resposta</button>
         }
       </div>

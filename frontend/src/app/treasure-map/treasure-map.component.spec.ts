@@ -4,6 +4,7 @@ import { of } from 'rxjs';
 
 import { ExerciseApiService } from '../core/exercise-api.service';
 import { ModuleExerciseSummary, ModuleSummary } from '../core/exercise.models';
+import { BRAZIL_MAP_SOURCE, BRAZIL_MAP_STATES } from './brazil-map.data';
 import { TreasureMapComponent } from './treasure-map.component';
 
 describe('TreasureMapComponent', () => {
@@ -45,12 +46,14 @@ describe('TreasureMapComponent', () => {
     }).compileComponents();
   });
 
-  it('starts in Acre and renders all 26 states plus the Federal District', () => {
+  it('starts in Acre and renders all 26 states plus the Federal District on official geometry', () => {
     const fixture = TestBed.createComponent(TreasureMapComponent);
     fixture.detectChanges();
 
     const component = fixture.componentInstance;
     const stateButtons = fixture.nativeElement.querySelectorAll('.state-selector button');
+    const statePaths = fixture.nativeElement.querySelectorAll('.state-shape');
+    const stateLabels = fixture.nativeElement.querySelectorAll('.state-name');
     const text = (fixture.nativeElement as HTMLElement).textContent ?? '';
 
     expect(component.stops.length).toBe(27);
@@ -60,7 +63,29 @@ describe('TreasureMapComponent', () => {
     ]));
     expect(component.currentStop.code).toBe('AC');
     expect(stateButtons.length).toBe(27);
+    expect(statePaths.length).toBe(27);
+    expect(stateLabels.length).toBe(27);
+    expect(BRAZIL_MAP_STATES.length).toBe(27);
+    expect(new Set(BRAZIL_MAP_STATES.map((state) => state.path)).size).toBe(27);
+    expect(BRAZIL_MAP_STATES.every((state) => state.path.startsWith('M'))).toBeTrue();
+    expect(BRAZIL_MAP_SOURCE).toContain('servicodados.ibge.gov.br');
     expect(text).toContain('não garante emprego');
+  });
+
+  it('matches the regional puzzle-map composition with wood, labels and the Brazilian flag', () => {
+    const fixture = TestBed.createComponent(TreasureMapComponent);
+    fixture.detectChanges();
+
+    const root = fixture.nativeElement as HTMLElement;
+    expect(root.querySelectorAll('[data-region="north"]').length).toBe(7);
+    expect(root.querySelectorAll('[data-region="northeast"]').length).toBe(9);
+    expect(root.querySelectorAll('[data-region="central-west"]').length).toBe(4);
+    expect(root.querySelectorAll('[data-region="southeast"]').length).toBe(4);
+    expect(root.querySelectorAll('[data-region="south"]').length).toBe(3);
+    expect(root.querySelectorAll('.flag-inset').length).toBe(1);
+    expect(root.querySelector('[data-state-label="AM"]')?.textContent).toContain('AMAZONAS - AM');
+    expect(root.querySelector('[data-state-label="RS"]')?.textContent).toContain('DO SUL - RS');
+    expect(root.querySelectorAll('.cloud, .destination, .compass, .state-stop').length).toBe(0);
   });
 
   it('does not use bank exercises to bypass the foundation journey', () => {
@@ -71,6 +96,18 @@ describe('TreasureMapComponent', () => {
     expect(fixture.componentInstance.foundationSolved).toBe(0);
     expect(fixture.componentInstance.currentStop.code).toBe('AC');
     expect(fixture.componentInstance.reachedSaoPaulo).toBeFalse();
+  });
+
+  it('uses each official state geometry as an interactive map target', () => {
+    const fixture = TestBed.createComponent(TreasureMapComponent);
+    fixture.detectChanges();
+
+    const saoPauloPath = fixture.nativeElement.querySelector('[data-state="SP"]') as SVGPathElement;
+    saoPauloPath.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.selectedStopCode).toBe('SP');
+    expect((fixture.nativeElement as HTMLElement).textContent).toContain('São Paulo');
   });
 
   it('keeps the complete journey inside a mobile-width viewport', () => {

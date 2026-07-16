@@ -139,10 +139,10 @@
     }
 
     .solution-code {
-      white-space: pre-wrap;
+      white-space: normal;
       overflow-x: hidden;
-      overflow-wrap: anywhere;
-      word-break: break-word;
+      overflow-wrap: normal;
+      word-break: normal;
       font-family: Consolas, 'Courier New', monospace;
       font-size: 13px;
       line-height: 1.5;
@@ -151,6 +151,21 @@
       background: #161b22;
       border: 1px solid #30363d;
       color: #e6edf3;
+    }
+
+    .solution-code,
+    .annotation-excerpt {
+      code { display: block; font: inherit; }
+
+      .code-line {
+        display: block;
+        box-sizing: border-box;
+        width: 100%;
+        min-height: 1.5em;
+        white-space: pre-wrap;
+        overflow-wrap: break-word;
+        word-break: normal;
+      }
     }
 
     .solution-annotations {
@@ -162,10 +177,10 @@
         border-left: 3px solid #d29922;
 
         .annotation-excerpt {
-          white-space: pre-wrap;
+          white-space: normal;
           overflow-x: hidden;
-          overflow-wrap: anywhere;
-          word-break: break-word;
+          overflow-wrap: normal;
+          word-break: normal;
           font-family: Consolas, 'Courier New', monospace;
           font-size: 12.5px;
           line-height: 1.4;

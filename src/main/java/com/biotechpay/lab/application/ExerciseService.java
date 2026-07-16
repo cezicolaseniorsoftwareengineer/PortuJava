@@ -66,7 +66,8 @@ public class ExerciseService {
         List<AnnotationView> annotations = exercise.getSolutionAnnotations().stream()
                 .map(a -> new AnnotationView(a.getCodeExcerpt(), a.getExplanation()))
                 .toList();
-        return new SolutionView(exercise.getReferenceSolution(), List.copyOf(exercise.getHints()), annotations);
+        return new SolutionView(ReferenceSolutionFormatter.format(exercise.getReferenceSolution()),
+                List.copyOf(exercise.getHints()), annotations);
     }
 
     public HintView getHint(String exerciseId, int index) {

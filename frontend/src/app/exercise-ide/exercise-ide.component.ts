@@ -6,7 +6,23 @@ import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 
 import { ExerciseApiService } from '../core/exercise-api.service';
 import { SubmissionApiService } from '../core/submission-api.service';
-import { ExerciseDetail, HintView, ScratchRunResult, SolutionView, SubmissionResult } from '../core/exercise.models';
+import {
+  ExerciseDetail,
+  HintView,
+  ScratchRunResult,
+  SolutionAnnotation,
+  SolutionView,
+  SubmissionResult
+} from '../core/exercise.models';
+
+interface DisplayCodeLine {
+  text: string;
+  indent: number;
+}
+
+interface DisplaySolutionAnnotation extends SolutionAnnotation {
+  codeLines: DisplayCodeLine[];
+}
 
 @Component({
     selector: 'app-exercise-ide',
@@ -30,6 +46,8 @@ export class ExerciseIdeComponent implements OnInit {
   loadingHint = false;
 
   solution: SolutionView | null = null;
+  solutionCodeLines: DisplayCodeLine[] = [];
+  solutionAnnotations: DisplaySolutionAnnotation[] = [];
   loadingSolution = false;
   solutionError = '';
 
@@ -141,6 +159,11 @@ export class ExerciseIdeComponent implements OnInit {
     this.exerciseApi.getSolution(this.exercise.exerciseId).subscribe({
       next: (solution) => {
         this.solution = solution;
+        this.solutionCodeLines = this.toDisplayCodeLines(solution.solutionCode);
+        this.solutionAnnotations = solution.annotations.map((annotation) => ({
+          ...annotation,
+          codeLines: this.toDisplayCodeLines(annotation.codeExcerpt)
+        }));
         this.loadingSolution = false;
       },
       error: () => {
@@ -152,6 +175,18 @@ export class ExerciseIdeComponent implements OnInit {
 
   hideSolution(): void {
     this.solution = null;
+    this.solutionCodeLines = [];
+    this.solutionAnnotations = [];
     this.solutionError = '';
+  }
+
+  private toDisplayCodeLines(code: string): DisplayCodeLine[] {
+    return code.replace(/\r\n?/g, '\n').split('\n').map((rawLine) => {
+      const text = rawLine.replace(/\t/g, '    ');
+      return {
+        text,
+        indent: text.length - text.trimStart().length
+      };
+    });
   }
 }

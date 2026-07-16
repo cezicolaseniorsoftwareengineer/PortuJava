@@ -81,10 +81,10 @@
 .map-card {
   min-width: 0;
   overflow: hidden;
-  border: 1px solid #795f2d;
+  border: 1px solid #59300c;
   border-radius: 18px;
-  background: #edda9f;
-  color: #292213;
+  background: #bd6e1b;
+  color: #261507;
   box-shadow: 0 22px 60px rgba(0, 0, 0, .34);
 }
 
@@ -94,8 +94,10 @@
   justify-content: space-between;
   gap: 18px;
   padding: 18px 22px;
-  border-bottom: 1px solid rgba(77, 57, 21, .25);
-  background: rgba(255, 249, 218, .45);
+  border-bottom: 1px solid rgba(72, 36, 8, .5);
+  background:
+    linear-gradient(90deg, rgba(255, 200, 83, .2), rgba(102, 45, 4, .1)),
+    #d2872b;
 
   h2 { margin: 3px 0 0; font-family: Georgia, serif; font-size: 21px; }
   .map-kicker { color: #765315; }
@@ -112,64 +114,81 @@
 
 .map-stage {
   position: relative;
-  padding: 10px 16px 4px;
+  isolation: isolate;
+  padding: 12px 16px 4px;
   background:
-    repeating-linear-gradient(0deg, transparent 0 35px, rgba(89, 67, 25, .04) 36px),
-    radial-gradient(circle at 50% 40%, #f7eabb, #ddc47f);
+    linear-gradient(92deg, transparent 0 14%, rgba(82, 38, 5, .18) 14.4%, transparent 15.1% 53%, rgba(255, 205, 97, .14) 54%, transparent 55%),
+    repeating-linear-gradient(88deg, rgba(255, 190, 64, .08) 0 2px, transparent 2px 13px),
+    repeating-linear-gradient(2deg, transparent 0 22px, rgba(91, 40, 4, .11) 23px, transparent 25px),
+    radial-gradient(ellipse at 50% 28%, #e79834 0, #c5741d 58%, #a95512 100%);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: .45;
+    background:
+      repeating-radial-gradient(ellipse at 18% 40%, transparent 0 18px, rgba(88, 38, 4, .2) 19px, transparent 21px 34px),
+      repeating-radial-gradient(ellipse at 82% 68%, transparent 0 25px, rgba(255, 198, 78, .12) 26px, transparent 29px 46px);
+    mix-blend-mode: multiply;
+  }
 
   &::after {
     content: '';
     position: absolute;
     inset: 0;
     pointer-events: none;
-    box-shadow: inset 0 0 50px rgba(85, 55, 8, .2);
+    z-index: 2;
+    box-shadow: inset 0 0 58px rgba(63, 27, 3, .38);
   }
 }
 
-.brazil-map { display: block; width: 100%; max-height: 720px; margin: 0 auto; }
-.land { fill: url('#land-gradient'); stroke: #6d5423; stroke-width: 3; }
-.river { fill: none; stroke: #4b9bb3; stroke-width: 4; stroke-linecap: round; opacity: .66; }
-.coast-detail { fill: none; stroke: rgba(86, 61, 19, .35); stroke-width: 2; stroke-dasharray: 7 8; }
-.route { fill: none; stroke-linecap: round; stroke-linejoin: round; }
-.route-base { stroke: rgba(77, 56, 17, .42); stroke-width: 3; stroke-dasharray: 3 10; }
-.route-completed { stroke: #16713d; stroke-width: 5; transition: stroke-dashoffset .8s ease; }
-
-.cloud {
-  fill: rgba(255, 253, 229, .52);
-  animation: drift 6s ease-in-out infinite alternate;
-  &.cloud-two { animation-delay: -2.2s; }
-}
-
-.state-stop {
-  outline: none;
+.brazil-map { position: relative; z-index: 1; display: block; width: 100%; max-height: 720px; margin: 0 auto; }
+.state-shape {
+  fill: #59d915;
+  fill-rule: evenodd;
+  stroke: #42311c;
+  stroke-linejoin: round;
+  stroke-width: 1.45;
+  vector-effect: non-scaling-stroke;
   cursor: pointer;
+  transition: filter .2s ease, stroke .2s ease, opacity .2s ease;
 
-  .stop-hit { fill: transparent; }
-  .stop-marker { fill: #6e6044; stroke: #f7e9b9; stroke-width: 3; transition: transform .18s ease, fill .18s ease; }
-  .stop-label { fill: #332811; font-size: 11px; font-weight: 900; paint-order: stroke; stroke: #f3df9e; stroke-width: 3px; }
-  .lock { fill: none; stroke: #f8ebc0; stroke-width: 1.8; }
-  .check { fill: none; stroke: #fff; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
-  .stop-pulse { fill: none; stroke: #e0a915; stroke-width: 3; animation: map-pulse 1.8s ease-out infinite; }
-
-  &.unlocked .stop-marker { fill: #c68713; }
-  &.completed .stop-marker { fill: #238636; }
-  &.current .stop-marker { fill: #ffdf00; stroke: #185c31; transform: scale(1.2); }
-  &.selected .stop-marker { stroke: #0b4b2a; stroke-width: 5; }
-  &:focus-visible .stop-hit { fill: rgba(24, 92, 49, .18); stroke: #185c31; stroke-width: 2; }
+  &[data-region='north'] { fill: #58dc16; }
+  &[data-region='northeast'] { fill: #f13d21; }
+  &[data-region='central-west'] { fill: #f18a20; }
+  &[data-region='southeast'] { fill: #f1df16; }
+  &[data-region='south'] { fill: #1767d9; }
+  &.completed { stroke: rgba(255, 255, 255, .9); stroke-width: 2.1; }
+  &.current { stroke: #fff; stroke-width: 3; animation: state-current-pulse 1.8s ease-in-out infinite; }
+  &.selected { stroke: #2f1b08; stroke-width: 3.4; }
+  &.current.selected { stroke: #fff; }
+  &:hover { filter: brightness(1.1) saturate(1.12); }
 }
 
-.destination {
-  fill: #ffdf00;
-  stroke: #7d5d0a;
-  stroke-width: 2;
-  animation: destination-glow 2s ease-in-out infinite alternate;
+.state-label-layer {
   pointer-events: none;
 }
 
-.compass {
-  circle { fill: rgba(255, 249, 218, .45); stroke: #6d5423; stroke-width: 2; }
-  path { fill: #9c361f; transform-origin: center; animation: compass-sway 5s ease-in-out infinite; }
-  text { fill: #5d4519; font: 800 13px Georgia, serif; }
+.state-name {
+  fill: #1c1a16;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 900;
+  letter-spacing: -.02em;
+  paint-order: stroke;
+  stroke: rgba(255, 255, 255, .18);
+  stroke-width: .55px;
+  text-rendering: geometricPrecision;
+}
+
+.flag-inset {
+  .flag-frame { fill: #14812d; stroke: #3e2d16; stroke-width: 2.2; }
+  .flag-field { fill: #159138; stroke: rgba(255, 255, 255, .32); stroke-width: .8; }
+  .flag-diamond { fill: #f5e31a; }
+  .flag-globe { fill: #123aa0; stroke: #102878; stroke-width: .8; }
+  .flag-band { fill: none; stroke: #fff; stroke-width: 3.2; }
+  .flag-motto { fill: #12316d; font: 900 3.6px Arial, sans-serif; letter-spacing: -.03em; }
 }
 
 .map-legend {
@@ -180,12 +199,28 @@
   justify-content: center;
   gap: 12px 20px;
   padding: 8px 8px 14px;
+  color: #2c1808;
+  font-weight: 700;
   font-size: 10px;
 
   span { display: inline-flex; align-items: center; gap: 6px; }
-  i { width: 9px; height: 9px; border-radius: 50%; background: #6e6044; }
-  .done { background: #238636; }
-  .now { background: #ffdf00; outline: 2px solid #185c31; }
+  i { width: 10px; height: 10px; border: 1px solid rgba(42, 23, 7, .45); border-radius: 2px; }
+  .north { background: #58dc16; }
+  .northeast { background: #f13d21; }
+  .central-west { background: #f18a20; }
+  .southeast { background: #f1df16; }
+  .south { background: #1767d9; }
+}
+
+.map-source {
+  position: relative;
+  z-index: 1;
+  margin: -5px 8px 12px;
+  color: #3f230c;
+  font-size: 9px;
+  text-align: center;
+
+  a { color: #173e20; font-weight: 900; }
 }
 
 .state-selector {
@@ -193,8 +228,10 @@
   grid-template-columns: repeat(9, minmax(0, 1fr));
   gap: 5px;
   padding: 12px;
-  border-top: 1px solid rgba(77, 57, 21, .25);
-  background: #d9bd70;
+  border-top: 1px solid rgba(72, 36, 8, .5);
+  background:
+    repeating-linear-gradient(88deg, rgba(255, 190, 64, .08) 0 2px, transparent 2px 15px),
+    #b96619;
 
   button {
     min-width: 0;
@@ -202,8 +239,8 @@
     padding: 5px 3px;
     border: 1px solid rgba(78, 56, 15, .3);
     border-radius: 7px;
-    background: rgba(255, 250, 221, .34);
-    color: #4c422d;
+    background: rgba(255, 229, 170, .58);
+    color: #38200d;
     cursor: pointer;
     opacity: .62;
     span, small { display: block; }
@@ -358,10 +395,10 @@
 .confetti i:nth-child(4n) { left: 88%; background: #f0c75e; animation-delay: -3.2s; }
 .confetti i:nth-child(n+9) { animation-duration: 5.2s; transform: translateX(70px) rotate(45deg); }
 
-@keyframes drift { to { transform: translateX(14px) translateY(-5px); } }
-@keyframes map-pulse { from { opacity: .85; transform: scale(.7); } to { opacity: 0; transform: scale(1.65); } }
-@keyframes destination-glow { to { filter: drop-shadow(0 0 12px #ffdf00); transform: scale(1.08); } }
-@keyframes compass-sway { 50% { transform: rotate(18deg); } }
+@keyframes state-current-pulse {
+  0%, 100% { filter: brightness(1) drop-shadow(0 0 0 rgba(255, 255, 255, 0)); }
+  50% { filter: brightness(1.13) drop-shadow(0 0 5px rgba(255, 255, 255, .9)); }
+}
 @keyframes confetti-fall { to { top: 110%; transform: translateX(35px) rotate(540deg); } }
 
 @media (max-width: 1050px) {
