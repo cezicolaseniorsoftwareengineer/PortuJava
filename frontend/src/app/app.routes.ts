@@ -15,5 +15,10 @@ export const routes: Routes = [
     path: 'laboratorio-repositorio',
     loadComponent: () =>
       import('./bank-project-lab/bank-project-lab.component').then((m) => m.BankProjectLabComponent)
+  },
+  {
+    path: 'mapa-do-tesouro',
+    loadComponent: () =>
+      import('./treasure-map/treasure-map.component').then((m) => m.TreasureMapComponent)
   }
 ];

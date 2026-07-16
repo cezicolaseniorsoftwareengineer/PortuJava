@@ -48,6 +48,30 @@ h1 {
   }
 }
 
+.treasure-invitation {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  max-width: 900px;
+  min-height: 70px;
+  margin: -20px 0 36px;
+  padding: 12px 16px;
+  border: 1px solid #8d6b24;
+  border-radius: 10px;
+  background: linear-gradient(110deg, #2b210d, #17251b);
+  color: #f0c75e;
+  text-decoration: none;
+  transition: border-color .15s ease, transform .15s ease;
+
+  &:hover { border-color: #f0c75e; transform: translateY(-1px); }
+  .treasure-compass { display: grid; width: 42px; height: 42px; place-items: center; border: 1px solid #f0c75e; border-radius: 50%; font: 800 11px Georgia, serif; }
+  strong, small { display: block; }
+  strong { font-size: 14px; }
+  small { margin-top: 4px; color: #b8aa84; font-size: 11px; line-height: 1.4; }
+  .treasure-arrow { font-size: 22px; }
+}
+
 .loading {
   color: #8b949e;
 }
@@ -193,6 +217,12 @@ h1 {
 
   .module-card {
     padding: 16px;
+  }
+
+  .treasure-invitation {
+    grid-template-columns: auto minmax(0, 1fr);
+    margin-top: -18px;
+    .treasure-arrow { display: none; }
   }
 
   .exercise-list li a {

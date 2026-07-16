@@ -55,5 +55,6 @@ describe('ModuleListComponent', () => {
     expect(component.solvedExerciseCount).toBe(3);
     expect(text).toContain('2 trilhas, 5 exercícios');
     expect(text).toContain('Construindo um banco inteiro sozinho Real');
+    expect(text).toContain('Viaje pelo mapa do tesouro do PortuJava');
   });
 });

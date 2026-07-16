@@ -43,8 +43,8 @@
   }
 }
 
+.treasure-map-link,
 .project-lab-link {
-  margin-left: auto;
   min-width: 0;
   border: 1px solid #238636;
   border-radius: 6px;
@@ -60,7 +60,16 @@
   }
 }
 
-.project-label-short {
+.treasure-map-link {
+  margin-left: auto;
+  border-color: #a57a22;
+  color: #f0c75e;
+
+  &:hover { background: #2a210e; }
+}
+
+.project-label-short,
+.map-label-short {
   display: none;
 }
 
@@ -232,6 +241,7 @@
     }
   }
 
+  .treasure-map-link,
   .project-lab-link {
     min-height: 44px;
     padding: 8px 10px;
@@ -241,6 +251,8 @@
 
   .project-label-full { display: none; }
   .project-label-short { display: inline; }
+  .map-label-full { display: none; }
+  .map-label-short { display: inline; }
 
   .menu-toggle {
     min-height: 44px;
