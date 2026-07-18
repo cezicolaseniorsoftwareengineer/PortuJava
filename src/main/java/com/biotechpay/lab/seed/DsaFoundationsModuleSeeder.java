@@ -5,6 +5,7 @@ import com.biotechpay.lab.domain.LearningModule;
 import com.biotechpay.lab.persistence.ExerciseRepository;
 import com.biotechpay.lab.persistence.LearningModuleRepository;
 import com.biotechpay.lab.seed.support.ExerciseBuilder;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 /**
@@ -46,6 +47,7 @@ public class DsaFoundationsModuleSeeder implements ModuleSeeder {
         return module;
     }
 
+    @NonNull
     private Exercise buildRecursion(LearningModule module) {
         return ExerciseBuilder.of(
                         "dsa-01-recursion-factorial",
@@ -118,6 +120,7 @@ public class DsaFoundationsModuleSeeder implements ModuleSeeder {
                 .build();
     }
 
+    @NonNull
     private Exercise buildStackQueueChoice(LearningModule module) {
         return ExerciseBuilder.of(
                         "dsa-02-stack-queue-choice",
@@ -210,6 +213,7 @@ public class DsaFoundationsModuleSeeder implements ModuleSeeder {
                 .build();
     }
 
+    @NonNull
     private Exercise buildBinarySearch(LearningModule module) {
         return ExerciseBuilder.of(
                         "dsa-03-binary-search",

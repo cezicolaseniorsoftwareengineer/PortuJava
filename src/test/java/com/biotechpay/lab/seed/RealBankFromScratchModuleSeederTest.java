@@ -43,7 +43,7 @@ class RealBankFromScratchModuleSeederTest {
         assertThat(module.getTitle()).isEqualTo("Construindo um banco inteiro sozinho Real");
         assertThat(module.getParadigm()).isEqualTo("ENGENHARIA BANCÁRIA");
         assertThat(module.getExercises())
-                .extracting(Exercise::getExerciseId)
+                .extracting(RealBankFromScratchModuleSeederTest::exerciseId)
                 .containsExactlyElementsOf(expectedExerciseIds());
     }
 
@@ -65,7 +65,7 @@ class RealBankFromScratchModuleSeederTest {
         LearningModule module = moduleRepository.findByModuleCode(MODULE_CODE).orElseThrow();
 
         assertThat(module.getExercises().subList(11, 16))
-                .extracting(Exercise::getExerciseId)
+                .extracting(RealBankFromScratchModuleSeederTest::exerciseId)
                 .containsExactly(
                         "bank-real-12-customer-profile",
                         "bank-real-13-account-lifecycle",
@@ -108,7 +108,7 @@ class RealBankFromScratchModuleSeederTest {
     @Test
     void moduleIsExposedInTheGlobalOrderedCatalog() {
         List<String> moduleCodes = moduleRepository.findAllByOrderBySortOrderAsc().stream()
-                .map(LearningModule::getModuleCode)
+                .map(RealBankFromScratchModuleSeederTest::moduleCode)
                 .toList();
 
         assertThat(moduleCodes).contains(MODULE_CODE);
@@ -119,6 +119,9 @@ class RealBankFromScratchModuleSeederTest {
         LearningModule module = moduleRepository.findByModuleCode(MODULE_CODE).orElseThrow();
         Exercise removed = exerciseRepository.findByExerciseId("bank-real-08-ambiguous-gateway-result")
                 .orElseThrow();
+        if (removed == null) {
+            throw new AssertionError("Seeded exercise must not be null");
+        }
         module.getExercises().remove(removed);
         exerciseRepository.delete(removed);
         exerciseRepository.flush();
@@ -129,8 +132,22 @@ class RealBankFromScratchModuleSeederTest {
         moduleSeeder.synchronize(module);
 
         assertThat(exerciseRepository.findByModuleOrderBySortOrderAsc(module))
-                .extracting(Exercise::getExerciseId)
+                .extracting(RealBankFromScratchModuleSeederTest::exerciseId)
                 .containsExactlyElementsOf(expectedExerciseIds());
+    }
+
+    private static String exerciseId(Exercise exercise) {
+        if (exercise == null) {
+            throw new AssertionError("Seeded exercise must not be null");
+        }
+        return exercise.getExerciseId();
+    }
+
+    private static String moduleCode(LearningModule module) {
+        if (module == null) {
+            throw new AssertionError("Seeded module must not be null");
+        }
+        return module.getModuleCode();
     }
 
     private static List<String> expectedExerciseIds() {

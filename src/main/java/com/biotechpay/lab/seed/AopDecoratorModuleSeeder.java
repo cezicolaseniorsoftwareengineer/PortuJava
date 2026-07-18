@@ -5,6 +5,7 @@ import com.biotechpay.lab.domain.LearningModule;
 import com.biotechpay.lab.persistence.ExerciseRepository;
 import com.biotechpay.lab.persistence.LearningModuleRepository;
 import com.biotechpay.lab.seed.support.ExerciseBuilder;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 /**
@@ -48,6 +49,7 @@ public class AopDecoratorModuleSeeder implements ModuleSeeder {
         return module;
     }
 
+    @NonNull
     private Exercise buildManualWrapper(LearningModule module) {
         return ExerciseBuilder.of(
                         "aop-01-manual-wrapper",
@@ -150,6 +152,7 @@ public class AopDecoratorModuleSeeder implements ModuleSeeder {
                 .build();
     }
 
+    @NonNull
     private Exercise buildCrossCuttingMultiple(LearningModule module) {
         return ExerciseBuilder.of(
                         "aop-02-cross-cutting-multiple",
@@ -236,6 +239,7 @@ public class AopDecoratorModuleSeeder implements ModuleSeeder {
                 .build();
     }
 
+    @NonNull
     private Exercise buildConditionalAudit(LearningModule module) {
         return ExerciseBuilder.of(
                         "aop-03-conditional-audit",

@@ -5,6 +5,7 @@ import com.biotechpay.lab.domain.LearningModule;
 import com.biotechpay.lab.persistence.ExerciseRepository;
 import com.biotechpay.lab.persistence.LearningModuleRepository;
 import com.biotechpay.lab.seed.support.ExerciseBuilder;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 /**
@@ -54,6 +55,7 @@ public class LogicShapesModuleSeeder implements ModuleSeeder {
         return module;
     }
 
+    @NonNull
     private Exercise buildLoopWithState(LearningModule module) {
         return ExerciseBuilder.of(
                         "shape-01-loop-with-state",
@@ -182,6 +184,7 @@ public class LogicShapesModuleSeeder implements ModuleSeeder {
                 .build();
     }
 
+    @NonNull
     private Exercise buildHashMapFrequency(LearningModule module) {
         return ExerciseBuilder.of(
                         "shape-02-hashmap-frequency",
@@ -258,6 +261,7 @@ public class LogicShapesModuleSeeder implements ModuleSeeder {
                 .build();
     }
 
+    @NonNull
     private Exercise buildHashSetFirstRepeated(LearningModule module) {
         return ExerciseBuilder.of(
                         "shape-03-hashset-first-repeated",
@@ -340,6 +344,7 @@ public class LogicShapesModuleSeeder implements ModuleSeeder {
                 .build();
     }
 
+    @NonNull
     private Exercise buildTwoPointers(LearningModule module) {
         return ExerciseBuilder.of(
                         "shape-04-two-pointers",
@@ -430,6 +435,7 @@ public class LogicShapesModuleSeeder implements ModuleSeeder {
                 .build();
     }
 
+    @NonNull
     private Exercise buildSlidingWindow(LearningModule module) {
         return ExerciseBuilder.of(
                         "shape-05-sliding-window",
@@ -515,6 +521,7 @@ public class LogicShapesModuleSeeder implements ModuleSeeder {
                 .build();
     }
 
+    @NonNull
     private Exercise buildStackBrackets(LearningModule module) {
         return ExerciseBuilder.of(
                         "shape-06-stack-brackets",
@@ -616,6 +623,7 @@ public class LogicShapesModuleSeeder implements ModuleSeeder {
                 .build();
     }
 
+    @NonNull
     private Exercise buildQueueHotPotato(LearningModule module) {
         return ExerciseBuilder.of(
                         "shape-07-queue-hot-potato",

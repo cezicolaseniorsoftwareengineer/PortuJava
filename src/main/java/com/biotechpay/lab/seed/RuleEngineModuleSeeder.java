@@ -5,6 +5,7 @@ import com.biotechpay.lab.domain.LearningModule;
 import com.biotechpay.lab.persistence.ExerciseRepository;
 import com.biotechpay.lab.persistence.LearningModuleRepository;
 import com.biotechpay.lab.seed.support.ExerciseBuilder;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 /**
@@ -46,6 +47,7 @@ public class RuleEngineModuleSeeder implements ModuleSeeder {
         return module;
     }
 
+    @NonNull
     private Exercise buildAlarmDecision(LearningModule module) {
         return ExerciseBuilder.of(
                         "routine-01-alarm-decision",
@@ -130,6 +132,7 @@ public class RuleEngineModuleSeeder implements ModuleSeeder {
                 .build();
     }
 
+    @NonNull
     private Exercise buildIrrigationSystem(LearningModule module) {
         return ExerciseBuilder.of(
                         "routine-02-irrigation-system",
@@ -213,6 +216,7 @@ public class RuleEngineModuleSeeder implements ModuleSeeder {
                 .build();
     }
 
+    @NonNull
     private Exercise buildCombinedCriteria(LearningModule module) {
         return ExerciseBuilder.of(
                         "routine-03-combined-criteria",

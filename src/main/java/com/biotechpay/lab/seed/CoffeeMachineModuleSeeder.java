@@ -5,6 +5,7 @@ import com.biotechpay.lab.domain.LearningModule;
 import com.biotechpay.lab.persistence.ExerciseRepository;
 import com.biotechpay.lab.persistence.LearningModuleRepository;
 import com.biotechpay.lab.seed.support.ExerciseBuilder;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 /**
@@ -51,6 +52,7 @@ public class CoffeeMachineModuleSeeder implements ModuleSeeder {
         return module;
     }
 
+    @NonNull
     private Exercise buildEncapsulation(LearningModule module) {
         return ExerciseBuilder.of(
                         "coffee-01-encapsulation",
@@ -152,6 +154,7 @@ public class CoffeeMachineModuleSeeder implements ModuleSeeder {
                 .build();
     }
 
+    @NonNull
     private Exercise buildBusinessRules(LearningModule module) {
         return ExerciseBuilder.of(
                         "coffee-02-business-rules",
@@ -278,6 +281,7 @@ public class CoffeeMachineModuleSeeder implements ModuleSeeder {
                 .build();
     }
 
+    @NonNull
     private Exercise buildInheritancePolymorphism(LearningModule module) {
         return ExerciseBuilder.of(
                         "coffee-03-inheritance-polymorphism",
@@ -430,6 +434,7 @@ public class CoffeeMachineModuleSeeder implements ModuleSeeder {
                 .build();
     }
 
+    @NonNull
     private Exercise buildInterfaceContract(LearningModule module) {
         return ExerciseBuilder.of(
                         "coffee-04-interface-contract",
@@ -613,6 +618,7 @@ public class CoffeeMachineModuleSeeder implements ModuleSeeder {
                 .build();
     }
 
+    @NonNull
     private Exercise buildCustomException(LearningModule module) {
         return ExerciseBuilder.of(
                         "coffee-05-custom-exception",
@@ -735,6 +741,7 @@ public class CoffeeMachineModuleSeeder implements ModuleSeeder {
                 .build();
     }
 
+    @NonNull
     private Exercise buildStateMachine(LearningModule module) {
         return ExerciseBuilder.of(
                         "coffee-06-state-machine",

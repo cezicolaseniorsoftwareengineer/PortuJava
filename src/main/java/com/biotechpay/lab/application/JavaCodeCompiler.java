@@ -1,7 +1,9 @@
 package com.biotechpay.lab.application;
 
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 
@@ -42,9 +44,23 @@ public class JavaCodeCompiler {
     private static final Pattern JAVAC_ERROR_LINE = Pattern.compile(".*:\\d+:\\s+(error|erro):.*", Pattern.CASE_INSENSITIVE);
     private static final Pattern JAVAC_WARNING_LINE = Pattern.compile(".*:\\d+:\\s+(warning|aviso):.*", Pattern.CASE_INSENSITIVE);
 
-    public JavaCodeCompiler() {
-        log.warn("JavaCodeCompiler executes student-submitted code via javac/java with no OS-level " +
-                "sandboxing beyond a timeout and an output cap. Safe only while this app is bound to localhost.");
+    @Value("${server.address:}")
+    private String serverAddress = "";
+
+    @PostConstruct
+    void validateExecutionBoundary() {
+        if (!isLoopbackAddress(serverAddress)) {
+            log.warn("JavaCodeCompiler executes student-submitted code without OS-level sandboxing while " +
+                    "server.address='{}'. Bind to a loopback address or isolate execution before exposing this app.",
+                    serverAddress.isBlank() ? "all interfaces" : serverAddress);
+        }
+    }
+
+    private static boolean isLoopbackAddress(String address) {
+        return "localhost".equalsIgnoreCase(address)
+                || "127.0.0.1".equals(address)
+                || "::1".equals(address)
+                || "0:0:0:0:0:0:0:1".equals(address);
     }
 
     public CompileAndRunResult compileAndRun(String sourceCode, String className) {

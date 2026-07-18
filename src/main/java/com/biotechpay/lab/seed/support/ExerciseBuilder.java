@@ -6,6 +6,7 @@ import com.biotechpay.lab.domain.Exercise;
 import com.biotechpay.lab.domain.LearningModule;
 import com.biotechpay.lab.domain.SolutionAnnotation;
 import com.biotechpay.lab.domain.TestCase;
+import org.springframework.lang.NonNull;
 
 /**
  * Fluent builder for seeding an Exercise plus its ordered TestCases and hints - replaces the old
@@ -13,18 +14,21 @@ import com.biotechpay.lab.domain.TestCase;
  */
 public class ExerciseBuilder {
 
+    @NonNull
     private final Exercise exercise;
     private int testCaseSortOrder = 0;
 
-    private ExerciseBuilder(Exercise exercise) {
+    private ExerciseBuilder(@NonNull Exercise exercise) {
         this.exercise = exercise;
     }
 
     public static ExerciseBuilder of(String exerciseId, LearningModule module, String title,
                                       String statementMarkdown, String codeContract, String starterCode,
                                       String difficulty, int sortOrder, int estimatedMinutes) {
-        Exercise exercise = new Exercise(exerciseId, module, title, statementMarkdown, codeContract,
-                starterCode, difficulty, sortOrder, estimatedMinutes);
+        Exercise exercise = new Exercise(exerciseId, module, title, statementMarkdown,
+                ReferenceSolutionFormatter.format(codeContract),
+                ReferenceSolutionFormatter.format(starterCode),
+                difficulty, sortOrder, estimatedMinutes);
         return new ExerciseBuilder(exercise);
     }
 
@@ -39,7 +43,9 @@ public class ExerciseBuilder {
      * itself instead of just being a wall of code to copy.
      */
     public ExerciseBuilder solutionAnnotation(String codeExcerpt, String explanation) {
-        exercise.getSolutionAnnotations().add(new SolutionAnnotation(codeExcerpt, explanation));
+        exercise.getSolutionAnnotations().add(new SolutionAnnotation(
+                ReferenceSolutionFormatter.formatExcerpt(exercise.getReferenceSolution(), codeExcerpt),
+                explanation));
         return this;
     }
 
@@ -84,6 +90,7 @@ public class ExerciseBuilder {
         return this;
     }
 
+    @NonNull
     public Exercise build() {
         return exercise;
     }

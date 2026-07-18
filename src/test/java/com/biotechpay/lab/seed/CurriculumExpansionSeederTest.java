@@ -38,7 +38,7 @@ class CurriculumExpansionSeederTest {
 
         assertThat(module.getExercises()).hasSize(30);
         Map<String, Long> counts = module.getExercises().stream()
-                .collect(Collectors.groupingBy(Exercise::getDifficulty, Collectors.counting()));
+                .collect(Collectors.groupingBy(CurriculumExpansionSeederTest::difficulty, Collectors.counting()));
         assertThat(counts).containsExactlyInAnyOrderEntriesOf(Map.of(
                 "BÁSICO", 8L,
                 "MÉDIO", 8L,
@@ -60,5 +60,12 @@ class CurriculumExpansionSeederTest {
                     .as("reference solution for %s must pass: %s", exercise.getExerciseId(), result.testResults())
                     .isTrue();
         }
+    }
+
+    private static String difficulty(Exercise exercise) {
+        if (exercise == null) {
+            throw new AssertionError("Seeded exercise must not be null");
+        }
+        return exercise.getDifficulty();
     }
 }

@@ -41,14 +41,14 @@ public class ExerciseService {
 
         String editorCode = progress != null && progress.getLastSubmittedCode() != null
                 ? progress.getLastSubmittedCode()
-                : exercise.getStarterCode();
+                : ReferenceSolutionFormatter.format(exercise.getStarterCode());
         ExerciseStatus status = progress != null ? progress.getStatus() : ExerciseStatus.NOT_STARTED;
 
         return new ExerciseDetail(
                 exercise.getExerciseId(),
                 exercise.getTitle(),
                 exercise.getStatementMarkdown(),
-                exercise.getCodeContract(),
+                ReferenceSolutionFormatter.format(exercise.getCodeContract()),
                 editorCode,
                 exercise.getDifficulty(),
                 exercise.getEstimatedMinutes(),
@@ -63,10 +63,13 @@ public class ExerciseService {
         if (exercise.getReferenceSolution() == null || exercise.getReferenceSolution().isBlank()) {
             throw new IllegalStateException("Exercicio sem solucao de referencia: " + exerciseId);
         }
+        String formattedSolution = ReferenceSolutionFormatter.format(exercise.getReferenceSolution());
         List<AnnotationView> annotations = exercise.getSolutionAnnotations().stream()
-                .map(a -> new AnnotationView(a.getCodeExcerpt(), a.getExplanation()))
+                .map(a -> new AnnotationView(
+                        ReferenceSolutionFormatter.formatExcerpt(formattedSolution, a.getCodeExcerpt()),
+                        a.getExplanation()))
                 .toList();
-        return new SolutionView(ReferenceSolutionFormatter.format(exercise.getReferenceSolution()),
+        return new SolutionView(formattedSolution,
                 List.copyOf(exercise.getHints()), annotations);
     }
 

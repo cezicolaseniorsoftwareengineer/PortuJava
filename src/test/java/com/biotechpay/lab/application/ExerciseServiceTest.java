@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.lang.NonNull;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.biotechpay.lab.domain.Exercise;
@@ -34,6 +35,8 @@ class ExerciseServiceTest {
             }
             """;
 
+    @NonNull
+    @SuppressWarnings("null")
     private Exercise exercise;
 
     @BeforeEach
@@ -44,8 +47,9 @@ class ExerciseServiceTest {
         exercise = new Exercise(
                 "solution-" + UUID.randomUUID(), module, "Somador",
                 "Implemente Adder.add(a, b).",
-                "public class Adder { public int add(int a, int b) { } }",
-                "public class Adder {\n}\n", "INICIANTE", 0, 5);
+                "public class Adder{public int add(int a,int b){return 0;}}",
+                "public class Adder{public int add(int a,int b){return 0;}}",
+                "INICIANTE", 0, 5);
         exercise.setReferenceSolution(SOLUTION_CODE);
         exercise.getHints().add("Some os dois parametros.");
         exercise.getHints().add("Use o operador +.");
@@ -58,7 +62,7 @@ class ExerciseServiceTest {
     void revealReturnsReferenceSolutionAndWalkthroughSteps() {
         ExerciseService.SolutionView solution = exerciseService.getSolution(exercise.getExerciseId());
 
-        assertThat(solution.solutionCode()).isEqualTo(SOLUTION_CODE);
+        assertThat(solution.solutionCode()).isEqualTo(ReferenceSolutionFormatter.format(SOLUTION_CODE));
         assertThat(solution.steps()).containsExactly("Some os dois parametros.", "Use o operador +.");
         assertThat(solution.annotations()).hasSize(1);
         assertThat(solution.annotations().get(0).codeExcerpt()).isEqualTo("return a + b;");
@@ -87,5 +91,13 @@ class ExerciseServiceTest {
 
         assertThat(detail.editorCode()).doesNotContain("return a + b;");
         assertThat(detail.statementMarkdown()).doesNotContain("return a + b;");
+        assertThat(detail.codeContract()).isEqualTo("""
+                public class Adder {
+                    public int add(int a, int b) {
+                        return 0;
+                    }
+                }
+                """.strip());
+        assertThat(detail.editorCode()).isEqualTo(detail.codeContract());
     }
 }

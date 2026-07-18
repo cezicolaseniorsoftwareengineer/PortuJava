@@ -20,20 +20,32 @@ class ReferenceSolutionFormattingTest {
     private ExerciseRepository exerciseRepository;
 
     @Test
-    void everyPublishedReferenceSolutionHasCanonicalWhitespaceAndReadableLineLengths() {
+    void everyPublishedJavaSurfaceHasCanonicalSyntaxAwareFormatting() {
         List<Exercise> exercises = exerciseRepository.findAll();
 
         assertThat(exercises).hasSize(97);
         for (Exercise exercise : exercises) {
-            String code = exercise.getReferenceSolution();
-            assertThat(code)
-                    .as("canonical whitespace for %s", exercise.getExerciseId())
-                    .isEqualTo(ReferenceSolutionFormatter.format(code))
-                    .doesNotContain("\r", "\t", "\n\n\n")
-                    .doesNotMatch("(?s).*\\s+$");
-            assertThat(code.lines())
-                    .as("readable line length for %s", exercise.getExerciseId())
-                    .allSatisfy(line -> assertThat(line.length()).isLessThanOrEqualTo(120));
+            assertCanonicalSource(exercise, "code contract", exercise.getCodeContract());
+            assertCanonicalSource(exercise, "starter code", exercise.getStarterCode());
+            assertCanonicalSource(exercise, "reference solution", exercise.getReferenceSolution());
+            exercise.getSolutionAnnotations().forEach(annotation ->
+                    assertThat(annotation.getCodeExcerpt())
+                            .as("canonical annotation excerpt for %s", exercise.getExerciseId())
+                            .isEqualTo(ReferenceSolutionFormatter.formatExcerpt(
+                                    exercise.getReferenceSolution(), annotation.getCodeExcerpt()))
+                            .doesNotContain("\r", "\t")
+                            .doesNotMatch("(?s).*\\s+$"));
         }
+    }
+
+    private static void assertCanonicalSource(Exercise exercise, String surface, String code) {
+        assertThat(code)
+                .as("canonical %s for %s", surface, exercise.getExerciseId())
+                .isEqualTo(ReferenceSolutionFormatter.format(code))
+                .doesNotContain("\r", "\t", "\n\n\n")
+                .doesNotMatch("(?s).*\\s+$");
+        assertThat(code.lines())
+                .as("readable %s line length for %s", surface, exercise.getExerciseId())
+                .allSatisfy(line -> assertThat(line.length()).isLessThanOrEqualTo(120));
     }
 }

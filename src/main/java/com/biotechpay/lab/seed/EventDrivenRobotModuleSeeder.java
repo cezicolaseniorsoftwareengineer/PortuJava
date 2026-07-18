@@ -5,6 +5,7 @@ import com.biotechpay.lab.domain.LearningModule;
 import com.biotechpay.lab.persistence.ExerciseRepository;
 import com.biotechpay.lab.persistence.LearningModuleRepository;
 import com.biotechpay.lab.seed.support.ExerciseBuilder;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 /**
@@ -46,6 +47,7 @@ public class EventDrivenRobotModuleSeeder implements ModuleSeeder {
         return module;
     }
 
+    @NonNull
     private Exercise buildObserverBasic(LearningModule module) {
         return ExerciseBuilder.of(
                         "robot-01-observer-basic",
@@ -142,6 +144,7 @@ public class EventDrivenRobotModuleSeeder implements ModuleSeeder {
                 .build();
     }
 
+    @NonNull
     private Exercise buildMultipleEvents(LearningModule module) {
         return ExerciseBuilder.of(
                         "robot-02-multiple-events",
@@ -276,6 +279,7 @@ public class EventDrivenRobotModuleSeeder implements ModuleSeeder {
                 .build();
     }
 
+    @NonNull
     private Exercise buildEventDrivenReaction(LearningModule module) {
         return ExerciseBuilder.of(
                         "robot-03-event-driven-reaction",

@@ -48,8 +48,15 @@ public class InterviewPreparationModuleSeeder implements ModuleSeeder {
                         InterviewMediumChallenges.build(module),
                         InterviewIntermediateChallenges.build(module),
                         InterviewAdvancedChallenges.build(module))
-                .flatMap(java.util.Collection::stream)
+                .flatMap(InterviewPreparationModuleSeeder::streamExercises)
                 .forEach(this::saveIfMissing);
+    }
+
+    private static Stream<Exercise> streamExercises(java.util.List<Exercise> exercises) {
+        if (exercises == null) {
+            throw new IllegalStateException("Interview challenge builder returned null");
+        }
+        return exercises.stream();
     }
 
     private void saveIfMissing(Exercise exercise) {
