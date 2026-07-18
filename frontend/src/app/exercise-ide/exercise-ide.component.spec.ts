@@ -31,7 +31,7 @@ describe('ExerciseIdeComponent', () => {
     expect(options.scrollBeyondLastColumn).toBe(0);
   });
 
-  it('preserves paragraphs and hanging indentation in revealed solution code', () => {
+  it('renders the full solution and explanation excerpts with read-only Java Monaco editors', () => {
     const fixture = TestBed.createComponent(ExerciseIdeComponent);
     const component = fixture.componentInstance;
     const source = 'public final class Example {\n' +
@@ -39,27 +39,48 @@ describe('ExerciseIdeComponent', () => {
       '\n' +
       '    public boolean valid() { return true; }\n' +
       '}';
-    const display = component as unknown as {
-      toDisplayCodeLines(code: string): Array<{ text: string; indent: number }>;
-    };
 
     component.loading = false;
     component.exercise = { exerciseId: 'example' } as never;
-    component.solution = { solutionCode: source, steps: [], annotations: [] };
-    component.solutionCodeLines = display.toDisplayCodeLines(source);
+    component.solution = {
+      solutionCode: source,
+      steps: [],
+      annotations: [{ codeExcerpt: 'return true;', explanation: 'Returns the decision.' }]
+    };
+    component.solutionAnnotations = [{
+      codeExcerpt: 'return true;',
+      explanation: 'Returns the decision.',
+      editorHeight: 64
+    }];
     fixture.detectChanges();
 
-    const lines = fixture.nativeElement.querySelectorAll('.solution-code .code-line') as NodeListOf<HTMLElement>;
-    const solutionCode = fixture.nativeElement.querySelector('.solution-code') as HTMLElement;
-    solutionCode.style.width = '220px';
-    solutionCode.style.maxWidth = '220px';
+    const solutionEditor = fixture.nativeElement.querySelector('.solution-code-editor') as HTMLElement;
+    const annotationEditor = fixture.nativeElement.querySelector('.annotation-code-editor') as HTMLElement;
 
-    expect(lines.length).toBe(5);
-    expect(lines[1].textContent).toBe('    private static final java.util.List<String> VALUES = java.util.List.of("one", "two");');
-    expect(lines[1].style.paddingLeft).toBe('4ch');
-    expect(lines[1].style.textIndent).toBe('-4ch');
-    expect(lines[2].textContent).toBe('');
-    expect(getComputedStyle(lines[1]).wordBreak).toBe('normal');
-    expect(solutionCode.scrollWidth).toBeLessThanOrEqual(solutionCode.clientWidth);
+    expect(solutionEditor).not.toBeNull();
+    expect(annotationEditor).not.toBeNull();
+    expect(component.solutionEditorOptions.theme).toBe(component.editorOptions.theme);
+    expect(component.solutionEditorOptions.language).toBe('java');
+    expect(component.solutionEditorOptions.readOnly).toBeTrue();
+    expect(component.solutionEditorOptions.domReadOnly).toBeTrue();
+    expect(component.annotationEditorOptions.theme).toBe(component.editorOptions.theme);
+    expect(component.annotationEditorOptions.language).toBe('java');
+    expect(component.annotationEditorOptions.readOnly).toBeTrue();
+  });
+
+  it('bounds read-only editor heights for short and long answers', () => {
+    const component = TestBed.createComponent(ExerciseIdeComponent).componentInstance;
+    const sizing = component as unknown as {
+      calculateEditorHeight(
+        code: string,
+        minimum: number,
+        maximum: number,
+        lineHeight: number,
+        verticalPadding: number
+      ): number;
+    };
+
+    expect(sizing.calculateEditorHeight('return true;', 64, 200, 18, 20)).toBe(64);
+    expect(sizing.calculateEditorHeight('line\n'.repeat(100), 220, 720, 21, 32)).toBe(720);
   });
 });

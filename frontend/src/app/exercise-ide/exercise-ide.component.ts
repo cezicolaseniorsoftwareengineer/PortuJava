@@ -15,13 +15,8 @@ import {
   SubmissionResult
 } from '../core/exercise.models';
 
-interface DisplayCodeLine {
-  text: string;
-  indent: number;
-}
-
 interface DisplaySolutionAnnotation extends SolutionAnnotation {
-  codeLines: DisplayCodeLine[];
+  editorHeight: number;
 }
 
 @Component({
@@ -46,12 +41,12 @@ export class ExerciseIdeComponent implements OnInit {
   loadingHint = false;
 
   solution: SolutionView | null = null;
-  solutionCodeLines: DisplayCodeLine[] = [];
   solutionAnnotations: DisplaySolutionAnnotation[] = [];
+  solutionEditorHeight = 220;
   loadingSolution = false;
   solutionError = '';
 
-  editorOptions = {
+  readonly editorOptions = {
     theme: 'vs-dark',
     language: 'java',
     automaticLayout: true,
@@ -65,6 +60,29 @@ export class ExerciseIdeComponent implements OnInit {
     // Monaco defaults to zero top padding, which glues line 1 to the container edge;
     // VS Code itself renders with breathing room above the first line.
     padding: { top: 16, bottom: 12 }
+  };
+
+  readonly solutionEditorOptions = {
+    ...this.editorOptions,
+    readOnly: true,
+    domReadOnly: true,
+    scrollBeyondLastLine: false,
+    renderLineHighlight: 'none',
+    overviewRulerLanes: 0,
+    hideCursorInOverviewRuler: true,
+    ariaLabel: 'Código Java completo da solução'
+  };
+
+  readonly annotationEditorOptions = {
+    ...this.solutionEditorOptions,
+    lineNumbers: 'off',
+    lineNumbersMinChars: 0,
+    glyphMargin: false,
+    folding: false,
+    lineDecorationsWidth: 8,
+    fontSize: 12.5,
+    padding: { top: 8, bottom: 8 },
+    ariaLabel: 'Trecho Java explicado'
   };
 
   constructor(
@@ -159,10 +177,10 @@ export class ExerciseIdeComponent implements OnInit {
     this.exerciseApi.getSolution(this.exercise.exerciseId).subscribe({
       next: (solution) => {
         this.solution = solution;
-        this.solutionCodeLines = this.toDisplayCodeLines(solution.solutionCode);
+        this.solutionEditorHeight = this.calculateEditorHeight(solution.solutionCode, 220, 720, 21, 32);
         this.solutionAnnotations = solution.annotations.map((annotation) => ({
           ...annotation,
-          codeLines: this.toDisplayCodeLines(annotation.codeExcerpt)
+          editorHeight: this.calculateEditorHeight(annotation.codeExcerpt, 64, 200, 18, 20)
         }));
         this.loadingSolution = false;
       },
@@ -175,18 +193,19 @@ export class ExerciseIdeComponent implements OnInit {
 
   hideSolution(): void {
     this.solution = null;
-    this.solutionCodeLines = [];
     this.solutionAnnotations = [];
+    this.solutionEditorHeight = 220;
     this.solutionError = '';
   }
 
-  private toDisplayCodeLines(code: string): DisplayCodeLine[] {
-    return code.replace(/\r\n?/g, '\n').split('\n').map((rawLine) => {
-      const text = rawLine.replace(/\t/g, '    ');
-      return {
-        text,
-        indent: text.length - text.trimStart().length
-      };
-    });
+  private calculateEditorHeight(
+    code: string,
+    minimum: number,
+    maximum: number,
+    lineHeight: number,
+    verticalPadding: number
+  ): number {
+    const lineCount = code.replace(/\r\n?/g, '\n').split('\n').length;
+    return Math.min(maximum, Math.max(minimum, lineCount * lineHeight + verticalPadding));
   }
 }

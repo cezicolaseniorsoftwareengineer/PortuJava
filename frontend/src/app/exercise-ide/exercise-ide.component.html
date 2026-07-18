@@ -46,18 +46,24 @@
             <div class="solution-annotations">
               @for (a of solutionAnnotations; track a.codeExcerpt) {
                 <div class="annotation">
-                  <pre class="annotation-excerpt"><code>@for (line of a.codeLines; track $index) {<span class="code-line"
-                        [style.padding-left.ch]="line.indent"
-                        [style.text-indent.ch]="-line.indent">{{ line.text }}</span>}</code></pre>
+                  <ngx-monaco-editor
+                    class="annotation-code-editor"
+                    [style.height.px]="a.editorHeight"
+                    [options]="annotationEditorOptions"
+                    [ngModel]="a.codeExcerpt"
+                    aria-label="Trecho Java explicado"></ngx-monaco-editor>
                   <p class="annotation-explanation">{{ a.explanation }}</p>
                 </div>
               }
             </div>
           }
           <h3>Código da solução</h3>
-          <pre class="solution-code" tabindex="0" aria-label="Código Java completo da solução"><code>@for (line of solutionCodeLines; track $index) {<span class="code-line"
-                [style.padding-left.ch]="line.indent"
-                [style.text-indent.ch]="-line.indent">{{ line.text }}</span>}</code></pre>
+          <ngx-monaco-editor
+            class="solution-code-editor"
+            [style.height.px]="solutionEditorHeight"
+            [options]="solutionEditorOptions"
+            [ngModel]="solution.solutionCode"
+            aria-label="Código Java completo da solução"></ngx-monaco-editor>
           <button type="button" (click)="hideSolution()">Esconder resposta</button>
         }
       </div>
